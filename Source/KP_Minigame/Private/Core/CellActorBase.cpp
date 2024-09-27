@@ -25,3 +25,11 @@ void ACellActorBase::Tick(float DeltaTime)
 
 }
 
+void ACellActorBase::Reset()
+{
+}
+
+void ACellActorBase::SetState(ECellState NewState)
+{
+}
+
