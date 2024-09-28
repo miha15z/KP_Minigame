@@ -8,25 +8,35 @@
 #include "AbilitySystemInterface.h"
 #include "Cell.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCellChosenDelegate, ACell*, ChosenCell, int, PlayerID);
+
+USTRUCT(BlueprintType)
+struct FBoardCoord
+{
+	GENERATED_USTRUCT_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int x;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int y;
+};
+
 UCLASS()
 class KP_MINIGAME_API ACell : public AActor, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// descrete coordinates on a board
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
-	int CoordX;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
-	int CoordY;
-
-	// TODO: make into atributes. For now mocks possible movement modifier attributes.
-	UPROPERTY()
-	int MovementCost;
+	FBoardCoord Coord;
 
 	// TODO: make into attribute. For now mocks possible blocking attributes.
 	UPROPERTY()
 	bool bBlocked;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCellChosenDelegate OnCellChosen;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))

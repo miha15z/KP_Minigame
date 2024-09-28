@@ -7,6 +7,7 @@
 #include "BoardNavigationSystem.generated.h"
 
 class ACell;
+struct FBoardCoord;
 /**
  * 
  */
@@ -17,6 +18,8 @@ class KP_MINIGAME_API UBoardNavigationSystem : public UObject
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void CalculateOrthogonalLength(ACell* Origin, ACell* Destination, int& Length);
+	void CalculateOrthogonalLength(ACell* Origin, ACell* Destination, float& Length);
 
+	UFUNCTION(BlueprintCallable)
+	void CalculateNeighbouringCoordsByMask(FBoardCoord ReferenceCoord, TArray<FBoardCoord> MovementPatternMask, TArray<FBoardCoord>& NeighbouringCoords);
 };

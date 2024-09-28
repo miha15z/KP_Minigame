@@ -25,4 +25,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MovementIn;
 	ATTRIBUTE_ACCESSORS(UCellAttributeSet, MovementIn)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData MovementOut;
+	ATTRIBUTE_ACCESSORS(UCellAttributeSet, MovementOut)
 };
