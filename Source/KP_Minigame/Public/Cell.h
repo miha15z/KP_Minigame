@@ -19,6 +19,10 @@ struct FBoardCoord
 	int x;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int y;
+
+	bool operator==(FBoardCoord const& other) const {
+		return (this->x == other.x) and (this->y == other.y);
+	}
 };
 
 UCLASS()
@@ -32,8 +36,12 @@ public:
 	FBoardCoord Coord;
 
 	// TODO: make into attribute. For now mocks possible blocking attributes.
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
 	bool bBlocked;
+
+	// Populated automatically
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
+	TArray<ACell*> Neighbours;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCellChosenDelegate OnCellChosen;
@@ -48,15 +56,15 @@ protected:
 public:
 	// Sets default values for this actor's properties
 	ACell();
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
+	{
+		return AbilitySystemComponent;
+	}
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override 
-	{
-		return AbilitySystemComponent;
-	}
 
 public:	
 	// Called every frame
