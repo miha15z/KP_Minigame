@@ -10,6 +10,7 @@
 class UBoardNavigationSystem;
 class UGameBoardGeneratorBase;
 class UGenDataAsset;
+class UUserWidget;
 
 /**
  * 
@@ -23,7 +24,7 @@ public:
 	static AKP_GameModeBase* GetKPGameMode(UObject* WorldContext);
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
-
+	virtual void StartPlay();
 	//navigation
 protected:
 	UPROPERTY(VisibleInstanceOnly, Category = "Board|Navigation")
@@ -50,5 +51,12 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable, Category = Gameboard)
 	const FBoardData& GetGameBoradData() const {return BoardData;}
-	
+
+	//UI
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = Widgets)
+	TSubclassOf<UUserWidget> UIClass;
+
+	UPROPERTY(VisibleAnywhere)
+	UUserWidget* PlayerUI;
 };

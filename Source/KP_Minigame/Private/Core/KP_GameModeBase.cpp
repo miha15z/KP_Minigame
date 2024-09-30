@@ -25,5 +25,13 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
     BoardNavSystem = NewObject<UBoardNavigationSystem>();
     //TO DO: BoardNavSystem->BuildNavigation(GenDataAsset->GetMovementPattern());
 
+    //ui
+
+
     Super::InitGame(MapName, Options, ErrorMessage);
+}
+
+void AKP_GameModeBase::StartPlay()
+{
+    check(false);
 }
