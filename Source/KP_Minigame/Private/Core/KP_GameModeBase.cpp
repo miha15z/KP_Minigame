@@ -25,7 +25,7 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
     BoardData = Generator->GenerateGameBoard(GenDataAsset.Get(), this);
 
     BoardNavSystem = NewObject<UBoardNavigationSystem>();
-    //TO DO: BoardNavSystem->BuildNavigation(GenDataAsset->GetMovementPattern());
+    BoardNavSystem->SetupNeighbouringCellsByMask(BoardData.Cells, GenDataAsset->GetMovementPattern());
 
     //ui
     PlayerUI = CreateWidget(this->GetWorld(), UIClass);

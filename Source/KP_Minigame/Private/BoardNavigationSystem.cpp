@@ -42,11 +42,11 @@ void UBoardNavigationSystem::SetupNeighbouringCellsByMask(TArray<ACell*> CellsOn
 		// And find them among other cells on the board
 		for (FBoardCoord NeighbouringCoord : NeighbouringCoords) {
 			bool isFound = false;
-			for (int i = 0; (i < CellNum) and not isFound; i++) {
+			for (int i = 0; (i < CellNum); i++) {
 				ACell* currentCell = CellsOnBoard[i];
 				if (NeighbouringCoord == currentCell->Coord) {
 					OriginCell->Neighbours.Add(currentCell);
-					isFound = true;
+					break;
 				}
 			}
 		}
