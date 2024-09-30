@@ -16,11 +16,11 @@ struct FBoardCoord;
 
 // Class for storing minimal movements between nodes.
 // UObject cause recursion/reference to the same type variables is not supported for UStruct.
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, Blueprintable)
 struct FBoardAtomicMovement{
 	GENERATED_USTRUCT_BODY()
 public:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	ACell* CellTo;
 	UPROPERTY()
 	ACell* CellFrom;
