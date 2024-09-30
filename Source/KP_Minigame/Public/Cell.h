@@ -21,6 +21,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Color)
 	FColor PossibleMovementColor;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Color)
+	FColor PathColor;
 };
 
 UENUM(BlueprintType, Blueprintable)

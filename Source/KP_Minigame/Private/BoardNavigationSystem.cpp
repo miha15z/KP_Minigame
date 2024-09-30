@@ -103,11 +103,65 @@ void UBoardNavigationSystem::GetPossibleMovements(TArray<ACell*> CellsOnBoard, A
 		// add movements to the neighbouring cells to the "open" array
 		for (ACell* Neighbour : CurrentMovement.CellTo->Neighbours) {
 			FBoardAtomicMovement ConstructedMovement;
-			CalculateAtomicMovement(OriginCell, Neighbour, OriginPiece, (float)CurrentMovement.MovementPointsLeft, ConstructedMovement);
+			CalculateAtomicMovement(CurrentMovement.CellTo, Neighbour, OriginPiece, (float)CurrentMovement.MovementPointsLeft, ConstructedMovement);
 			OpenQueue.Enqueue(ConstructedMovement);
 		}
 	}
 	
+}
+
+void UBoardNavigationSystem::GetMovementPathToCell(TArray<FBoardAtomicMovement> PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath)
+{
+	// check if origin cell is there
+	bool isOriginCellThere = false;
+	for (FBoardAtomicMovement Movement : PossibleMovements) {
+		if (Movement.CellFrom == OriginCell) {
+			isOriginCellThere = true;
+			break;
+		}
+	}
+	if (not isOriginCellThere) {
+		isPossible = false;
+		return;
+	}
+	else {
+		isPossible = true;
+	}
+
+	MovementPath.Empty();
+	// find the destination movement
+	FBoardAtomicMovement FirstBackTrackMovement;
+	bool isThereFirstBackTrackMovement = false;
+	for (FBoardAtomicMovement Movement : PossibleMovements) {
+		if (Movement.CellTo == DestinationCell) {
+			FirstBackTrackMovement = Movement;
+			isThereFirstBackTrackMovement = true;
+			break;
+		}
+	}
+	if (not isThereFirstBackTrackMovement) {
+		isPossible = false;
+		return;
+	}
+
+	// find the successive back track movements until OriginCell
+	FBoardAtomicMovement CurrentBackTrackMovement = FirstBackTrackMovement;
+	ACell* CurrentCellFrom = CurrentBackTrackMovement.CellFrom;
+	MovementPath.Add(CurrentBackTrackMovement);
+
+	while (CurrentCellFrom != OriginCell) {
+		for (FBoardAtomicMovement Movement : PossibleMovements) {
+			if (Movement.CellTo == CurrentCellFrom) {
+				CurrentBackTrackMovement = Movement;
+				CurrentCellFrom = CurrentBackTrackMovement.CellFrom;
+				MovementPath.Add(CurrentBackTrackMovement);
+				break;
+			}
+		}
+	}
+
+	isPossible = true;
+	return;
 }
 
 void UBoardNavigationSystem::CalculateAtomicMovement(ACell* Origin, ACell* Destination, ABoardPiece* BoardPiece, float MovementPoints, FBoardAtomicMovement& AtomicMovement)
@@ -117,7 +171,7 @@ void UBoardNavigationSystem::CalculateAtomicMovement(ACell* Origin, ACell* Desti
 	
 	const float MovementOut = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementOutAttribute());
 	const float MovementIn = Destination->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementInAttribute());
-	const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
+	//const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
 	AtomicMovement.MovementPointsConsumed = MovementIn; //* BoardPieceMovementPointsModifier;
 	AtomicMovement.MovementPointsLeft = MovementPoints - AtomicMovement.MovementPointsConsumed;
 }
