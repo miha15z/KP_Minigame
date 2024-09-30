@@ -7,7 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "BoardPiece.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API ABoardPiece : public AActor, public IAbilitySystemInterface
 {
 	GENERATED_BODY()

@@ -6,7 +6,7 @@
 #include "KP_Structs.generated.h"
 
 class ACell;
-class AKPPawnBase;
+class ABoardPiece;
 
 USTRUCT()
 struct KP_MINIGAME_API FKPPawnData
@@ -14,7 +14,7 @@ struct KP_MINIGAME_API FKPPawnData
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditInstanceOnly)
-	TSubclassOf<AKPPawnBase> PawnClass;
+	TSubclassOf<ABoardPiece> PawnClass;
 
 	UPROPERTY(EditInstanceOnly)
 	int32 CellId = -1; // -1  =  not valid value!
@@ -23,7 +23,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct KP_MINIGAME_API FKPPlayerData
+struct KP_MINIGAME_API FKPGenPlayerData
 {
 	GENERATED_BODY()
 public:
@@ -35,6 +35,26 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct KP_MINIGAME_API FKPPawnInfo
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite)
+	ABoardPiece* Pawn;
+	UPROPERTY(BlueprintReadWrite)
+	int32 CellId;
+};
+
+USTRUCT(BlueprintType)
+struct KP_MINIGAME_API FKPPlayerData
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditInstanceOnly)
+	TArray<FKPPawnInfo> Pawns;
+};
+
+USTRUCT(BlueprintType)
 struct KP_MINIGAME_API FBoardData
 {
 	GENERATED_BODY();
@@ -42,10 +62,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<ACell*> Cells;
 
-	//void operator=(FBoardData&& Other)
-	//{
-	//	Cells = MoveTemp(Other.Cells);
-	//}
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FKPPlayerData> PlayersData;
 };
 
 USTRUCT(BlueprintType)
@@ -53,9 +71,9 @@ struct KP_MINIGAME_API FBoardCoord
 {
 	GENERATED_USTRUCT_BODY()
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int x;
+	int32 x;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int y;
+	int32 y;
 
 	bool operator==(FBoardCoord const& other) const {
 		return (this->x == other.x) and (this->y == other.y);

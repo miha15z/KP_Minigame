@@ -5,7 +5,7 @@
 
 
 
-const FKPPlayerData& UGenDataAsset::GetPlayerData(const int32 PlayerId) const
+const FKPGenPlayerData& UGenDataAsset::GetPlayerData(const int32 PlayerId) const
 {
 	check(PlayerId < PlayersData.Num() && PlayerId >= 0);
 	return PlayersData[PlayerId];

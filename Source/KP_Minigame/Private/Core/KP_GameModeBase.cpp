@@ -5,7 +5,8 @@
 #include "Core/Generators/GameBoardGeneratorBase.h"
 #include "Core/Generators/Data/GenDataAsset.h"
 #include "BoardNavigationSystem.h"
-#include "../../../../../../../Source/Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "Blueprint/UserWidget.h"
+#include "Cell.h"
 
 AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
 {
@@ -35,4 +36,14 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
 void AKP_GameModeBase::StartPlay()
 {
     Super::StartPlay();
+
+    for (auto Cell : BoardData.Cells)
+    {
+        if (Cell)
+        {
+            Cell->Reset();
+        }
+    }
+
+    // Selelect first player
 }

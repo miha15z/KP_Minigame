@@ -36,7 +36,7 @@ protected:
 
 	// PlayersData[0] = player data, other = AI
 	UPROPERTY(EditDefaultsOnly, Category = "GameBoard | Players")
-	TArray<FKPPlayerData> PlayersData;  
+	TArray<FKPGenPlayerData> PlayersData;  
 
 public:
 
@@ -44,12 +44,12 @@ public:
 	FORCEINLINE TArray<FBoardCoord> GetMovementPattern() const { return MovementPattern; }
 
 	UFUNCTION(BlueprintCallable)
-	const FKPPlayerData& GetPlayerData(const int32 PlayerId) const;
+	const FKPGenPlayerData& GetPlayerData(const int32 PlayerId) const;
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int32 GetNumPlayers() const {return PlayersData.Num(); }
 
-	FORCEINLINE const TArray<FKPPlayerData>& GetAllPlayersData() const {return PlayersData;}
+	FORCEINLINE const TArray<FKPGenPlayerData>& GetAllPlayersData() const {return PlayersData;}
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int32 GetBoardSize() const {return BoardSize;}

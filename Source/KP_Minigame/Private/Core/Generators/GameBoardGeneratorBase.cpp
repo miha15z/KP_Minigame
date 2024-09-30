@@ -3,8 +3,8 @@
 
 #include "Core/Generators/GameBoardGeneratorBase.h"
 #include "Core/Generators/Data/GenDataAsset.h"
-#include "Core/KPPawnBase.h"
 #include "Cell.h"
+#include "BoardPiece.h"
 
 FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAsset* GenData, UObject* WorldContext) const
 {
