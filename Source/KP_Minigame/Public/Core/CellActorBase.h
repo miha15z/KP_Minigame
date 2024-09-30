@@ -15,7 +15,7 @@ enum class ECellState : uint8
 	ShowPath
 };
 
-UCLASS()
+UCLASS(abstract, Blueprintable, BlueprintType)
 class KP_MINIGAME_API ACellActorBase : public AActor
 {
 	GENERATED_BODY()
