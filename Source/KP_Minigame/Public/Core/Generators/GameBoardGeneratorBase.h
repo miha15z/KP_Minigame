@@ -26,5 +26,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Generation)
 	FBoardData GenerateGameBoard(UGenDataAsset* GenData, UObject* WorldContext) const;
+protected:
 	virtual FBoardData GenerateGameBoard_Implementation(UGenDataAsset* GenData, UObject* WorldContext) const;
+
+protected:
+/*	void SpawnPawns(FBoardData& BoardData, )*/
+
 };

@@ -51,7 +51,7 @@ public:
 	}
 
 public:
-	UPROPERTY(BlueprintReadOnly, Category = CellInfo, BlueprintGetter = GetCellId)
+	UPROPERTY(BlueprintReadOnly, Category = CellInfo, BlueprintGetter = GetCellId, VisibleAnywhere)
 	int32 CellId = 0;
 
 protected:

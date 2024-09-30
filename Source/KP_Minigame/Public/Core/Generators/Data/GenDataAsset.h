@@ -41,6 +41,11 @@ public:
 	const FKPPlayerData& GetPlayerData(const int32 PlayerId) const;
 
 	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int32 GetNumPlayers() const {return PlayersData.Num(); }
+
+	FORCEINLINE const TArray<FKPPlayerData>& GetAllPlayersData() const {return PlayersData;}
+
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int32 GetBoardSize() const {return BoardSize;}
 
 	UFUNCTION(BlueprintCallable)
