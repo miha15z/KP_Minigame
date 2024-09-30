@@ -12,7 +12,18 @@ class UGameplayAbility;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCellChosenDelegate, ACell*, ChosenCell, int, PlayerID);
 
-UENUM(BlueprintType)
+UCLASS(BlueprintType, Blueprintable)
+class KP_MINIGAME_API UCellConfigAsset : public UDataAsset {
+	GENERATED_BODY()
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Color)
+	FColor DefaultColor;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Color)
+	FColor PossibleMovementColor;
+};
+
+UENUM(BlueprintType, Blueprintable)
 enum class ECellState : uint8
 {
 	None,
@@ -45,6 +56,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnCellChosenDelegate OnCellChosen;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UCellConfigAsset* CellConfig;
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	class UAbilitySystemComponent* AbilitySystemComponent;
@@ -52,7 +66,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	const class UCellAttributeSet* AttributeSet;
 
-	UPROPERTY(EditDefaultsOnly, Category = CellInfo)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
 	ECellState CurrentState = ECellState::None;
 
 public:

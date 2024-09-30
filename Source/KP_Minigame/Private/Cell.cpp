@@ -36,6 +36,7 @@ void ACell::Reset()
 
 void ACell::SetState(ECellState NewState)
 {
+	CurrentState = NewState;
 	ACell::SetState_BP(NewState);
 }
 
