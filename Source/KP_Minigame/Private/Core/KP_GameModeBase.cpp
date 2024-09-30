@@ -5,6 +5,7 @@
 #include "Core/Generators/GameBoardGeneratorBase.h"
 #include "Core/Generators/Data/GenDataAsset.h"
 #include "BoardNavigationSystem.h"
+#include "../../../../../../../Source/Runtime/UMG/Public/Blueprint/UserWidget.h"
 
 AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
 {
@@ -26,12 +27,12 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
     //TO DO: BoardNavSystem->BuildNavigation(GenDataAsset->GetMovementPattern());
 
     //ui
-
-
+    PlayerUI = CreateWidget(this->GetWorld(), UIClass);
+    PlayerUI->AddToViewport();
     Super::InitGame(MapName, Options, ErrorMessage);
 }
 
 void AKP_GameModeBase::StartPlay()
 {
-    check(false);
+    Super::StartPlay();
 }
