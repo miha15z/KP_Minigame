@@ -7,6 +7,9 @@
 #include "AbilitySystemInterface.h"
 #include "BoardPiece.generated.h"
 
+
+class ACell;
+
 UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API ABoardPiece : public AActor, public IAbilitySystemInterface
 {
@@ -33,4 +36,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	
+	UFUNCTION(BlueprintCallable, Category = BoardMove)
+	void SetNewCellId(int32 NewCellId);
+	UFUNCTION(BlueprintCallable, Category = BoardMove)
+	int32 GetCurrentCellId() const; 
+protected:
+	UPROPERTY(Transient)
+	int32 CurrentCellId;
 };

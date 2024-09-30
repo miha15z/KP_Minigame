@@ -9,6 +9,7 @@
 #include "Cell.generated.h"
 
 class UGameplayAbility;
+class ABoardPiece;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCellChosenDelegate, ACell*, ChosenCell, int, PlayerID);
 
@@ -69,6 +70,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
 	ECellState CurrentState = ECellState::None;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
+	TWeakObjectPtr<ABoardPiece> PawnPtr;
 public:
 	// Sets default values for this actor's properties
 	ACell();
@@ -109,4 +112,10 @@ public:
 	{
 		return CellId;
 	}
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void StoodPawnOnCell(ABoardPiece* Pawn);
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	ABoardPiece* GetStoodPawn() const;
 };

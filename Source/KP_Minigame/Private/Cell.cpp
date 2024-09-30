@@ -3,6 +3,7 @@
 #include "Cell.h"
 #include "AbilitySystemComponent.h"
 #include "CellAttributeSet.h"
+#include "BoardPiece.h"
 
 // Sets default values
 ACell::ACell()
@@ -38,5 +39,15 @@ void ACell::SetState(ECellState NewState)
 {
 	CurrentState = NewState;
 	ACell::SetState_BP(NewState);
+}
+
+void ACell::StoodPawnOnCell(ABoardPiece* Pawn)
+{
+	PawnPtr = Pawn;
+}
+
+ABoardPiece* ACell::GetStoodPawn() const
+{
+	return PawnPtr.Get();
 }
 

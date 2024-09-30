@@ -26,3 +26,13 @@ void ABoardPiece::Tick(float DeltaTime)
 
 }
 
+void ABoardPiece::SetNewCellId(int32 NewCellId)
+{
+	CurrentCellId = NewCellId;
+}
+
+int32 ABoardPiece::GetCurrentCellId() const
+{
+	return CurrentCellId;
+}
+

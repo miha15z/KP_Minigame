@@ -39,12 +39,27 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	// spawn pawns
 	for (const auto& PlayerData : GenData->GetAllPlayersData())
 	{
+		FKPPlayerData PlayerPawnsData;
 		for (const auto& PawnData : PlayerData.Pawns)
 		{
 			check(PawnData.PawnClass.Get());
 			// to do
-			//auto Pawn = World->SpawnActor<AKPPawnBase>(PawnData.PawnClass);
+			auto Pawn = World->SpawnActor<ABoardPiece>(PawnData.PawnClass);
+			Pawn->SetNewCellId(PawnData.CellId);
+			// Use Array.FindByPredicate or BinareSerch
+			if (PawnData.CellId >= 0 && PawnData.CellId < BoardData.Cells.Num())
+			{
+				ACell* Cell = BoardData.Cells[PawnData.CellId];
+				Pawn->SetActorLocation(Cell->GetActorLocation());
+				PlayerPawnsData.Pawns.Add({Pawn ,PawnData.CellId });
+				Cell->StoodPawnOnCell(Pawn);
+			}
+			else
+			{
+				check(false);
+			}
 		}
+		BoardData.PlayersData.Add(MoveTemp(PlayerPawnsData));
 	}
 
 	return BoardData;
