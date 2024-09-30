@@ -41,6 +41,11 @@ struct KP_MINIGAME_API FBoardData
 public:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<ACell*> Cells;
+
+	//void operator=(FBoardData&& Other)
+	//{
+	//	Cells = MoveTemp(Other.Cells);
+	//}
 };
 
 USTRUCT(BlueprintType)
