@@ -8,21 +8,24 @@
 #include "GenDataAsset.generated.h"
 
 
-class ACellActorBase;
+class ACell;
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class KP_MINIGAME_API UGenDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 protected:
 
+	UPROPERTY(EditDefaultsOnly, Category = "GameBoard|Navigation")
+	TArray<FBoardCoord> MovementPattern = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+
 	UPROPERTY(EditDefaultsOnly, Category = GameBoard)
 	int32 BoardSize = 8;
 
 	UPROPERTY(EditDefaultsOnly, Category = GameBoard)
-	TSubclassOf<ACellActorBase> CellClass;
+	TSubclassOf<ACell> CellClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = GameBoard)
 	FVector TopCellLocation;
@@ -38,6 +41,9 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable)
+	FORCEINLINE TArray<FBoardCoord> GetMovementPattern() const { return MovementPattern; }
+
+	UFUNCTION(BlueprintCallable)
 	const FKPPlayerData& GetPlayerData(const int32 PlayerId) const;
 
 	UFUNCTION(BlueprintCallable)
@@ -49,7 +55,7 @@ public:
 	FORCEINLINE int32 GetBoardSize() const {return BoardSize;}
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE TSubclassOf<ACellActorBase> GetCellClass() const { return CellClass; }
+	FORCEINLINE TSubclassOf<ACell> GetCellClass() const { return CellClass; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FVector GetTopCellLocation() const { return TopCellLocation; }

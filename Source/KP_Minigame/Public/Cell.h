@@ -4,40 +4,39 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Containers/StaticArray.h"
 #include "AbilitySystemInterface.h"
+#include "Core/KP_Structs.h"
 #include "Cell.generated.h"
 
+class UGameplayAbility;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCellChosenDelegate, ACell*, ChosenCell, int, PlayerID);
 
-USTRUCT(BlueprintType)
-struct FBoardCoord
+UENUM(BlueprintType)
+enum class ECellState : uint8
 {
-	GENERATED_USTRUCT_BODY()
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int x;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int y;
-
-	bool operator==(FBoardCoord const& other) const {
-		return (this->x == other.x) and (this->y == other.y);
-	}
+	None,
+	SelectToNav,
+	SelectToPlayer,
+	ShowPath
 };
 
-UCLASS()
+UCLASS(Abstract, BlueprintType, Blueprintable)
 class KP_MINIGAME_API ACell : public AActor, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(BlueprintReadOnly, Category = CellInfo, BlueprintGetter = GetCellId, VisibleAnywhere)
+	int32 CellId = 0;
+
 	// descrete coordinates on a board
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
 	FBoardCoord Coord;
 
-	// TODO: make into attribute. For now mocks possible blocking attributes.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
-	bool bBlocked;
+	TArray<UGameplayAbility*> Abilities;
 
 	// Populated automatically
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
@@ -53,6 +52,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	const class UCellAttributeSet* AttributeSet;
 
+	UPROPERTY(EditDefaultsOnly, Category = CellInfo)
+	ECellState CurrentState = ECellState::None;
+
 public:
 	// Sets default values for this actor's properties
 	ACell();
@@ -60,6 +62,9 @@ public:
 	{
 		return AbilitySystemComponent;
 	}
+
+	//UFUNCTION()
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -70,4 +75,24 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void Reset();
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void SetState(ECellState NewState);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Cell)
+	void SetState_BP(ECellState NewState);
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	FORCEINLINE ECellState GetCurrentState() const
+	{
+		return CurrentState;
+	}
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	FORCEINLINE int32 GetCellId() const
+	{
+		return CellId;
+	}
 };

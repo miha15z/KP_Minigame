@@ -30,3 +30,12 @@ void ACell::Tick(float DeltaTime)
 
 }
 
+void ACell::Reset()
+{
+}
+
+void ACell::SetState(ECellState NewState)
+{
+	ACell::SetState_BP(NewState);
+}
+

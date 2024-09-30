@@ -7,6 +7,7 @@
 #include <BoardPiece.h>
 #include <BoardPieceAttributeSet.h>
 #include "Kismet/KismetMathLibrary.h"
+#include "Core/KP_Structs.h"
 #include "AbilitySystemComponent.h"
 
 void UBoardNavigationSystem::CalculateOrthogonalLength(ACell* Origin, ACell* Destination, float& Length)

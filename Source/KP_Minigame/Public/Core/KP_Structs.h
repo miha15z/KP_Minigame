@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "KP_Structs.generated.h"
 
-class ACellActorBase;
+class ACell;
 class AKPPawnBase;
 
 USTRUCT()
@@ -40,5 +40,19 @@ struct KP_MINIGAME_API FBoardData
 	GENERATED_BODY();
 public:
 	UPROPERTY(BlueprintReadWrite)
-	TArray<ACellActorBase*> Cells;
+	TArray<ACell*> Cells;
+};
+
+USTRUCT(BlueprintType)
+struct KP_MINIGAME_API FBoardCoord
+{
+	GENERATED_USTRUCT_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int x;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int y;
+
+	bool operator==(FBoardCoord const& other) const {
+		return (this->x == other.x) and (this->y == other.y);
+	}
 };

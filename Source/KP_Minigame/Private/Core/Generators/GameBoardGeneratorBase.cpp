@@ -3,8 +3,8 @@
 
 #include "Core/Generators/GameBoardGeneratorBase.h"
 #include "Core/Generators/Data/GenDataAsset.h"
-#include "Core/CellActorBase.h"
 #include "Core/KPPawnBase.h"
+#include "Cell.h"
 
 FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAsset* GenData, UObject* WorldContext) const
 {
@@ -24,8 +24,9 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	{
 		for (int32 j = 0; j < BoardSize; ++j)
 		{
-			auto CellActor = World->SpawnActor<ACellActorBase>(CellClass/*to do  spawn params*/);
+			auto CellActor = World->SpawnActor<ACell>(CellClass/*to do  spawn params*/);
 			check(CellActor);
+			CellActor->Coord = {i, j};
 			CellActor->CellId = i * BoardSize + j;
 			CellActor->SetActorLocation(TopCellLocation - (i * RightOffset + j * LeftOffset));
 			BoardData.Cells.Add(CellActor);
