@@ -61,13 +61,25 @@ void AKPPawn::SetGameModePtr(AKP_GameModeBase* GM_Ptr)
 
 void AKPPawn::RollDices()
 {
+	GetKPGameMode()->RerollDices(this);
+}
+
+void AKPPawn::TurnEnd()
+{
+	GetKPGameMode()->EndTurn(this);
+}
+
+AKP_GameModeBase* AKPPawn::GetKPGameMode()
+{
 	if (GM.IsValid())
-	{
-		GM->RerollDices(this);
+	{ 
+		return GM.Get();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NotValid GM in %s"), *GetHumanReadableName());
+		GM = AKP_GameModeBase::GetKPGameMode(this);
+		check(GM.IsValid());
 	}
+	return GM.Get();
 }
 
