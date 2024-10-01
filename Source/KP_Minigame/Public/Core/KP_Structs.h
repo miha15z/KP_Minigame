@@ -79,3 +79,12 @@ struct KP_MINIGAME_API FBoardCoord
 		return (this->x == other.x) and (this->y == other.y);
 	}
 };
+
+UENUM(BlueprintType)
+enum class EBoardPiece : uint8
+{
+	None,
+	Pawn,
+	AdvancedPawn,
+	King
+};

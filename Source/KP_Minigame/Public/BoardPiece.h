@@ -39,9 +39,27 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = BoardMove)
 	void SetNewCellId(int32 NewCellId);
+
 	UFUNCTION(BlueprintCallable, Category = BoardMove)
 	int32 GetCurrentCellId() const; 
+
+	UFUNCTION(BlueprintCallable, Category = Player)
+	FORCEINLINE int32 GetOwnPlayerId()const {return OwnPlayerId;}
+	UFUNCTION(BlueprintCallable, Category = Player)
+	void SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor);
+
+protected:
+	UFUNCTION(BlueprintImplementableEvent, Category = Player)
+	void SetOwnPlayerDataBP();
+
 protected:
 	UPROPERTY(Transient)
 	int32 CurrentCellId;
+
+	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
+	int32 OwnPlayerId = -1;
+
+	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
+	FColor OwnPlayerColor;
+
 };
