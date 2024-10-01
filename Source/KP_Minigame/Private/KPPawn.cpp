@@ -41,6 +41,8 @@ bool AKPPawn::CanSelectBoardPiece(ABoardPiece* BoardPiece) const
 
 void AKPPawn::PreMakeStepData()
 {
+	bCanRollDices = true;
+	OnUpdateCanRollState.Broadcast();
 }
 
 void AKPPawn::MakeStepData(int32 StepPoints)
@@ -61,12 +63,23 @@ void AKPPawn::SetGameModePtr(AKP_GameModeBase* GM_Ptr)
 
 void AKPPawn::RollDices()
 {
-	GetKPGameMode()->RerollDices(this);
+	if (CanRollDices() && GetKPGameMode()->RerollDices(this))
+	{
+		auto RollData = GM->GetLastRollData();
+		MakeStepData(RollData.Value1 > RollData.Value2 ? RollData.Value1 : RollData.Value2);
+		bCanRollDices = false;
+		OnUpdateCanRollState.Broadcast();
+	}
 }
 
 void AKPPawn::TurnEnd()
 {
 	GetKPGameMode()->EndTurn(this);
+}
+
+bool AKPPawn::CanRollDices() const
+{
+	return bCanRollDices;
 }
 
 AKP_GameModeBase* AKPPawn::GetKPGameMode()

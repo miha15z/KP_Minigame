@@ -37,8 +37,13 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	for (FKPCellData CellData : GenData->GetCellsData()) {
 		for (ACell* Cell : BoardData.Cells) {
 			if (CellData.CellId == Cell->CellId) {
-				// Setup cell abilities
-				Cell->StartupAbilities = CellData.StartupAbilities;
+				// Setup cell ability info holders
+				Cell->AbilityInfoHolders.Empty();
+				for (FGameplayAbilityCellToPawnInfo Info : CellData.StartupAbilitiesInfo) {
+					UGameplayAbilityCellToPawnInfoHolder* InfoHolder = NewObject<UGameplayAbilityCellToPawnInfoHolder>();
+					InfoHolder->SetInfo(Info);
+					Cell->AbilityInfoHolders.Add(InfoHolder);
+				}
 			}
 		}
 	}

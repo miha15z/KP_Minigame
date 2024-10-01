@@ -9,6 +9,8 @@
 class ABoardPiece;
 class AKP_GameModeBase;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateCanRollState);
+
 UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API AKPPawn : public APawn
 {
@@ -33,6 +35,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerData)
 	int32 PlayerId = -1;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnUpdateCanRollState OnUpdateCanRollState;
+
 	bool CanSelectBoardPiece(ABoardPiece* BoardPiece) const;
 	void PreMakeStepData();
 	void MakeStepData(int32  StepPoints);
@@ -44,6 +49,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void TurnEnd();
+
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	bool CanRollDices() const; 
 
 protected:
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly)
@@ -57,4 +65,6 @@ protected:
 
 	AKP_GameModeBase* GetKPGameMode();
 
+	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly)
+	bool bCanRollDices = false;
 };

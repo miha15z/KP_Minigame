@@ -61,11 +61,13 @@ void ACell::ActivateOwnedAbilitiesOnStoodPawn()
 
 void ACell::ActivateOwnedAbilities(ABoardPiece* TargetBoardPiece)
 {
-	for (TSubclassOf<UGameplayAbilityCellToPawnBase>& Ability : StartupAbilities) {
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this);
+	for (UGameplayAbilityCellToPawnInfoHolder* AbilityInfoHolder : AbilityInfoHolders) {
+		FGameplayAbilityCellToPawnInfo AbilityInfo = AbilityInfoHolder->GetInfo();
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityInfo.AbilityClass, 1, INDEX_NONE, this);
 		FGameplayEventData EventData; //= FGameplayEventData(this, TargetBoardPiece);
 		EventData.Instigator = this;
 		EventData.Target = TargetBoardPiece;
+		EventData.OptionalObject = AbilityInfoHolder;
 		GetAbilitySystemComponent()->GiveAbilityAndActivateOnce(AbilitySpec, &EventData);
 	}
 

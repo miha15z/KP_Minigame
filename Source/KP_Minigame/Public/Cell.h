@@ -43,6 +43,8 @@ class KP_MINIGAME_API ACell : public AActor, public IAbilitySystemInterface
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base")
+	FGameplayAbilitySpec TestSpec;
 
 	UPROPERTY(BlueprintReadOnly, Category = CellInfo, BlueprintGetter = GetCellId, VisibleAnywhere)
 	int32 CellId = 0;
@@ -51,8 +53,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
 	FBoardCoord Coord;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
-	TArray<TSubclassOf<UGameplayAbilityCellToPawnBase>> StartupAbilities;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base")
+	TArray<UGameplayAbilityCellToPawnInfoHolder*> AbilityInfoHolders;
 
 	// Populated automatically
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")

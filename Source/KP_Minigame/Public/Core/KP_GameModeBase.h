@@ -61,6 +61,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Gameboard)
 	const FBoardData& GetGameBoradData() const {return BoardData;}
 
+	UFUNCTION(BlueprintCallable, Category = Gameboard)
+	FRollDicesData GetLastRollData()const;
 	//UI
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Widgets)
@@ -96,7 +98,7 @@ public:
 	bool CanPlaerRollDices(AKPPawn* PlayerPawn);
 
 	UFUNCTION(BlueprintCallable, Category = RollDices)
-	void RerollDices(AKPPawn* PlayerPawn);
+	bool RerollDices(AKPPawn* PlayerPawn);
 
 	//Gameplay
 protected:

@@ -24,11 +24,22 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FGameplayAbilityCellToPawnInfo {
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayAbilityCellToPawnBase> AbilityClass;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	int OwningPlayerID;
+};
+
+USTRUCT(BlueprintType)
 struct FKPCellData {
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditInstanceOnly)
-	TArray<TSubclassOf<UGameplayAbilityCellToPawnBase>> StartupAbilities;
+	TArray<FGameplayAbilityCellToPawnInfo> StartupAbilitiesInfo;
 
 	UPROPERTY(EditInstanceOnly)
 	int32 CellId = -1;
