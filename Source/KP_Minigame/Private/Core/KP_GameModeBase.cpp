@@ -45,5 +45,31 @@ void AKP_GameModeBase::StartPlay()
         }
     }
 
-    // Selelect first player
+    // Select first player
+    auto PlayerPawn = GetWorld() -> GetFirstPlayerController()->GetPawn();
+    check(PlayerPawn);
+}
+
+int32 AKP_GameModeBase::RollDice() const
+{
+    return  FMath::RandRange(RollDiscesMinValue, RollDiscesMaxValue);
+}
+
+bool AKP_GameModeBase::CanPlaerRollDices(AKPPawn* PlayerPawn)
+{
+    return false;
+}
+
+void AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
+{
+    if (CanPlaerRollDices(PlayerPawn))
+    {
+        LastRollData.Value1 = RollDice();
+        LastRollData.Value2 = RollDice();
+        OnRerollDices.Broadcast(LastRollData, PlayerPawn);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Try reroll the dices, State is Lock"))
+    }
 }
