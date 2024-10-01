@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
 #include "Core/KP_Structs.h"
+#include "GameplayAbilityCellToPawnBase.h"
 #include "Cell.generated.h"
 
 class UGameplayAbility;
@@ -51,7 +52,7 @@ public:
 	FBoardCoord Coord;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
-	TArray<UGameplayAbility*> Abilities;
+	TArray<TSubclassOf<UGameplayAbilityCellToPawnBase>> StartupAbilities;
 
 	// Populated automatically
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
@@ -121,4 +122,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	ABoardPiece* GetStoodPawn() const;
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void ActivateOwnedAbilitiesOnStoodPawn();
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void ActivateOwnedAbilities(ABoardPiece* TargetBoardPiece);
 };
