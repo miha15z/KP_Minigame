@@ -172,3 +172,33 @@ AKPPawn* AKP_GameModeBase::GetCurrentPawn() const
 {
     return CurrentPawn;
 }
+
+void AKP_GameModeBase::EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer,bool NewState, EBoardPiece BoardPieceType)
+{
+    check(OwnerPlayer);
+    check(BoardData.PlayersData.Num() > OwnerPlayer->PlayerId);
+    // apply for all
+    if (BoardPieceType == EBoardPiece::None)
+    {
+        for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)
+        {
+            auto* BoardPiece = PawnsInfo.Pawn;
+            if (IsValid(BoardPiece) && BoardPiece->IsAlive())
+            {
+                BoardPiece->EnableSelectability(NewState);
+            }
+        }
+    }
+    //aplly for type
+    else
+    {
+        for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)
+        {
+            auto* BoardPiece = PawnsInfo.Pawn;
+            if (IsValid(BoardPiece) && BoardPiece->IsAlive() && BoardPiece->GetBoardPieceType() == BoardPieceType)
+            {
+                BoardPiece->EnableSelectability(NewState);
+            }
+        }
+    }
+}

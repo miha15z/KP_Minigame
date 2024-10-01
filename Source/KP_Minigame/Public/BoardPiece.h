@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
+#include "Core/KP_Structs.h"
 #include "BoardPiece.generated.h"
+
 
 
 class ACell;
@@ -56,9 +58,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void EnableSelectability(bool NewState);
 
+	UFUNCTION(BlueprintCallable, Category = Player)
+	EBoardPiece GetBoardPieceType() const;
 	void ConfirmSelection();
 	void ResetSelection();
-
+	bool IsAlive() const;
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
@@ -68,6 +72,8 @@ protected:
 
 	UFUNCTION()
 	bool TrySelect();
+
+
 
 protected:
 	UPROPERTY(Transient)
@@ -84,7 +90,8 @@ protected:
 
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
 	bool bSelected = false;
-
+	UPROPERTY( EditDefaultsOnly)
+	EBoardPiece BoardPieceType;
 public:
 	FOnTrySelectBoardPiece OnTrySelectBoardPiece;
 
