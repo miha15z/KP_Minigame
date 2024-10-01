@@ -9,7 +9,7 @@ class ACell;
 class ABoardPiece;
 
 USTRUCT()
-struct KP_MINIGAME_API FKPPawnData
+struct FKPPawnData
 {
 	GENERATED_BODY()
 public:
@@ -23,7 +23,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct KP_MINIGAME_API FKPGenPlayerData
+struct FKPGenPlayerData
 {
 	GENERATED_BODY()
 public:
@@ -35,7 +35,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct KP_MINIGAME_API FKPPawnInfo
+struct FKPPawnInfo
 {
 	GENERATED_BODY()
 public:
@@ -46,7 +46,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct KP_MINIGAME_API FKPPlayerData
+struct FKPPlayerData
 {
 	GENERATED_BODY()
 public:
@@ -55,7 +55,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct KP_MINIGAME_API FBoardData
+struct FBoardData
 {
 	GENERATED_BODY();
 public:
@@ -67,7 +67,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct KP_MINIGAME_API FBoardCoord
+struct FBoardCoord
 {
 	GENERATED_USTRUCT_BODY()
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -87,4 +87,14 @@ enum class EBoardPiece : uint8
 	Pawn,
 	AdvancedPawn,
 	King
+};
+
+USTRUCT(BlueprintType)
+struct FRollDicesData
+{
+	GENERATED_BODY();
+	UPROPERTY(BlueprintReadOnly)
+	int32 Value1;
+	UPROPERTY(BlueprintReadOnly)
+	int32 Value2;
 };

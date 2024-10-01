@@ -11,6 +11,9 @@ class UBoardNavigationSystem;
 class UGameBoardGeneratorBase;
 class UGenDataAsset;
 class UUserWidget;
+class AKPPawn;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRerollDices, FRollDicesData, RollResult, AKPPawn*, Player);
 
 /**
  * 
@@ -59,4 +62,29 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UUserWidget* PlayerUI;
+
+protected:
+	//Roll the dices
+	UPROPERTY(VisibleInstanceOnly, Category = RollDices)
+	FRollDicesData LastRollData;
+	
+	UPROPERTY(EditDefaultsOnly, Category = RollDices);
+	int32 RollDiscesMinValue = 1;
+
+	UPROPERTY(EditDefaultsOnly, Category = RollDices);
+	int32 RollDiscesMaxValue = 3;
+
+public:
+	UPROPERTY(BlueprintAssignable, Category = RollDices)
+	FOnRerollDices OnRerollDices;
+
+private:
+	int32 RollDice() const;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = RollDices)
+	bool CanPlaerRollDices(AKPPawn* PlayerPawn);
+
+	UFUNCTION(BlueprintCallable, Category = RollDices)
+	void RerollDices(AKPPawn* PlayerPawn);
 };
