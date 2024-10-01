@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Core/KP_Structs.h"
 #include "KPPawn.generated.h"
 
 class ABoardPiece;
@@ -43,6 +44,7 @@ public:
 	void MakeStepData(int32  StepPoints);
 	void EnableCanSelectedStateForBoardPieces();
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
+	void InitBoardPieces(TArray<FKPPawnInfo>& PawnsInfo);
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void RollDices();
@@ -53,8 +55,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	bool CanRollDices() const; 
 
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	void TrySelectBoardPiece(ABoardPiece* BoardPiece);
 protected:
-	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly)
+	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	TWeakObjectPtr<ABoardPiece> LastUsedBoardPiece;
 
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly)

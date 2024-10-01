@@ -44,6 +44,7 @@ void AKP_GameModeBase::StartPlay()
     check(PlayerPawn);
     PlayerPawn->PlayerId = 0;
     PlayerPawn->SetGameModePtr(this);
+    PlayerPawn->InitBoardPieces(BoardData.PlayersData[0].Pawns);
     //Make GameQueue
     QueuePawns.Enqueue(PlayerPawn);
     FActorSpawnParameters SpawnParams;
@@ -54,6 +55,7 @@ void AKP_GameModeBase::StartPlay()
         auto PawnAI = World->SpawnActor<AKPPawn>(BotPawnClass.Get(), SpawnTransform, SpawnParams);
         PawnAI->PlayerId = i;
         PawnAI->SetGameModePtr(this);
+        PawnAI->InitBoardPieces(BoardData.PlayersData[i].Pawns);
         QueuePawns.Enqueue(PawnAI);
     }
     UpdateGameBoard();

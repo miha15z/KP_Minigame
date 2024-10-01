@@ -10,6 +10,8 @@
 
 class ACell;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTrySelectBoardPiece, ABoardPiece*)
+
 UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API ABoardPiece : public AActor, public IAbilitySystemInterface
 {
@@ -54,7 +56,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void EnableSelectability(bool NewState);
 
+	void ConfirmSelection();
+	void ResetSelection();
+
+
 protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnChengSelectionBP();
 	UFUNCTION(BlueprintImplementableEvent, Category = Player)
 	void SetOwnPlayerDataBP();
 
@@ -77,5 +85,7 @@ protected:
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
 	bool bSelected = false;
 
+public:
+	FOnTrySelectBoardPiece OnTrySelectBoardPiece;
 
 };

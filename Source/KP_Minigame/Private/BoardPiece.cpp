@@ -62,11 +62,23 @@ void ABoardPiece::EnableSelectability(bool NewState)
 	bCandSelected = NewState;
 }
 
+void ABoardPiece::ConfirmSelection()
+{
+	bSelected = true;
+	OnChengSelectionBP();
+}
+
+void ABoardPiece::ResetSelection()
+{
+	bSelected = false;
+	OnChengSelectionBP();
+}
+
 bool ABoardPiece::TrySelect()
 {
 	if (bCandSelected && !bSelected)
 	{
-		bSelected = true;
+		OnTrySelectBoardPiece.Broadcast(this);
 	}
 	return bSelected;
 }
