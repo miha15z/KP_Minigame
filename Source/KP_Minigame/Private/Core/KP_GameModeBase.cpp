@@ -6,6 +6,8 @@
 #include "Core/Generators/Data/GenDataAsset.h"
 #include "BoardNavigationSystem.h"
 #include "Blueprint/UserWidget.h"
+#include "KPPawn.h"
+#include "BoardPiece.h"
 #include "Cell.h"
 
 AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
@@ -36,18 +38,47 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
 void AKP_GameModeBase::StartPlay()
 {
     Super::StartPlay();
+    check(BotPawnClass.Get())
+    // Select first player
+    auto World = GetWorld();
+    check(World);
+    auto PlayerPawn = World->GetFirstPlayerController()->GetPawn<AKPPawn>();
+    check(PlayerPawn);
+    PlayerPawn->PlayerId = 0;
+    //Make GameQueue
+    QueuePawns.Enqueue(PlayerPawn);
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+    const FTransform SpawnTransform;
+    for (int32 i = 1; i < BoardData.PlayersData.Num(); ++i)
+    {
+        auto PawnAI = World->SpawnActor<AKPPawn>(BotPawnClass.Get(), SpawnTransform, SpawnParams);
+        PawnAI->PlayerId = i;
+        QueuePawns.Enqueue(PawnAI);
+    }
+    UpdateGameBoard();
+    SelectNextPawn();
+}
 
+void AKP_GameModeBase::UpdateGameBoard()
+{
     for (auto Cell : BoardData.Cells)
     {
         if (Cell)
         {
             Cell->Reset();
+            //to do
+            //Cell->UpplyAbil
         }
     }
 
-    // Select first player
-    auto PlayerPawn = GetWorld() -> GetFirstPlayerController()->GetPawn();
-    check(PlayerPawn);
+    for (auto& PlayerData : BoardData.PlayersData)
+    {
+        for (auto& PawnInfo : PlayerData.Pawns)
+        {
+           // PawnInfo.Pawn->
+        }
+    }
 }
 
 int32 AKP_GameModeBase::RollDice() const
@@ -72,4 +103,37 @@ void AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
     {
         UE_LOG(LogTemp, Warning, TEXT("Try reroll the dices, State is Lock"))
     }
+}
+
+bool AKP_GameModeBase::IsWin_Implementation() const
+{
+    return false;
+}
+
+bool AKP_GameModeBase::EndTurn()
+{
+    if (IsWin())
+    {
+        check(CurrentPawn);
+        OnWinKPGame.Broadcast(CurrentPawn->PlayerId);
+        return false;
+    }
+    else
+    {
+        UpdateGameBoard();
+        SelectNextPawn();
+    }
+    return true;
+}
+
+void AKP_GameModeBase::SelectNewBoardPiece(ABoardPiece* NewBoardPiece)
+{
+}
+
+void AKP_GameModeBase::SelectNextPawn()
+{
+    QueuePawns.Enqueue(CurrentPawn);
+    QueuePawns.Dequeue(CurrentPawn);
+    check(CurrentPawn);
+    CurrentPawn->PreMakeStepData();
 }

@@ -14,7 +14,8 @@ class UUserWidget;
 class AKPPawn;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRerollDices, FRollDicesData, RollResult, AKPPawn*, Player);
-
+DECLARE_MULTICAST_DELEGATE(FOnFinishStep);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWinKPGame, int32, PlayerId);
 /**
  * 
  */
@@ -28,6 +29,7 @@ public:
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void StartPlay();
+	void UpdateGameBoard();
 	//navigation
 protected:
 	UPROPERTY(VisibleInstanceOnly, Category = "Board|Navigation")
@@ -46,6 +48,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Generator")
 	TSoftObjectPtr<UGenDataAsset> GenDataAsset;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Board|Generator")
+	TSubclassOf<AKPPawn> BotPawnClass;
 
 	//GameBoard
 	UPROPERTY(Transient)
@@ -77,6 +82,8 @@ protected:
 public:
 	UPROPERTY(BlueprintAssignable, Category = RollDices)
 	FOnRerollDices OnRerollDices;
+	UPROPERTY(BlueprintAssignable, Category = RollDices)
+	FOnWinKPGame OnWinKPGame;
 
 private:
 	int32 RollDice() const;
@@ -87,4 +94,25 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = RollDices)
 	void RerollDices(AKPPawn* PlayerPawn);
+
+	//Gameplay
+protected:
+	//Maybe use TQueue
+	//UPROPERTY(VisibleInstanceOnly, Category = Gameplay)
+	TQueue<AKPPawn*> QueuePawns;
+	AKPPawn* CurrentPawn = nullptr;
+	UFUNCTION(BlueprintNativeEvent, Category = Gameplay)
+	bool IsWin() const;
+	virtual bool IsWin_Implementation()const;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	bool EndTurn();
+
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	void SelectNewBoardPiece(ABoardPiece* NewBoardPiece);
+
+	void SelectNextPawn();
+
+
 };
