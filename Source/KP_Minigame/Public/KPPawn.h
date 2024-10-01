@@ -9,7 +9,7 @@
 class ABoardPiece;
 class AKP_GameModeBase;
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API AKPPawn : public APawn
 {
 	GENERATED_BODY()
@@ -30,7 +30,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	UPROPERTY(VisibleAnywhere, Category = PlayerData)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerData)
 	int32 PlayerId = -1;
 
 	bool CanSelectBoardPiece(ABoardPiece* BoardPiece) const;
