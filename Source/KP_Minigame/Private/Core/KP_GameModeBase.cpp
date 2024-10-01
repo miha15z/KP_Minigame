@@ -105,6 +105,10 @@ void AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
         LastRollData.Value1 = RollDice();
         LastRollData.Value2 = RollDice();
         OnRerollDices.Broadcast(LastRollData, PlayerPawn);
+        if (LastRollData.Value1 == LastRollData.Value2)
+        {
+            // to do: Get bonus
+        }
     }
     else
     {
