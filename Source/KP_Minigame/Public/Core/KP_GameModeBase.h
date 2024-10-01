@@ -14,8 +14,9 @@ class UUserWidget;
 class AKPPawn;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRerollDices, FRollDicesData, RollResult, AKPPawn*, Player);
-DECLARE_MULTICAST_DELEGATE(FOnFinishStep);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishStep);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWinKPGame, int32, PlayerId);
+
 /**
  * 
  */
@@ -84,6 +85,8 @@ public:
 	FOnRerollDices OnRerollDices;
 	UPROPERTY(BlueprintAssignable, Category = RollDices)
 	FOnWinKPGame OnWinKPGame;
+	UPROPERTY(BlueprintAssignable, Category = RollDices)
+	FOnFinishStep OnFinishStep;
 
 private:
 	int32 RollDice() const;
@@ -107,12 +110,14 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-	bool EndTurn();
+	bool EndTurn(AKPPawn* PlayerPawn);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void SelectNewBoardPiece(ABoardPiece* NewBoardPiece);
 
 	void SelectNextPawn();
 
+	UFUNCTION(BlueprintCallable, Category = RollDices)
+	AKPPawn* GetCurrentPawn()const;
 
 };

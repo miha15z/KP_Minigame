@@ -29,9 +29,7 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
     BoardNavSystem = NewObject<UBoardNavigationSystem>();
     BoardNavSystem->SetupNeighbouringCellsByMask(BoardData.Cells, GenDataAsset->GetMovementPattern());
 
-    //ui
-    PlayerUI = CreateWidget(this->GetWorld(), UIClass);
-    PlayerUI->AddToViewport();
+
     Super::InitGame(MapName, Options, ErrorMessage);
 }
 
@@ -58,6 +56,13 @@ void AKP_GameModeBase::StartPlay()
     }
     UpdateGameBoard();
     SelectNextPawn();
+
+	//ui
+	PlayerUI = CreateWidget(this->GetWorld(), UIClass);
+	PlayerUI->AddToViewport();
+
+    // firstInitUI and other
+    OnFinishStep.Broadcast();
 }
 
 void AKP_GameModeBase::UpdateGameBoard()
@@ -88,7 +93,7 @@ int32 AKP_GameModeBase::RollDice() const
 
 bool AKP_GameModeBase::CanPlaerRollDices(AKPPawn* PlayerPawn)
 {
-    return false;
+    return PlayerPawn == CurrentPawn ; //  to do
 }
 
 void AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
@@ -110,8 +115,13 @@ bool AKP_GameModeBase::IsWin_Implementation() const
     return false;
 }
 
-bool AKP_GameModeBase::EndTurn()
+bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
 {
+    if (PlayerPawn != CurrentPawn)
+    {
+        return false;
+    }
+
     if (IsWin())
     {
         check(CurrentPawn);
@@ -122,6 +132,7 @@ bool AKP_GameModeBase::EndTurn()
     {
         UpdateGameBoard();
         SelectNextPawn();
+        OnFinishStep.Broadcast();
     }
     return true;
 }
@@ -132,8 +143,16 @@ void AKP_GameModeBase::SelectNewBoardPiece(ABoardPiece* NewBoardPiece)
 
 void AKP_GameModeBase::SelectNextPawn()
 {
-    QueuePawns.Enqueue(CurrentPawn);
+    if(IsValid(CurrentPawn))
+    {
+        QueuePawns.Enqueue(CurrentPawn);
+    }
     QueuePawns.Dequeue(CurrentPawn);
     check(CurrentPawn);
     CurrentPawn->PreMakeStepData();
+}
+
+AKPPawn* AKP_GameModeBase::GetCurrentPawn() const
+{
+    return CurrentPawn;
 }
