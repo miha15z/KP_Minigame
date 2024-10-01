@@ -35,7 +35,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
 	
 	UFUNCTION(BlueprintCallable, Category = BoardMove)
 	void SetNewCellId(int32 NewCellId);
@@ -48,9 +48,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Player)
 	void SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor);
 
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void EnableSelectability(bool NewState);
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = Player)
 	void SetOwnPlayerDataBP();
+
+	UFUNCTION()
+	bool TrySelect();
 
 protected:
 	UPROPERTY(Transient)
@@ -61,5 +67,12 @@ protected:
 
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
 	FColor OwnPlayerColor;
+
+	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
+	bool bCandSelected = false;
+
+	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
+	bool bSelected = false;
+
 
 };
