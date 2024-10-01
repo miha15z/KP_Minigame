@@ -40,3 +40,11 @@ int32 ABoardPiece::GetCurrentCellId() const
 	return CurrentCellId;
 }
 
+void ABoardPiece::SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor)
+{
+	OwnPlayerId = PlayerId;
+	OwnPlayerColor = PlayerColor;
+
+	// update visualisation
+	SetOwnPlayerDataBP();
+}

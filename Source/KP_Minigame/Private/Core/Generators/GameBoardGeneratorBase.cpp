@@ -37,6 +37,7 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	// to do
 
 	// spawn pawns
+	int32 CurrentPlayerId = 0;
 	for (const auto& PlayerData : GenData->GetAllPlayersData())
 	{
 		FKPPlayerData PlayerPawnsData;
@@ -53,13 +54,16 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 				Pawn->SetActorLocation(Cell->GetActorLocation());
 				PlayerPawnsData.Pawns.Add({Pawn ,PawnData.CellId });
 				Cell->StoodPawnOnCell(Pawn);
+				Pawn->SetOwnPlayerData(CurrentPlayerId, PlayerData.PlayerColor);
 			}
 			else
 			{
 				check(false);
 			}
+			
 		}
 		BoardData.PlayersData.Add(MoveTemp(PlayerPawnsData));
+		++CurrentPlayerId;
 	}
 
 	return BoardData;
