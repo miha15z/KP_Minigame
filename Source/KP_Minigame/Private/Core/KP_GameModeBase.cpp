@@ -23,10 +23,10 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
 
     check(!GenDataAsset.IsNull())
     GenDataAsset.LoadSynchronous();
-    auto Generator = NewObject<UGameBoardGeneratorBase>();
+    auto Generator = NewObject<UGameBoardGeneratorBase>(this);
     BoardData = Generator->GenerateGameBoard(GenDataAsset.Get(), this);
 
-    BoardNavSystem = NewObject<UBoardNavigationSystem>();
+    BoardNavSystem = NewObject<UBoardNavigationSystem>(this);
     BoardNavSystem->SetupNeighbouringCellsByMask(BoardData.Cells, GenDataAsset->GetMovementPattern());
 
 
@@ -43,6 +43,7 @@ void AKP_GameModeBase::StartPlay()
     auto PlayerPawn = World->GetFirstPlayerController()->GetPawn<AKPPawn>();
     check(PlayerPawn);
     PlayerPawn->PlayerId = 0;
+    PlayerPawn->SetGameModePtr(this);
     //Make GameQueue
     QueuePawns.Enqueue(PlayerPawn);
     FActorSpawnParameters SpawnParams;
@@ -52,6 +53,7 @@ void AKP_GameModeBase::StartPlay()
     {
         auto PawnAI = World->SpawnActor<AKPPawn>(BotPawnClass.Get(), SpawnTransform, SpawnParams);
         PawnAI->PlayerId = i;
+        PawnAI->SetGameModePtr(this);
         QueuePawns.Enqueue(PawnAI);
     }
     UpdateGameBoard();
