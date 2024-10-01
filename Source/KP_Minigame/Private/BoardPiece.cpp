@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BoardPiece.h"
+#include "BoardPieceAttributeSet.h"
 #include "AbilitySystemComponent.h"
 
 // Sets default values
@@ -17,6 +18,9 @@ void ABoardPiece::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (IsValid(AbilitySystemComponent)) {
+		AttributeSet = AbilitySystemComponent->GetSet<UBoardPieceAttributeSet>();
+	}
 }
 
 // Called every frame

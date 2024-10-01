@@ -171,7 +171,7 @@ void UBoardNavigationSystem::CalculateAtomicMovement(ACell* Origin, ACell* Desti
 	
 	const float MovementOut = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementOutAttribute());
 	const float MovementIn = Destination->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementInAttribute());
-	//const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
-	AtomicMovement.MovementPointsConsumed = MovementIn; //* BoardPieceMovementPointsModifier;
+	const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
+	AtomicMovement.MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
 	AtomicMovement.MovementPointsLeft = MovementPoints - AtomicMovement.MovementPointsConsumed;
 }
