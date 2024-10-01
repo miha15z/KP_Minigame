@@ -7,6 +7,7 @@
 
 class ACell;
 class ABoardPiece;
+class UGameplayAbilityCellToPawnBase;
 
 USTRUCT()
 struct FKPPawnData
@@ -20,6 +21,17 @@ public:
 	int32 CellId = -1; // -1  =  not valid value!
 
 	// to do: abilities for pawn
+};
+
+USTRUCT(BlueprintType)
+struct FKPCellData {
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditInstanceOnly)
+	TArray<TSubclassOf<UGameplayAbilityCellToPawnBase>> StartupAbilities;
+
+	UPROPERTY(EditInstanceOnly)
+	int32 CellId = -1;
 };
 
 USTRUCT(BlueprintType)

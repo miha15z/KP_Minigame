@@ -33,8 +33,15 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 		}
 	}
 
-	//apply cell's ability
-	// to do
+	// Setup Special Cell cases
+	for (FKPCellData CellData : GenData->GetCellsData()) {
+		for (ACell* Cell : BoardData.Cells) {
+			if (CellData.CellId == Cell->CellId) {
+				// Setup cell abilities
+				Cell->StartupAbilities = CellData.StartupAbilities;
+			}
+		}
+	}
 
 	// spawn pawns
 	int32 CurrentPlayerId = 0;

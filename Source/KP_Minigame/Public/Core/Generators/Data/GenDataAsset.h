@@ -36,7 +36,11 @@ protected:
 
 	// PlayersData[0] = player data, other = AI
 	UPROPERTY(EditDefaultsOnly, Category = "GameBoard | Players")
-	TArray<FKPGenPlayerData> PlayersData;  
+	TArray<FKPGenPlayerData> PlayersData;
+
+	// Data for Special Cells to be arranged
+	UPROPERTY(EditDefaultsOnly, Category = "GameBoard | Cells")
+	TArray<FKPCellData> CellsData;
 
 public:
 
@@ -56,6 +60,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE TSubclassOf<ACell> GetCellClass() const { return CellClass; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE TArray<FKPCellData> GetCellsData() const { return CellsData; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FVector GetTopCellLocation() const { return TopCellLocation; }
