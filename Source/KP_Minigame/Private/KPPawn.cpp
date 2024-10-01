@@ -61,6 +61,15 @@ void AKPPawn::SetGameModePtr(AKP_GameModeBase* GM_Ptr)
 	GM = GM_Ptr;
 }
 
+void AKPPawn::InitBoardPieces(TArray<FKPPawnInfo>& PawnsInfo)
+{
+	for (auto& PawnInfo : PawnsInfo)
+	{
+		check(PawnInfo.Pawn);
+		PawnInfo.Pawn->OnTrySelectBoardPiece.AddUObject(this, &AKPPawn::TrySelectBoardPiece);
+	}
+}
+
 void AKPPawn::RollDices()
 {
 	if (CanRollDices() && GetKPGameMode()->RerollDices(this))
@@ -80,6 +89,18 @@ void AKPPawn::TurnEnd()
 bool AKPPawn::CanRollDices() const
 {
 	return bCanRollDices;
+}
+
+void AKPPawn::TrySelectBoardPiece(ABoardPiece* BoardPiece)
+{
+	// TO DO :Check Can Select BoardPiece type
+	if(LastUsedBoardPiece.IsValid())
+	{
+		LastUsedBoardPiece->ResetSelection();
+	}
+	check(BoardPiece);
+	BoardPiece->ConfirmSelection();
+	LastUsedBoardPiece = BoardPiece;
 }
 
 AKP_GameModeBase* AKPPawn::GetKPGameMode()

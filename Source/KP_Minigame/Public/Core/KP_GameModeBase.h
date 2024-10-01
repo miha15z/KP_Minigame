@@ -122,4 +122,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = RollDices)
 	AKPPawn* GetCurrentPawn()const;
 
+	void EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer, bool NewState, EBoardPiece BoardPieceType = EBoardPiece::None);
+
 };

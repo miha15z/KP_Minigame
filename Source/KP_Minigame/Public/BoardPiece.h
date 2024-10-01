@@ -5,10 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
+#include "Core/KP_Structs.h"
 #include "BoardPiece.generated.h"
 
 
+
 class ACell;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTrySelectBoardPiece, ABoardPiece*)
 
 UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API ABoardPiece : public AActor, public IAbilitySystemInterface
@@ -54,12 +58,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void EnableSelectability(bool NewState);
 
+	UFUNCTION(BlueprintCallable, Category = Player)
+	EBoardPiece GetBoardPieceType() const;
+	void ConfirmSelection();
+	void ResetSelection();
+	bool IsAlive() const;
+
 protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnChengSelectionBP();
 	UFUNCTION(BlueprintImplementableEvent, Category = Player)
 	void SetOwnPlayerDataBP();
 
 	UFUNCTION()
 	bool TrySelect();
+
+
 
 protected:
 	UPROPERTY(Transient)
@@ -76,6 +90,9 @@ protected:
 
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
 	bool bSelected = false;
-
+	UPROPERTY( EditDefaultsOnly)
+	EBoardPiece BoardPieceType;
+public:
+	FOnTrySelectBoardPiece OnTrySelectBoardPiece;
 
 };

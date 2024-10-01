@@ -44,6 +44,7 @@ void AKP_GameModeBase::StartPlay()
     check(PlayerPawn);
     PlayerPawn->PlayerId = 0;
     PlayerPawn->SetGameModePtr(this);
+    PlayerPawn->InitBoardPieces(BoardData.PlayersData[0].Pawns);
     //Make GameQueue
     QueuePawns.Enqueue(PlayerPawn);
     FActorSpawnParameters SpawnParams;
@@ -54,6 +55,7 @@ void AKP_GameModeBase::StartPlay()
         auto PawnAI = World->SpawnActor<AKPPawn>(BotPawnClass.Get(), SpawnTransform, SpawnParams);
         PawnAI->PlayerId = i;
         PawnAI->SetGameModePtr(this);
+        PawnAI->InitBoardPieces(BoardData.PlayersData[i].Pawns);
         QueuePawns.Enqueue(PawnAI);
     }
     UpdateGameBoard();
@@ -169,4 +171,34 @@ void AKP_GameModeBase::SelectNextPawn()
 AKPPawn* AKP_GameModeBase::GetCurrentPawn() const
 {
     return CurrentPawn;
+}
+
+void AKP_GameModeBase::EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer,bool NewState, EBoardPiece BoardPieceType)
+{
+    check(OwnerPlayer);
+    check(BoardData.PlayersData.Num() > OwnerPlayer->PlayerId);
+    // apply for all
+    if (BoardPieceType == EBoardPiece::None)
+    {
+        for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)
+        {
+            auto* BoardPiece = PawnsInfo.Pawn;
+            if (IsValid(BoardPiece) && BoardPiece->IsAlive())
+            {
+                BoardPiece->EnableSelectability(NewState);
+            }
+        }
+    }
+    //aplly for type
+    else
+    {
+        for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)
+        {
+            auto* BoardPiece = PawnsInfo.Pawn;
+            if (IsValid(BoardPiece) && BoardPiece->IsAlive() && BoardPiece->GetBoardPieceType() == BoardPieceType)
+            {
+                BoardPiece->EnableSelectability(NewState);
+            }
+        }
+    }
 }

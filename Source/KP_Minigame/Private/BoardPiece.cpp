@@ -62,11 +62,34 @@ void ABoardPiece::EnableSelectability(bool NewState)
 	bCandSelected = NewState;
 }
 
+EBoardPiece ABoardPiece::GetBoardPieceType() const
+{
+	return BoardPieceType;
+}
+
+void ABoardPiece::ConfirmSelection()
+{
+	bSelected = true;
+	OnChengSelectionBP();
+}
+
+void ABoardPiece::ResetSelection()
+{
+	bSelected = false;
+	OnChengSelectionBP();
+}
+
+bool ABoardPiece::IsAlive() const
+{
+	//TO DO
+	return true;
+}
+
 bool ABoardPiece::TrySelect()
 {
 	if (bCandSelected && !bSelected)
 	{
-		bSelected = true;
+		OnTrySelectBoardPiece.Broadcast(this);
 	}
 	return bSelected;
 }
