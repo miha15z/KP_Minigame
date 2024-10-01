@@ -8,8 +8,6 @@
 #include "GameplayAbilityCellToPawnBase.generated.h"
 
 
-
-// UObject to hold FGameplayAbilityCellToPawnInfo (payload) when transferring inside the activating UGameplayAbilityCellToPawnBase
 UCLASS(BlueprintType)
 class UGameplayAbilityCellToPawnInfoHolder : public UObject {
 	GENERATED_BODY()
@@ -34,7 +32,6 @@ class KP_MINIGAME_API UGameplayAbilityCellToPawnBase : public UGameplayAbility
 {
 	GENERATED_BODY()
 	
-	// Get Payload Info from inside the Ability
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FGameplayAbilityCellToPawnInfo GetInfo() const;
 };

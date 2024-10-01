@@ -23,7 +23,6 @@ public:
 	// to do: abilities for pawn
 };
 
-// Structure for storing UGameplayAbilityCellToPawnBase Information both for setup and ability activation
 USTRUCT(BlueprintType)
 struct FGameplayAbilityCellToPawnInfo {
 	GENERATED_BODY()
