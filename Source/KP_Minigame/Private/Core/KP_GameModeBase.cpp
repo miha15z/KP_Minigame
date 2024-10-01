@@ -88,6 +88,11 @@ void AKP_GameModeBase::UpdateGameBoard()
     }
 }
 
+FRollDicesData AKP_GameModeBase::GetLastRollData() const
+{
+    return LastRollData;
+}
+
 int32 AKP_GameModeBase::RollDice() const
 {
     return  FMath::RandRange(RollDiscesMinValue, RollDiscesMaxValue);
@@ -98,7 +103,7 @@ bool AKP_GameModeBase::CanPlaerRollDices(AKPPawn* PlayerPawn)
     return PlayerPawn == CurrentPawn ; //  to do
 }
 
-void AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
+bool AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
 {
     if (CanPlaerRollDices(PlayerPawn))
     {
@@ -109,11 +114,14 @@ void AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
         {
             // to do: Get bonus
         }
+
+        return true;
     }
     else
     {
         UE_LOG(LogTemp, Warning, TEXT("Try reroll the dices, State is Lock"))
     }
+    return false;
 }
 
 bool AKP_GameModeBase::IsWin_Implementation() const
