@@ -30,6 +30,14 @@ void ABoardPiece::Tick(float DeltaTime)
 
 }
 
+void ABoardPiece::NotifyActorOnClicked(FKey ButtonPressed)
+{
+	if (ButtonPressed == EKeys::LeftMouseButton)
+	{
+		TrySelect();
+	}
+}
+
 void ABoardPiece::SetNewCellId(int32 NewCellId)
 {
 	CurrentCellId = NewCellId;
@@ -47,4 +55,18 @@ void ABoardPiece::SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor)
 
 	// update visualisation
 	SetOwnPlayerDataBP();
+}
+
+void ABoardPiece::EnableSelectability(bool NewState)
+{
+	bCandSelected = NewState;
+}
+
+bool ABoardPiece::TrySelect()
+{
+	if (bCandSelected && !bSelected)
+	{
+		bSelected = true;
+	}
+	return bSelected;
 }
