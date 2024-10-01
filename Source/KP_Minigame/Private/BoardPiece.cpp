@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BoardPiece.h"
+#include "BoardPieceAttributeSet.h"
 #include "AbilitySystemComponent.h"
 
 // Sets default values
@@ -15,7 +16,11 @@ ABoardPiece::ABoardPiece()
 // Called when the game starts or when spawned
 void ABoardPiece::BeginPlay()
 {
-	Super::BeginPlay();	
+	Super::BeginPlay();
+	
+	if (IsValid(AbilitySystemComponent)) {
+		AttributeSet = AbilitySystemComponent->GetSet<UBoardPieceAttributeSet>();
+	}
 }
 
 // Called every frame
@@ -42,29 +47,4 @@ void ABoardPiece::SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor)
 
 	// update visualisation
 	SetOwnPlayerDataBP();
-}
-
-void ABoardPiece::EnableSelectability(bool NewState)
-{
-	bCandSelected = NewState;
-	//Reset selection
-	bSelected = false;
-}
-
-bool ABoardPiece::TrySelect()
-{
-	if (bCandSelected && !bSelected)
-	{
-		bSelected = true;
-	}
-	return bSelected;
-}
-
-void ABoardPiece::NotifyActorOnClicked(FKey ButtonPressed)
-{
-	Super::NotifyActorOnClicked(ButtonPressed);
-	if (ButtonPressed == EKeys::LeftMouseButton)
-	{
-		TrySelect();
-	}
 }

@@ -169,9 +169,33 @@ void UBoardNavigationSystem::CalculateAtomicMovement(ACell* Origin, ACell* Desti
 	AtomicMovement.CellTo = Destination;
 	AtomicMovement.CellFrom = Origin;
 	
-	const float MovementOut = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementOutAttribute());
-	const float MovementIn = Destination->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementInAttribute());
-	//const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
-	AtomicMovement.MovementPointsConsumed = MovementIn; //* BoardPieceMovementPointsModifier;
-	AtomicMovement.MovementPointsLeft = MovementPoints - AtomicMovement.MovementPointsConsumed;
+
+	// Check if there is any BoardPiece in the destination.
+	ABoardPiece* DestinationBoardPiece = Destination->GetStoodPawn();
+	if (DestinationBoardPiece != NULL) {
+		// If there is a board piece of the same team, do not allow to enter this cell
+		if (BoardPiece->GetOwnPlayerId() == DestinationBoardPiece->GetOwnPlayerId()) {
+			AtomicMovement.MovementPointsLeft = -1.0;
+		}
+		// If there is an enemy pawn, make that the final movement
+		else {
+			const float MovementOut = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementOutAttribute());
+			const float MovementIn = Destination->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementInAttribute());
+			const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
+			// calculate movement points amount that is to be consumed
+			float MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
+			// If there are any points left after this movement, dispose of them
+			float MovementPointsLeft = FMath::Min(MovementPointsConsumed, 0.0);
+			AtomicMovement.MovementPointsLeft = MovementPointsLeft;
+		}
+		AtomicMovement.MovementPointsConsumed = MovementPoints - AtomicMovement.MovementPointsLeft;
+	}
+	// If the cell is in the clear
+	else {
+		const float MovementOut = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementOutAttribute());
+		const float MovementIn = Destination->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementInAttribute());
+		const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
+		AtomicMovement.MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
+		AtomicMovement.MovementPointsLeft = MovementPoints - AtomicMovement.MovementPointsConsumed;
+	}
 }
