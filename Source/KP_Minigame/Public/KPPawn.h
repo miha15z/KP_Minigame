@@ -39,6 +39,12 @@ public:
 	void EnableCanSelectedStateForBoardPieces();
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
 
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	void RollDices();
+
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	void TurnEnd();
+
 protected:
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly)
 	TWeakObjectPtr<ABoardPiece> LastUsedBoardPiece;
@@ -48,4 +54,7 @@ protected:
 
 	UPROPERTY(Transient)
 	TWeakObjectPtr<AKP_GameModeBase> GM;
+
+	AKP_GameModeBase* GetKPGameMode();
+
 };
