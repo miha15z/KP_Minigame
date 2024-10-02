@@ -70,7 +70,8 @@ void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn)
 	if (PawnPtr.IsValid() && PawnPtr.Get() != Pawn)
 	{
 		PawnPtr->Kill(Pawn);
-		*OutKilledPawn = PawnPtr.Get();
+		auto tempPawn = PawnPtr.Get();
+		OutKilledPawn = &tempPawn;
 		//To Do:: Kill 
 	}
 
