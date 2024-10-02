@@ -13,7 +13,8 @@ class ACell;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateCanRollState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateSelectCell);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateStepsCounter);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateMovomentInfo);
 
 UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API AKPPawn : public APawn
@@ -45,6 +46,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdateSelectCell OnUpdateSelectCell;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnUpdateStepsCounter OnUpdateStepsCounter;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnUpdateMovomentInfo OnUpdateMovomentInfo;
+
 	bool CanSelectBoardPiece(ABoardPiece* BoardPiece) const;
 	void PreMakeStepData();
 	void MakeStepData(int32  StepPoints);
@@ -68,11 +75,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void SelectCell(ACell* Cell);
 
+	UFUNCTION(BlueprintPure, Category = Gameplay)
+	bool CanMoveBoardPiece();
+
 protected:
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	TWeakObjectPtr<ABoardPiece> LastUsedBoardPiece;
 
-	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly)
+	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	int32 StepsCounter = 0;
 
 	UPROPERTY(Transient)

@@ -52,6 +52,7 @@ void AKPPawn::MakeStepData(int32 StepPoints)
 	LastUsedBoardPiece = nullptr;
 	StepsCounter = StepPoints;
 	GetKPGameMode()->EnableSelectabilityForBoardPieces(this, true);
+	OnUpdateStepsCounter.Broadcast();
 }
 
 void AKPPawn::SetGameModePtr(AKP_GameModeBase* GM_Ptr)
@@ -108,6 +109,7 @@ void AKPPawn::RestSelectionCurrenBoardPiece()
 	{
 		LastUsedBoardPiece->ResetSelection();
 		LastUsedBoardPiece = nullptr;
+		OnUpdateMovomentInfo.Broadcast();
 	}
 }
 
@@ -115,6 +117,12 @@ void AKPPawn::SelectCell(ACell* Cell)
 {
 	SelectedCell = Cell;
 	OnUpdateSelectCell.Broadcast();
+	OnUpdateMovomentInfo.Broadcast();
+}
+
+bool AKPPawn::CanMoveBoardPiece()
+{
+	return SelectedCell.IsValid() && LastUsedBoardPiece.IsValid();
 }
 
 AKP_GameModeBase* AKPPawn::GetKPGameMode()
@@ -152,7 +160,8 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 	}
 	ClearNavigationCell();
 	RestSelectionCurrenBoardPiece();
-	
+	OnUpdateMovomentInfo.Broadcast();
+	OnUpdateStepsCounter.Broadcast();
 }
 
 void AKPPawn::ShowNavigationCellForCurentBoardPiece()
