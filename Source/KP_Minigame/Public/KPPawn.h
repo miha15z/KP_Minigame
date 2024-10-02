@@ -42,7 +42,6 @@ public:
 	bool CanSelectBoardPiece(ABoardPiece* BoardPiece) const;
 	void PreMakeStepData();
 	void MakeStepData(int32  StepPoints);
-	void EnableCanSelectedStateForBoardPieces();
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
 	void InitBoardPieces(TArray<FKPPawnInfo>& PawnsInfo);
 
@@ -57,6 +56,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void TrySelectBoardPiece(ABoardPiece* BoardPiece);
+	void RestSelectionCurrenBoardPiece();
 protected:
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	TWeakObjectPtr<ABoardPiece> LastUsedBoardPiece;
