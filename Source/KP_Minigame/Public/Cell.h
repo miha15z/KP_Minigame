@@ -13,6 +13,7 @@ class UGameplayAbility;
 class ABoardPiece;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCellChosenDelegate, ACell*, ChosenCell, int, PlayerID);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnSelectCell, ACell*);
 
 UCLASS(BlueprintType, Blueprintable)
 class KP_MINIGAME_API UCellConfigAsset : public UDataAsset {
@@ -65,6 +66,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	UCellConfigAsset* CellConfig;
+
+	FOnSelectCell OnSelectCell;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))

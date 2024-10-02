@@ -9,8 +9,11 @@
 
 class ABoardPiece;
 class AKP_GameModeBase;
+class ACell;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateCanRollState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateSelectCell);
+
 
 UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API AKPPawn : public APawn
@@ -39,6 +42,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdateCanRollState OnUpdateCanRollState;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnUpdateSelectCell OnUpdateSelectCell;
+
 	bool CanSelectBoardPiece(ABoardPiece* BoardPiece) const;
 	void PreMakeStepData();
 	void MakeStepData(int32  StepPoints);
@@ -57,6 +63,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void TrySelectBoardPiece(ABoardPiece* BoardPiece);
 	void RestSelectionCurrenBoardPiece();
+
+	// call on GM  for Player or cool AI  for bot
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	void SelectCell(ACell* Cell);
+
 protected:
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	TWeakObjectPtr<ABoardPiece> LastUsedBoardPiece;
@@ -71,4 +82,15 @@ protected:
 
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly)
 	bool bCanRollDices = false;
+
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	void MoveCurrentBoardPieceToSlectedCell();
+
+	void ShowNavigationCellForCurentBoardPiece();
+	void ClearNavigationCell();
+
+	TArray<FBoardAtomicMovement> PossibleMovements;
+
+	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
+	TWeakObjectPtr<ACell> SelectedCell = nullptr;
 };
