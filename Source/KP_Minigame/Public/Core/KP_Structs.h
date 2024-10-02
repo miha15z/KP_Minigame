@@ -121,3 +121,17 @@ struct FRollDicesData
 	UPROPERTY(BlueprintReadOnly)
 	int32 Value2;
 };
+
+USTRUCT(BlueprintType, Blueprintable)
+struct FBoardAtomicMovement {
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadOnly)
+	ACell* CellTo;
+	UPROPERTY(BlueprintReadOnly)
+	ACell* CellFrom;
+	UPROPERTY()
+	float MovementPointsLeft;
+	UPROPERTY()
+	float MovementPointsConsumed;
+};

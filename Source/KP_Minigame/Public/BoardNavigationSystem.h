@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Core/KP_Structs.h"
 #include "BoardNavigationSystem.generated.h"
 
 class ACell;
@@ -16,19 +17,7 @@ struct FBoardCoord;
 
 // Class for storing minimal movements between nodes.
 // UObject cause recursion/reference to the same type variables is not supported for UStruct.
-USTRUCT(BlueprintType, Blueprintable)
-struct FBoardAtomicMovement{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(BlueprintReadOnly)
-	ACell* CellTo;
-	UPROPERTY(BlueprintReadOnly)
-	ACell* CellFrom;
-	UPROPERTY()
-	float MovementPointsLeft;
-	UPROPERTY()
-	float MovementPointsConsumed;
-};
+
 
 UCLASS(Blueprintable, BlueprintType)
 class KP_MINIGAME_API UBoardNavigationSystem : public UObject
