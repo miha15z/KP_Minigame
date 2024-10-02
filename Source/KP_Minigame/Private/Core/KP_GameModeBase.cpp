@@ -71,21 +71,24 @@ void AKP_GameModeBase::StartPlay()
 
 void AKP_GameModeBase::UpdateGameBoard()
 {
-    for (auto Cell : BoardData.Cells)
-    {
-        if (Cell)
-        {
-            Cell->Reset();
-            //to do
-            //Cell->UpplyAbil
-        }
-    }
+    ResetCells();
 
     for (auto& PlayerData : BoardData.PlayersData)
     {
         for (auto& PawnInfo : PlayerData.Pawns)
         {
            // PawnInfo.Pawn->
+        }
+    }
+}
+
+void AKP_GameModeBase::ResetCells()
+{
+    for (auto Cell : BoardData.Cells)
+    {
+        if (Cell)
+        {
+            Cell->Reset();
         }
     }
 }
@@ -200,5 +203,13 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer,bo
                 BoardPiece->EnableSelectability(NewState);
             }
         }
+    }
+}
+
+void AKP_GameModeBase::LeaveCell(int32 CellId, ABoardPiece* BoardPiece)
+{
+    check(CellId >= 0 && CellId < BoardData.Cells.Num())
+    {
+        BoardData.Cells[CellId]->LeavePawn(BoardPiece);
     }
 }

@@ -49,11 +49,7 @@ void AKPPawn::MakeStepData(int32 StepPoints)
 {
 	LastUsedBoardPiece = nullptr;
 	StepsCounter = StepPoints;
-
-}
-
-void AKPPawn::EnableCanSelectedStateForBoardPieces()
-{
+	GetKPGameMode()->EnableSelectabilityForBoardPieces(this, true);
 }
 
 void AKPPawn::SetGameModePtr(AKP_GameModeBase* GM_Ptr)
@@ -83,6 +79,8 @@ void AKPPawn::RollDices()
 
 void AKPPawn::TurnEnd()
 {
+	RestSelectionCurrenBoardPiece();
+	GetKPGameMode()->EnableSelectabilityForBoardPieces(this, false);
 	GetKPGameMode()->EndTurn(this);
 }
 
@@ -94,13 +92,18 @@ bool AKPPawn::CanRollDices() const
 void AKPPawn::TrySelectBoardPiece(ABoardPiece* BoardPiece)
 {
 	// TO DO :Check Can Select BoardPiece type
-	if(LastUsedBoardPiece.IsValid())
-	{
-		LastUsedBoardPiece->ResetSelection();
-	}
+	RestSelectionCurrenBoardPiece();
 	check(BoardPiece);
 	BoardPiece->ConfirmSelection();
 	LastUsedBoardPiece = BoardPiece;
+}
+
+void AKPPawn::RestSelectionCurrenBoardPiece()
+{
+	if (LastUsedBoardPiece.IsValid())
+	{
+		LastUsedBoardPiece->ResetSelection();
+	}
 }
 
 AKP_GameModeBase* AKPPawn::GetKPGameMode()
