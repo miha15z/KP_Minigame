@@ -68,6 +68,8 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 				ABoardPiece** KilledPawn = nullptr;
 				Cell->PutPawnOnCell(Pawn, KilledPawn);
 				Pawn->SetOwnPlayerData(CurrentPlayerId, PlayerData.PlayerColor);
+				// Apply the Pawns Directoin multiplier for changing team movement direction
+				Pawn->SetupTeamMovementDirectionMultiplier(PlayerData.PawnsDirectionMultiplier);
 			}
 			else
 			{

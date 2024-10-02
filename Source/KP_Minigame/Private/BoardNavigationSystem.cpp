@@ -181,6 +181,23 @@ void UBoardNavigationSystem::CalculateAtomicMovement(ACell* Origin, ACell* Desti
 	AtomicMovement.CellTo = Destination;
 	AtomicMovement.CellFrom = Origin;
 	
+	FBoardCoord PendingMovementDirection = Destination->Coord - Origin->Coord;
+	const TArray<FBoardCoord>& PossibleDirections = BoardPiece->GetMovementDirections();
+	
+	// Check if this direction is allowed for the pawn
+	bool bMovementDirectionAllowed = false;
+	for (FBoardCoord PossibleDirection : PossibleDirections) {
+		if (PossibleDirection == PendingMovementDirection) {
+			bMovementDirectionAllowed = true;
+		}
+	}
+
+	// If the direction is not allowed, then cast the movement impossible
+	if (not bMovementDirectionAllowed) {
+		AtomicMovement.MovementPointsLeft = -1.0;
+		AtomicMovement.MovementPointsConsumed = MovementPoints - AtomicMovement.MovementPointsLeft;
+		return;
+	}
 
 	// Check if there is any BoardPiece in the destination.
 	ABoardPiece* DestinationBoardPiece = Destination->GetStoodPawn();

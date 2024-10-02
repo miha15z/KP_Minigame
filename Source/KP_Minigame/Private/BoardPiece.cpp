@@ -111,6 +111,22 @@ void ABoardPiece::MoveToCell(int32 CellId, FVector CellLocation)
 	SetActorLocation(CellLocation);
 }
 
+const TArray<FBoardCoord>& ABoardPiece::GetMovementDirections()
+{
+	return MovementDirections;
+}
+
+void ABoardPiece::SetupTeamMovementDirectionMultiplier(FBoardCoord DirectionMultiplier)
+{
+	// TODO
+	// normalize DirectionMultiplier
+
+	// modify movement direction according to the team multiplier
+	for (FBoardCoord& Direction : MovementDirections) {
+		Direction = DirectionMultiplier * Direction;
+	}
+}
+
 void ABoardPiece::OnChengSelection_Implementation()
 {
 	// only test
