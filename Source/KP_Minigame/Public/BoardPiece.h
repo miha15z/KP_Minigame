@@ -62,11 +62,24 @@ public:
 	EBoardPiece GetBoardPieceType() const;
 	void ConfirmSelection();
 	void ResetSelection();
+
+	UFUNCTION(BlueprintCallable, Category = Player)
 	bool IsAlive() const;
+	bool Kill(ABoardPiece* OherPawn);
 
 protected:
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnChengSelectionBP();
+	bool bAlive = true; // to do: chenge to atributes
+
+protected:
+	// maybe make Selectaility interface for Cell and BoardPiece
+	UFUNCTION(BlueprintNativeEvent)
+	void OnChengSelection();
+	virtual void OnChengSelection_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnChengSelectability();
+	virtual void OnChengSelectability_Implementation();
+
 	UFUNCTION(BlueprintImplementableEvent, Category = Player)
 	void SetOwnPlayerDataBP();
 

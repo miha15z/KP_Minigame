@@ -60,6 +60,7 @@ void ABoardPiece::SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor)
 void ABoardPiece::EnableSelectability(bool NewState)
 {
 	bCandSelected = NewState;
+	OnChengSelectability();
 }
 
 EBoardPiece ABoardPiece::GetBoardPieceType() const
@@ -69,20 +70,69 @@ EBoardPiece ABoardPiece::GetBoardPieceType() const
 
 void ABoardPiece::ConfirmSelection()
 {
-	bSelected = true;
-	OnChengSelectionBP();
+	if (bSelected != true)
+	{
+		bSelected = true;
+		OnChengSelection();
+	}
 }
 
 void ABoardPiece::ResetSelection()
 {
-	bSelected = false;
-	OnChengSelectionBP();
+	if (bSelected != false)
+	{
+		bSelected = false;
+		OnChengSelection();
+	}
 }
 
 bool ABoardPiece::IsAlive() const
 {
 	//TO DO
-	return true;
+	return bAlive;
+}
+
+bool ABoardPiece::Kill(ABoardPiece* OherPawn)
+{
+	if (IsAlive())
+	{
+		// to do
+		bAlive = false;
+		SetActorHiddenInGame(true);
+		SetActorLocation(FVector(0.f, 0.f, -1000.f));
+		return true;
+	}
+	return false;
+}
+
+void ABoardPiece::OnChengSelection_Implementation()
+{
+	// only test
+	if (bSelected)
+	{
+		this->SetActorScale3D(FVector(1.3f));
+	}
+	else
+	{
+		this->SetActorScale3D(FVector(1.f));
+	}
+	// To do : update visualObject;
+}
+
+void ABoardPiece::OnChengSelectability_Implementation()
+{
+	static const FVector SelectabilityOffset = FVector(0.f, 0.f, 50.f);
+	//Only Test
+	if (bCandSelected)
+	{
+		this->SetActorLocation(GetActorLocation() + SelectabilityOffset);
+	}
+	else
+	{
+		this->SetActorLocation(GetActorLocation() - SelectabilityOffset);
+	}
+
+	// To do Selectability visualization
 }
 
 bool ABoardPiece::TrySelect()
