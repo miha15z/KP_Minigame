@@ -38,6 +38,7 @@ void ACell::TrySelect()
 	{
 		SetState(ECellState::SelectToPlayer);
 		OnSelectCell.Broadcast(this);
+		UE_LOG(LogTemp, Warning, TEXT("Select Cell %d"), CellId);
 	}
 }
 
@@ -63,22 +64,27 @@ void ACell::SetState(ECellState NewState)
 	ACell::SetState_BP(NewState);
 }
 
-void ACell::PutPawnOnCell(ABoardPiece* Pawn)
+void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn)
 {
 	check(Pawn);
-	if (PawnPtr.IsValid())
+	if (PawnPtr.IsValid() && PawnPtr.Get() != Pawn)
 	{
 		PawnPtr->Kill(Pawn);
+		*OutKilledPawn = PawnPtr.Get();
 		//To Do:: Kill 
 	}
+
 	PawnPtr = Pawn;
 	ActivateOwnedAbilitiesOnStoodPawn();
+	UE_LOG(LogTemp, Warning, TEXT("Put pawn %s to cell %d"), *Pawn->GetHumanReadableName(), CellId);
 }
 
 void ACell::LeavePawn(ABoardPiece* Pawn)
 {
 	// to do : reset cell abilities
-	PawnPtr == nullptr;
+	UE_LOG(LogTemp, Warning, TEXT(" pawn %s leave from cell %d"), *Pawn->GetHumanReadableName(), CellId);
+	PawnPtr = nullptr;
+
 }
 
 ABoardPiece* ACell::GetStoodPawn() const

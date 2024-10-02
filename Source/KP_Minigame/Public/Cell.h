@@ -125,8 +125,8 @@ public:
 		return CellId;
 	}
 
-	UFUNCTION(BlueprintCallable, Category = Cells)
-	void PutPawnOnCell(ABoardPiece* Pawn);
+	//UFUNCTION(BlueprintCallable, Category = Cells)
+	void PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn);
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	void LeavePawn(ABoardPiece* Pawn);

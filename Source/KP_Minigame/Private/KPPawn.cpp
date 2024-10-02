@@ -143,7 +143,13 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 
 	GetKPGameMode()->LeaveCell(LastUsedBoardPiece->GetCurrentCellId(), LastUsedBoardPiece.Get());
 	LastUsedBoardPiece->MoveToCell(SelectedCell->GetCellId(), SelectedCell->GetActorLocation());
-	SelectedCell->PutPawnOnCell(LastUsedBoardPiece.Get());
+	ABoardPiece** KilledPawn = nullptr;
+	SelectedCell->PutPawnOnCell(LastUsedBoardPiece.Get(), KilledPawn);
+	// if have kill - reset all steps
+	if (KilledPawn != nullptr)
+	{
+		StepsCounter = 0;
+	}
 	ClearNavigationCell();
 	RestSelectionCurrenBoardPiece();
 	
