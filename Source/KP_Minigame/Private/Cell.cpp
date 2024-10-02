@@ -37,6 +37,7 @@ void ACell::TrySelect()
 	if (CanSelect())
 	{
 		SetState(ECellState::SelectToPlayer);
+		OnSelectCell.Broadcast(this);
 	}
 }
 

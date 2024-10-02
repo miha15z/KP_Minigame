@@ -4,6 +4,7 @@
 #include "KPPawn.h"
 #include "BoardPiece.h"
 #include "Core/KP_GameModeBase.h"
+#include "Cell.h"
 
 // Sets default values
 AKPPawn::AKPPawn()
@@ -96,6 +97,8 @@ void AKPPawn::TrySelectBoardPiece(ABoardPiece* BoardPiece)
 	check(BoardPiece);
 	BoardPiece->ConfirmSelection();
 	LastUsedBoardPiece = BoardPiece;
+	ClearNavigationCell();
+	ShowNavigationCellForCurentBoardPiece();
 }
 
 void AKPPawn::RestSelectionCurrenBoardPiece()
@@ -103,7 +106,14 @@ void AKPPawn::RestSelectionCurrenBoardPiece()
 	if (LastUsedBoardPiece.IsValid())
 	{
 		LastUsedBoardPiece->ResetSelection();
+		LastUsedBoardPiece = nullptr;
 	}
+}
+
+void AKPPawn::SelectCell(ACell* Cell)
+{
+	SelectedCell = Cell;
+	OnUpdateSelectCell.Broadcast();
 }
 
 AKP_GameModeBase* AKPPawn::GetKPGameMode()
@@ -118,5 +128,25 @@ AKP_GameModeBase* AKPPawn::GetKPGameMode()
 		check(GM.IsValid());
 	}
 	return GM.Get();
+}
+
+void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
+{
+	check(LastUsedBoardPiece.IsValid() && SelectedCell.IsValid());
+	GetKPGameMode()->LeaveCell(LastUsedBoardPiece->GetCurrentCellId(), LastUsedBoardPiece.Get());
+	LastUsedBoardPiece->MoveToCell(SelectedCell->GetCellId(), SelectedCell->GetActorLocation());
+	SelectedCell->PutPawnOnCell(LastUsedBoardPiece.Get());
+	ClearNavigationCell();
+	RestSelectionCurrenBoardPiece();
+}
+
+void AKPPawn::ShowNavigationCellForCurentBoardPiece()
+{
+}
+
+void AKPPawn::ClearNavigationCell()
+{
+	// to do;
+	SelectCell(nullptr);
 }
 

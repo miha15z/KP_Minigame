@@ -39,6 +39,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Navigation")
 	TSubclassOf<UBoardNavigationSystem> BoardNavSystemClass;
+
+	UFUNCTION()
+	void SelectCellForCurrentPlayer(ACell* Cell);
 public:
 	UFUNCTION(BlueprintCallable, Category ="Board|Navigation")
 	UBoardNavigationSystem* GetBoardNavSystem() const { return BoardNavSystem; }
@@ -128,4 +131,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void  LeaveCell(int32 CellId, ABoardPiece* BoardPiece);
+
+
 };

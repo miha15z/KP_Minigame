@@ -29,6 +29,10 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
     BoardNavSystem = NewObject<UBoardNavigationSystem>(this);
     BoardNavSystem->SetupNeighbouringCellsByMask(BoardData.Cells, GenDataAsset->GetMovementPattern());
 
+    for (auto& Cell : BoardData.Cells)
+    {
+        Cell->OnSelectCell.AddUObject(this, &AKP_GameModeBase::SelectCellForCurrentPlayer);
+    }
 
     Super::InitGame(MapName, Options, ErrorMessage);
 }
@@ -90,6 +94,14 @@ void AKP_GameModeBase::ResetCells()
         {
             Cell->Reset();
         }
+    }
+}
+
+void AKP_GameModeBase::SelectCellForCurrentPlayer(ACell* Cell)
+{
+    if (IsValid(CurrentPawn))
+    {
+        CurrentPawn->SelectCell(Cell);
     }
 }
 
