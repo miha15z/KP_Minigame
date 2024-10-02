@@ -23,8 +23,12 @@ UCLASS(Blueprintable, BlueprintType)
 class KP_MINIGAME_API UBoardNavigationSystem : public UObject
 {
 	GENERATED_BODY()
-	
+
+	FBoardData* BoardDataRef = nullptr;
+
 public:
+	void Init(FBoardData* NewBoardData);
+
 	UFUNCTION(BlueprintCallable)
 	void CalculateOrthogonalLength(ACell* Origin, ACell* Destination, float& Length);
 
@@ -32,13 +36,18 @@ public:
 	void CalculateNeighbouringCoordsByMask(FBoardCoord ReferenceCoord, TArray<FBoardCoord> MovementMask, TArray<FBoardCoord>& NeighbouringCoords);
 
 	UFUNCTION(BlueprintCallable)
-	void SetupNeighbouringCellsByMask(TArray<ACell*> CellsOnBoard, TArray<FBoardCoord> MovementMask);
+	void SetupNeighbouringCellsByMask(TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask);
 	
 	UFUNCTION(BlueprintCallable)
-	void GetPossibleMovements(TArray<ACell*> CellsOnBoard, ABoardPiece* OriginPiece, ACell* OriginCell, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
+	void GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, ABoardPiece* OriginPiece, ACell* OriginCell, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
 
 	UFUNCTION(BlueprintCallable)
-	void GetMovementPathToCell(TArray<FBoardAtomicMovement> PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath);
+	void GetPossibleMovementsLocalData(ABoardPiece* OriginPiece, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
+
+
+	//!!!
+	UFUNCTION(BlueprintCallable)
+	void GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath);
 
 	UFUNCTION(BlueprintCallable)
 	void CalculateAtomicMovement(ACell* Origin, ACell* Destination, ABoardPiece* BoardPiece, float MovementPoints, FBoardAtomicMovement& AtomicMovement);

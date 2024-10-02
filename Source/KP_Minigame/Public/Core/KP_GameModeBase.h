@@ -104,6 +104,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = RollDices)
 	bool RerollDices(AKPPawn* PlayerPawn);
 
+	ACell* GetCellByID(int32 ID) const;
+
 	//Gameplay
 protected:
 	//Maybe use TQueue

@@ -10,6 +10,11 @@
 #include "Core/KP_Structs.h"
 #include "AbilitySystemComponent.h"
 
+void UBoardNavigationSystem::Init(FBoardData* NewBoardData)
+{
+	BoardDataRef = NewBoardData;
+}
+
 void UBoardNavigationSystem::CalculateOrthogonalLength(ACell* Origin, ACell* Destination, float& Length)
 {
 	Length = 0.f;//abs(Destination->CoordX - Origin->CoordX) - abs(Destination->CoordY - Origin->CoordY);
@@ -31,7 +36,7 @@ void UBoardNavigationSystem::CalculateNeighbouringCoordsByMask(FBoardCoord Refer
 }
 
 // TODO: Finish or remove
-void UBoardNavigationSystem::SetupNeighbouringCellsByMask(TArray<ACell*> CellsOnBoard, TArray<FBoardCoord> MovementMask)
+void UBoardNavigationSystem::SetupNeighbouringCellsByMask(TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask)
 {
 	int CellNum = CellsOnBoard.Num();
 	// For each cell on board
@@ -54,7 +59,7 @@ void UBoardNavigationSystem::SetupNeighbouringCellsByMask(TArray<ACell*> CellsOn
 
 }
 
-void UBoardNavigationSystem::GetPossibleMovements(TArray<ACell*> CellsOnBoard, ABoardPiece* OriginPiece, ACell* OriginCell, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
+void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, ABoardPiece* OriginPiece, ACell* OriginCell, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
 {
 	// populate initial "open" array
 	// in a while not empty loop over "open" queue:
@@ -62,6 +67,8 @@ void UBoardNavigationSystem::GetPossibleMovements(TArray<ACell*> CellsOnBoard, A
 	// add movements to the neighbouring cells to the "open" array
 	// end of loop
 	// return the "closed" array
+
+	PossibleMovements.Empty();
 
 	TQueue<FBoardAtomicMovement> OpenQueue;
 	// WARNING: Might be succeptible for wrongful garbage collection
@@ -110,7 +117,12 @@ void UBoardNavigationSystem::GetPossibleMovements(TArray<ACell*> CellsOnBoard, A
 	
 }
 
-void UBoardNavigationSystem::GetMovementPathToCell(TArray<FBoardAtomicMovement> PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath)
+void UBoardNavigationSystem::GetPossibleMovementsLocalData(ABoardPiece* OriginPiece, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
+{
+	GetPossibleMovements(BoardDataRef->Cells, OriginPiece, BoardDataRef->Cells[OriginPiece->GetCurrentCellId()], MovementPoints, PossibleMovements);
+}
+
+void UBoardNavigationSystem::GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath)
 {
 	// check if origin cell is there
 	bool isOriginCellThere = false;

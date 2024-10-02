@@ -4,6 +4,7 @@
 #include "KPPawn.h"
 #include "BoardPiece.h"
 #include "Core/KP_GameModeBase.h"
+#include "BoardNavigationSystem.h"
 #include "Cell.h"
 
 // Sets default values
@@ -133,19 +134,39 @@ AKP_GameModeBase* AKPPawn::GetKPGameMode()
 void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 {
 	check(LastUsedBoardPiece.IsValid() && SelectedCell.IsValid());
+	// Updatecounter
+	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();
+	TArray<FBoardAtomicMovement> PathToCell;
+	bool bMovementPossible;
+	NavSys->GetMovementPathToCell(PossibleMovements, GetKPGameMode()->GetCellByID(LastUsedBoardPiece->GetCurrentCellId()), SelectedCell.Get(), bMovementPossible, PathToCell);
+	StepsCounter -= FMath::CeilToInt((PathToCell.Last().MovementPointsConsumed + PathToCell.Last().MovementPointsLeft) - (PathToCell[0].MovementPointsLeft));
+
 	GetKPGameMode()->LeaveCell(LastUsedBoardPiece->GetCurrentCellId(), LastUsedBoardPiece.Get());
 	LastUsedBoardPiece->MoveToCell(SelectedCell->GetCellId(), SelectedCell->GetActorLocation());
 	SelectedCell->PutPawnOnCell(LastUsedBoardPiece.Get());
 	ClearNavigationCell();
 	RestSelectionCurrenBoardPiece();
+	
 }
 
 void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 {
+	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();
+
+	// TODO:
+	// MovementPoints Calculation
+	NavSys->GetPossibleMovementsLocalData(LastUsedBoardPiece.Get(), StepsCounter, PossibleMovements);
+
+	for (auto& MovementData : PossibleMovements) {
+		MovementData.CellTo->SetState(ECellState::SelectToNav);
+	}
 }
 
 void AKPPawn::ClearNavigationCell()
 {
+	for (auto& MovementData : PossibleMovements) {
+		MovementData.CellTo->Reset();
+	}
 	// to do;
 	SelectCell(nullptr);
 }

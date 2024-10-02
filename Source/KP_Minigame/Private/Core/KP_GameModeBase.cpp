@@ -27,6 +27,7 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
     BoardData = Generator->GenerateGameBoard(GenDataAsset.Get(), this);
 
     BoardNavSystem = NewObject<UBoardNavigationSystem>(this);
+    BoardNavSystem->Init(&BoardData);
     BoardNavSystem->SetupNeighbouringCellsByMask(BoardData.Cells, GenDataAsset->GetMovementPattern());
 
     for (auto& Cell : BoardData.Cells)
@@ -139,6 +140,14 @@ bool AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
         UE_LOG(LogTemp, Warning, TEXT("Try reroll the dices, State is Lock"))
     }
     return false;
+}
+
+ACell* AKP_GameModeBase::GetCellByID(int32 ID) const
+{
+    if (ID >= 0 && BoardData.Cells.Num() > ID) {
+        return BoardData.Cells[ID];
+    }
+    return nullptr;
 }
 
 bool AKP_GameModeBase::IsWin_Implementation() const
