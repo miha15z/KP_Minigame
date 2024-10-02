@@ -86,14 +86,17 @@ public:
 		return AbilitySystemComponent;
 	}
 
-	//UFUNCTION()
-
+	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void TrySelect();
 
+	UFUNCTION(BlueprintNativeEvent)
+	bool CanSelect() const;
+	virtual bool CanSelect_Implementation() const;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -120,7 +123,10 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
-	void StoodPawnOnCell(ABoardPiece* Pawn);
+	void PutPawnOnCell(ABoardPiece* Pawn);
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void LeavePawn(ABoardPiece* Pawn);
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	ABoardPiece* GetStoodPawn() const;

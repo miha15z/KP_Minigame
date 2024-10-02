@@ -14,6 +14,14 @@ ACell::ACell()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 }
 
+void ACell::NotifyActorOnClicked(FKey ButtonPressed)
+{
+	if (ButtonPressed == EKeys::LeftMouseButton)
+	{
+		TrySelect();
+	}
+}
+
 // Called when the game starts or when spawned
 void ACell::BeginPlay()
 {
@@ -24,15 +32,28 @@ void ACell::BeginPlay()
 	}
 }
 
+void ACell::TrySelect()
+{
+	if (CanSelect())
+	{
+		SetState(ECellState::SelectToPlayer);
+	}
+}
+
+ bool ACell::CanSelect_Implementation() const
+{
+	return CurrentState == ECellState::SelectToNav;
+}
+
 // Called every frame
 void ACell::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ACell::Reset()
 {
+	SetState(ECellState::None);
 }
 
 void ACell::SetState(ECellState NewState)
@@ -41,9 +62,22 @@ void ACell::SetState(ECellState NewState)
 	ACell::SetState_BP(NewState);
 }
 
-void ACell::StoodPawnOnCell(ABoardPiece* Pawn)
+void ACell::PutPawnOnCell(ABoardPiece* Pawn)
 {
+	check(Pawn);
+	if (PawnPtr.IsValid())
+	{
+		PawnPtr->Kill(Pawn);
+		//To Do:: Kill 
+	}
 	PawnPtr = Pawn;
+	ActivateOwnedAbilitiesOnStoodPawn();
+}
+
+void ACell::LeavePawn(ABoardPiece* Pawn)
+{
+	// to do : reset cell abilities
+	PawnPtr == nullptr;
 }
 
 ABoardPiece* ACell::GetStoodPawn() const
@@ -70,6 +104,5 @@ void ACell::ActivateOwnedAbilities(ABoardPiece* TargetBoardPiece)
 		EventData.OptionalObject = AbilityInfoHolder;
 		GetAbilitySystemComponent()->GiveAbilityAndActivateOnce(AbilitySpec, &EventData);
 	}
-
 }
 

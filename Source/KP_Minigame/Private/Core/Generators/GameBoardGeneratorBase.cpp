@@ -65,7 +65,7 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 				ACell* Cell = BoardData.Cells[PawnData.CellId];
 				Pawn->SetActorLocation(Cell->GetActorLocation());
 				PlayerPawnsData.Pawns.Add({Pawn ,PawnData.CellId });
-				Cell->StoodPawnOnCell(Pawn);
+				Cell->PutPawnOnCell(Pawn);
 				Pawn->SetOwnPlayerData(CurrentPlayerId, PlayerData.PlayerColor);
 			}
 			else
