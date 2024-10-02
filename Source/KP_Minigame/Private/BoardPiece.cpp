@@ -105,6 +105,12 @@ bool ABoardPiece::Kill(ABoardPiece* OherPawn)
 	return false;
 }
 
+void ABoardPiece::MoveToCell(int32 CellId, FVector CellLocation)
+{
+	CurrentCellId = CellId;
+	SetActorLocation(CellLocation);
+}
+
 void ABoardPiece::OnChengSelection_Implementation()
 {
 	// only test

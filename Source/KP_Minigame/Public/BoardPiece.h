@@ -67,6 +67,9 @@ public:
 	bool IsAlive() const;
 	bool Kill(ABoardPiece* OherPawn);
 
+	UFUNCTION(BlueprintCallable, Category = Movement)
+	void MoveToCell(int32 CellId, FVector CellLocation);
+
 protected:
 	bool bAlive = true; // to do: chenge to atributes
 
