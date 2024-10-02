@@ -31,6 +31,7 @@ public:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void StartPlay();
 	void UpdateGameBoard();
+	void ResetCells();
 	//navigation
 protected:
 	UPROPERTY(VisibleInstanceOnly, Category = "Board|Navigation")
@@ -110,6 +111,7 @@ protected:
 	bool IsWin() const;
 	virtual bool IsWin_Implementation()const;
 
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	bool EndTurn(AKPPawn* PlayerPawn);
@@ -124,4 +126,6 @@ public:
 
 	void EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer, bool NewState, EBoardPiece BoardPieceType = EBoardPiece::None);
 
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	void  LeaveCell(int32 CellId, ABoardPiece* BoardPiece);
 };
