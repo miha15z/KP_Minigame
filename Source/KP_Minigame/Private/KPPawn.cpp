@@ -140,7 +140,7 @@ AKP_GameModeBase* AKPPawn::GetKPGameMode()
 	}
 	return GM.Get();
 }
-
+#pragma optimize("", off)
 void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 {
 	check(LastUsedBoardPiece.IsValid() && SelectedCell.IsValid());
@@ -156,24 +156,33 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 
 	GetKPGameMode()->LeaveCell(LastUsedBoardPiece->GetCurrentCellId(), LastUsedBoardPiece.Get());
 	LastUsedBoardPiece->MoveToCell(SelectedCell->GetCellId(), SelectedCell->GetActorLocation());
-	ABoardPiece** KilledPawn = nullptr;
-	SelectedCell->PutPawnOnCell(LastUsedBoardPiece.Get(), KilledPawn);
+
+	ABoardPiece* KilledPawn = nullptr;
+	SelectedCell->PutPawnOnCell(LastUsedBoardPiece.Get(), &KilledPawn);
 	// if have kill - reset all steps
+
 	if (KilledPawn != nullptr)
 	{
+		UE_LOG(LogTemp, Display, TEXT("Kill BoardPiece %s"),*(KilledPawn)->GetHumanReadableName());
 		StepsCounter = 0;
-		if ((*KilledPawn)->GetBoardPieceType() == EBoardPiece::King)
+		if ((KilledPawn)->GetBoardPieceType() == EBoardPiece::King)
 		{
+			UE_LOG(LogTemp, Display, TEXT("Kill King"));
 			GetKPGameMode()->GetAbilitySystemComponent()->AddLooseGameplayTag(KP_GameplayTags::Ability_ActivateWin_KillKing);
 		}
 	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("Move"));
+	}
+
 	ClearNavigationCell();
 	RestSelectionCurrenBoardPiece();
 	OnUpdateMovomentInfo.Broadcast();
 	OnUpdateStepsCounter.Broadcast();
 	GetKPGameMode()->CheckWinState();
 }
-
+#pragma optimize("", on)
 void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 {
 	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();

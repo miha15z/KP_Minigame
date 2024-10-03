@@ -71,7 +71,8 @@ void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn)
 	{
 		PawnPtr->Kill(Pawn);
 		auto tempPawn = PawnPtr.Get();
-		OutKilledPawn = &tempPawn;
+		*OutKilledPawn = tempPawn;
+		UE_LOG(LogTemp, Display, TEXT("Cell: Kill BoardPiece %s"), *(*OutKilledPawn)->GetHumanReadableName());
 		//To Do:: Kill 
 	}
 
