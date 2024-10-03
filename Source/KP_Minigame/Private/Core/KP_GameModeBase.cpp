@@ -160,8 +160,7 @@ ACell* AKP_GameModeBase::GetCellByID(int32 ID) const
 bool AKP_GameModeBase::IsWin_Implementation() const
 {
     check(AbilitySystemComponent);
-    AbilitySystemComponent->HasMatchingGameplayTag(KP_GameplayTags::Ability_ActivateWin);
-    return false;
+    return  AbilitySystemComponent->HasMatchingGameplayTag(KP_GameplayTags::Ability_ActivateWin);
 }
 
 bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
