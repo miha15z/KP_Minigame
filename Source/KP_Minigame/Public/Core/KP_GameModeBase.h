@@ -137,6 +137,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	bool EndTurn(AKPPawn* PlayerPawn);
 
+	bool CheckWinState() const ;
+
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void SelectNewBoardPiece(ABoardPiece* NewBoardPiece);
 

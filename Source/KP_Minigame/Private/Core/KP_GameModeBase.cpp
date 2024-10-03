@@ -183,19 +183,27 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
     // Resets Board Pieces at the end of the turn
     ResetBoardPieces();
 
-    if (IsWin())
-    {
-        check(CurrentPawn);
-        OnWinKPGame.Broadcast(CurrentPawn->PlayerId);
-        return false;
-    }
-    else
+    if(! CheckWinState())
     {
         UpdateGameBoard();
         SelectNextPawn();
         OnFinishStep.Broadcast();
     }
     return true;
+}
+
+bool AKP_GameModeBase::CheckWinState()const
+{
+    if (IsWin())
+    {
+        check(CurrentPawn);
+        OnWinKPGame.Broadcast(CurrentPawn->PlayerId);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void AKP_GameModeBase::SelectNewBoardPiece(ABoardPiece* NewBoardPiece)
