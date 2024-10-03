@@ -6,6 +6,8 @@
 #include "Core/KP_GameModeBase.h"
 #include "BoardNavigationSystem.h"
 #include "Cell.h"
+#include "AbilitySystemComponent.h"
+#include "KP_GameplayTags.h"
 
 // Sets default values
 AKPPawn::AKPPawn()
@@ -160,11 +162,16 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 	if (KilledPawn != nullptr)
 	{
 		StepsCounter = 0;
+		if ((*KilledPawn)->GetBoardPieceType() == EBoardPiece::King)
+		{
+			GetKPGameMode()->GetAbilitySystemComponent()->AddLooseGameplayTag(KP_GameplayTags::Ability_ActivateWin_KillKing);
+		}
 	}
 	ClearNavigationCell();
 	RestSelectionCurrenBoardPiece();
 	OnUpdateMovomentInfo.Broadcast();
 	OnUpdateStepsCounter.Broadcast();
+	GetKPGameMode()->CheckWinState();
 }
 
 void AKPPawn::ShowNavigationCellForCurentBoardPiece()
