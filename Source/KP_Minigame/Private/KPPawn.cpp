@@ -51,10 +51,11 @@ void AKPPawn::PreMakeStepData()
 
 void AKPPawn::MakeStepData(int32 StepPoints)
 {
-	LastUsedBoardPiece = nullptr;
+	SelectedBoardPiece = nullptr;
 	StepsCounter = StepPoints;
 	GetKPGameMode()->EnableSelectabilityForBoardPieces(this, true);
 	OnUpdateStepsCounter.Broadcast();
+	LastUsedBoardPieceTipe = EBoardPiece::None;
 }
 
 void AKPPawn::SetGameModePtr(AKP_GameModeBase* GM_Ptr)
@@ -100,17 +101,17 @@ void AKPPawn::TrySelectBoardPiece(ABoardPiece* BoardPiece)
 	RestSelectionCurrenBoardPiece();
 	check(BoardPiece);
 	BoardPiece->ConfirmSelection();
-	LastUsedBoardPiece = BoardPiece;
+	SelectedBoardPiece = BoardPiece;
 	ClearNavigationCell();
 	ShowNavigationCellForCurentBoardPiece();
 }
 
 void AKPPawn::RestSelectionCurrenBoardPiece()
 {
-	if (LastUsedBoardPiece.IsValid())
+	if (SelectedBoardPiece.IsValid())
 	{
-		LastUsedBoardPiece->ResetSelection();
-		LastUsedBoardPiece = nullptr;
+		SelectedBoardPiece->ResetSelection();
+		SelectedBoardPiece = nullptr;
 		OnUpdateMovomentInfo.Broadcast();
 	}
 }
@@ -124,7 +125,7 @@ void AKPPawn::SelectCell(ACell* Cell)
 
 bool AKPPawn::CanMoveBoardPiece()
 {
-	return SelectedCell.IsValid() && LastUsedBoardPiece.IsValid();
+	return SelectedCell.IsValid() && SelectedBoardPiece.IsValid();
 }
 
 AKP_GameModeBase* AKPPawn::GetKPGameMode()
@@ -140,25 +141,25 @@ AKP_GameModeBase* AKPPawn::GetKPGameMode()
 	}
 	return GM.Get();
 }
-#pragma optimize("", off)
+
 void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 {
-	check(LastUsedBoardPiece.IsValid() && SelectedCell.IsValid());
+	check(SelectedBoardPiece.IsValid() && SelectedCell.IsValid());
 	// Updatecounter
 	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();
 	TArray<FBoardAtomicMovement> PathToCell;
 	bool bMovementPossible;
-	NavSys->GetMovementPathToCell(PossibleMovements, GetKPGameMode()->GetCellByID(LastUsedBoardPiece->GetCurrentCellId()), SelectedCell.Get(), bMovementPossible, PathToCell);
+	NavSys->GetMovementPathToCell(PossibleMovements, GetKPGameMode()->GetCellByID(SelectedBoardPiece->GetCurrentCellId()), SelectedCell.Get(), bMovementPossible, PathToCell);
 	int32 PointsConsumed = FMath::CeilToInt((PathToCell.Last().MovementPointsConsumed + PathToCell.Last().MovementPointsLeft) - (PathToCell[0].MovementPointsLeft));
 	StepsCounter -= PointsConsumed;
 	// When the move happens, consume the available points for the pawn
-	LastUsedBoardPiece.Get()->ConsumeMovementPoints(PointsConsumed);
+	SelectedBoardPiece.Get()->ConsumeMovementPoints(PointsConsumed);
 
-	GetKPGameMode()->LeaveCell(LastUsedBoardPiece->GetCurrentCellId(), LastUsedBoardPiece.Get());
-	LastUsedBoardPiece->MoveToCell(SelectedCell->GetCellId(), SelectedCell->GetActorLocation());
+	GetKPGameMode()->LeaveCell(SelectedBoardPiece->GetCurrentCellId(), SelectedBoardPiece.Get());
+	SelectedBoardPiece->MoveToCell(SelectedCell->GetCellId(), SelectedCell->GetActorLocation());
 
 	ABoardPiece* KilledPawn = nullptr;
-	SelectedCell->PutPawnOnCell(LastUsedBoardPiece.Get(), &KilledPawn);
+	SelectedCell->PutPawnOnCell(SelectedBoardPiece.Get(), &KilledPawn);
 	// if have kill - reset all steps
 
 	if (KilledPawn != nullptr)
@@ -182,7 +183,7 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 	OnUpdateStepsCounter.Broadcast();
 	GetKPGameMode()->CheckWinState();
 }
-#pragma optimize("", on)
+
 void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 {
 	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();
@@ -190,7 +191,7 @@ void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 	// TODO:
 	// MovementPoints Calculation
 	// Check all the cells the board piecce can reach given the steps count and available movement points
-	NavSys->GetPossibleMovementsLocalData(LastUsedBoardPiece.Get(), FMath::Min(StepsCounter, LastUsedBoardPiece.Get()->GetAvailableMovementPoints()), PossibleMovements);
+	NavSys->GetPossibleMovementsLocalData(SelectedBoardPiece.Get(), FMath::Min(StepsCounter, SelectedBoardPiece.Get()->GetAvailableMovementPoints()), PossibleMovements);
 
 	for (auto& MovementData : PossibleMovements) {
 		MovementData.CellTo->SetState(ECellState::SelectToNav);

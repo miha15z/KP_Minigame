@@ -80,7 +80,7 @@ public:
 
 protected:
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
-	TWeakObjectPtr<ABoardPiece> LastUsedBoardPiece;
+	TWeakObjectPtr<ABoardPiece> SelectedBoardPiece;
 
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	int32 StepsCounter = 0;
@@ -103,4 +103,6 @@ protected:
 
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	TWeakObjectPtr<ACell> SelectedCell = nullptr;
+protected:
+	EBoardPiece LastUsedBoardPieceTipe;
 };
