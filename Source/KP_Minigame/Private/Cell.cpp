@@ -67,7 +67,7 @@ void ACell::SetState(ECellState NewState)
 void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn)
 {
 	check(Pawn);
-	if (PawnPtr.IsValid() && PawnPtr.Get() != Pawn)
+	if (PawnPtr.IsValid() && PawnPtr.Get()->GetOwnPlayerId() != Pawn->GetOwnPlayerId())
 	{
 		PawnPtr->Kill(Pawn);
 		auto tempPawn = PawnPtr.Get();
