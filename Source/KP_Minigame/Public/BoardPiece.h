@@ -76,6 +76,18 @@ public:
 	const TArray<FBoardCoord>& GetMovementDirections();
 	void SetupTeamMovementDirectionMultiplier(FBoardCoord DirectionMultiplier);
 
+	// Get movements points available yet this turn
+	UFUNCTION(BlueprintCallable)
+	int32 GetAvailableMovementPoints() const;
+
+	// Reset the number of movement points at the end of the turn
+	UFUNCTION(BlueprintCallable)
+	void ResetAvailableMovementPoints();
+
+	// Detract points from the available points when the board piece moves
+	UFUNCTION(BlueprintCallable)
+	void ConsumeMovementPoints(int32 Points);
+
 protected:
 	bool bAlive = true; // to do: chenge to atributes
 
@@ -114,6 +126,10 @@ protected:
 	bool bSelected = false;
 	UPROPERTY( EditDefaultsOnly)
 	EBoardPiece BoardPieceType;
+
+	// Movement Points already consumed by this board piece  this turn
+	UPROPERTY(VisibleAnywhere)
+	int32 MovementPointsConsumed = 0;
 public:
 	FOnTrySelectBoardPiece OnTrySelectBoardPiece;
 

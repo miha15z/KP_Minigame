@@ -105,6 +105,16 @@ void AKP_GameModeBase::ResetCells()
     }
 }
 
+void AKP_GameModeBase::ResetBoardPieces()
+{
+    for (auto Player : BoardData.PlayersData)
+    {
+        for (auto BoardPiece : Player.Pawns) {
+            BoardPiece.Pawn->ResetAvailableMovementPoints();
+        }
+    }
+}
+
 void AKP_GameModeBase::SelectCellForCurrentPlayer(ACell* Cell)
 {
     if (IsValid(CurrentPawn))
@@ -169,6 +179,9 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
     {
         return false;
     }
+
+    // Resets Board Pieces at the end of the turn
+    ResetBoardPieces();
 
     if (IsWin())
     {
