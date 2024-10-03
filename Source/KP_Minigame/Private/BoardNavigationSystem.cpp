@@ -214,7 +214,7 @@ void UBoardNavigationSystem::CalculateAtomicMovement(ACell* Origin, ACell* Desti
 			// calculate movement points amount that is to be consumed
 			float MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
 			// If there are any points left after this movement, dispose of them
-			float MovementPointsLeft = FMath::Min(MovementPointsConsumed, 0.0);
+			float MovementPointsLeft = FMath::Min(MovementPoints - MovementPointsConsumed, 0.0);
 			AtomicMovement.MovementPointsLeft = MovementPointsLeft;
 		}
 		AtomicMovement.MovementPointsConsumed = MovementPoints - AtomicMovement.MovementPointsLeft;
