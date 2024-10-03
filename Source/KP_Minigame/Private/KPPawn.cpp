@@ -98,8 +98,15 @@ bool AKPPawn::CanRollDices() const
 void AKPPawn::TrySelectBoardPiece(ABoardPiece* BoardPiece)
 {
 	// TO DO :Check Can Select BoardPiece type
-	RestSelectionCurrenBoardPiece();
 	check(BoardPiece);
+	if (LastUsedBoardPieceTipe != EBoardPiece::None && BoardPiece->GetBoardPieceType() != LastUsedBoardPieceTipe)
+	{
+		// lock selection for next sub step
+		return; 
+	}
+
+	RestSelectionCurrenBoardPiece();
+	
 	BoardPiece->ConfirmSelection();
 	SelectedBoardPiece = BoardPiece;
 	ClearNavigationCell();
@@ -176,6 +183,9 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 	{
 		UE_LOG(LogTemp, Display, TEXT("Move"));
 	}
+
+	// save type  for lock other board piece types.
+	LastUsedBoardPieceTipe = SelectedBoardPiece->GetBoardPieceType();
 
 	ClearNavigationCell();
 	RestSelectionCurrenBoardPiece();
