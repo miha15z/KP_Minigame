@@ -53,14 +53,17 @@ void ABoardPiece::SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor)
 	OwnPlayerId = PlayerId;
 	OwnPlayerColor = PlayerColor;
 
-	// update visualisation
+	// update visualization
 	SetOwnPlayerDataBP();
 }
 
 void ABoardPiece::EnableSelectability(bool NewState)
 {
-	bCandSelected = NewState;
-	OnChengSelectability();
+	if (NewState != bCandSelected)
+	{
+		bCandSelected = NewState;
+		OnChengSelectability();
+	}
 }
 
 EBoardPiece ABoardPiece::GetBoardPieceType() const
@@ -132,7 +135,7 @@ void ABoardPiece::OnChengSelection_Implementation()
 	// only test
 	if (bSelected)
 	{
-		this->SetActorScale3D(FVector(1.3f));
+		this->SetActorScale3D(FVector(1.4f));
 	}
 	else
 	{
@@ -147,11 +150,14 @@ void ABoardPiece::OnChengSelectability_Implementation()
 	//Only Test
 	if (bCandSelected)
 	{
-		this->SetActorLocation(GetActorLocation() + SelectabilityOffset);
+		this->SetActorScale3D(FVector(1.2f));
+		this->SetActorEnableCollision(true);
 	}
 	else
 	{
-		this->SetActorLocation(GetActorLocation() - SelectabilityOffset);
+		this->SetActorScale3D(FVector(1.f));
+		// disable collision
+		this->SetActorEnableCollision(false);
 	}
 
 	// To do Selectability visualization
