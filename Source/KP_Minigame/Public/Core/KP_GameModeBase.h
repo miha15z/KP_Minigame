@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "KP_Structs.h"
+#include "AbilitySystemInterface.h"
 #include "KP_GameModeBase.generated.h"
 
 class UBoardNavigationSystem;
@@ -12,6 +13,7 @@ class UGameBoardGeneratorBase;
 class UGenDataAsset;
 class UUserWidget;
 class AKPPawn;
+class UAbilitySystemComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRerollDices, FRollDicesData, RollResult, AKPPawn*, Player);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishStep);
@@ -21,19 +23,27 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWinKPGame, int32, PlayerId);
  * 
  */
 UCLASS()
-class KP_MINIGAME_API AKP_GameModeBase : public AGameModeBase
+class KP_MINIGAME_API AKP_GameModeBase : public AGameModeBase, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable)
 	static AKP_GameModeBase* GetKPGameMode(UObject* WorldContext);
 
+	AKP_GameModeBase(const FObjectInitializer& ObjectInitializer /*= FObjectInitializer::Get()*/);
+
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void StartPlay();
 	void UpdateGameBoard();
 	void ResetCells();
+	//tags
+
 	//navigation
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	UAbilitySystemComponent* AbilitySystemComponent;
+
 	UPROPERTY(VisibleInstanceOnly, Category = "Board|Navigation")
 	UBoardNavigationSystem* BoardNavSystem;
 
@@ -46,6 +56,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category ="Board|Navigation")
 	UBoardNavigationSystem* GetBoardNavSystem() const { return BoardNavSystem; }
 
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
+	{
+		return AbilitySystemComponent;
+	}
 	//generator
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Generator")

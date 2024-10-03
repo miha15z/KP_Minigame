@@ -9,12 +9,19 @@
 #include "KPPawn.h"
 #include "BoardPiece.h"
 #include "Cell.h"
+#include "KP_GameplayTags.h"
+#include "AbilitySystemComponent.h"
 
 AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
 {
     auto World = WorldContext->GetWorld();
     check(World);
     return World->GetAuthGameMode< AKP_GameModeBase>();
+}
+
+AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
+{
+    AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 }
 
 void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -152,6 +159,8 @@ ACell* AKP_GameModeBase::GetCellByID(int32 ID) const
 
 bool AKP_GameModeBase::IsWin_Implementation() const
 {
+    check(AbilitySystemComponent);
+    AbilitySystemComponent->HasMatchingGameplayTag(KP_GameplayTags::Ability_ActivateWin);
     return false;
 }
 
