@@ -9,6 +9,28 @@ class ACell;
 class ABoardPiece;
 class UGameplayAbilityCellToPawnBase;
 
+USTRUCT(BlueprintType)
+struct FBoardCoord
+{
+	GENERATED_USTRUCT_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 x;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 y;
+
+	FBoardCoord operator*(FBoardCoord const& other) const {
+		return FBoardCoord{ (this->x * other.x), (this->y * other.y) };
+	}
+
+	FBoardCoord operator-(FBoardCoord const& other) const {
+		return FBoardCoord{ (this->x - other.x), (this->y - other.y) };
+	}
+
+	bool operator==(FBoardCoord const& other) const {
+		return (this->x == other.x) and (this->y == other.y);
+	}
+};
+
 USTRUCT()
 struct FKPPawnData
 {
@@ -19,7 +41,6 @@ public:
 
 	UPROPERTY(EditInstanceOnly)
 	int32 CellId = -1; // -1  =  not valid value!
-
 	// to do: abilities for pawn
 };
 
@@ -56,6 +77,11 @@ public:
 
 	UPROPERTY(EditInstanceOnly)
 	FColor PlayerColor = FColor::Black;
+
+	// Direction multiplier for ABoardPiece.MovementDirections
+	// Use for changing team movement on the board
+	UPROPERTY(EditInstanceOnly)
+	FBoardCoord PawnsDirectionMultiplier;
 };
 
 USTRUCT(BlueprintType)
@@ -88,20 +114,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FKPPlayerData> PlayersData;
-};
-
-USTRUCT(BlueprintType)
-struct FBoardCoord
-{
-	GENERATED_USTRUCT_BODY()
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 x;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 y;
-
-	bool operator==(FBoardCoord const& other) const {
-		return (this->x == other.x) and (this->y == other.y);
-	}
 };
 
 UENUM(BlueprintType)

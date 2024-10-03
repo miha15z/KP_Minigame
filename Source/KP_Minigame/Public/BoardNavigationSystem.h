@@ -8,7 +8,6 @@
 #include "BoardNavigationSystem.generated.h"
 
 class ACell;
-// TODO: Create actual class
 class ABoardPiece;
 struct FBoardCoord;
 /**
@@ -45,7 +44,7 @@ public:
 	void GetPossibleMovementsLocalData(ABoardPiece* OriginPiece, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
 
 
-	//!!!
+	//!!! Check in Blueprints - might not work
 	UFUNCTION(BlueprintCallable)
 	void GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath);
 

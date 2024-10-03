@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	const class UBoardPieceAttributeSet* AttributeSet;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FBoardCoord> MovementDirections;
+
 public:	
 	// Sets default values for this actor's properties
 	ABoardPiece();
@@ -69,6 +72,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Movement)
 	void MoveToCell(int32 CellId, FVector CellLocation);
+
+	const TArray<FBoardCoord>& GetMovementDirections();
+	void SetupTeamMovementDirectionMultiplier(FBoardCoord DirectionMultiplier);
 
 protected:
 	bool bAlive = true; // to do: chenge to atributes
