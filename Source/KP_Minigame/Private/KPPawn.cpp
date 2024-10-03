@@ -147,7 +147,10 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 	TArray<FBoardAtomicMovement> PathToCell;
 	bool bMovementPossible;
 	NavSys->GetMovementPathToCell(PossibleMovements, GetKPGameMode()->GetCellByID(LastUsedBoardPiece->GetCurrentCellId()), SelectedCell.Get(), bMovementPossible, PathToCell);
-	StepsCounter -= FMath::CeilToInt((PathToCell.Last().MovementPointsConsumed + PathToCell.Last().MovementPointsLeft) - (PathToCell[0].MovementPointsLeft));
+	int32 PointsConsumed = FMath::CeilToInt((PathToCell.Last().MovementPointsConsumed + PathToCell.Last().MovementPointsLeft) - (PathToCell[0].MovementPointsLeft));
+	StepsCounter -= PointsConsumed;
+	// When the move happens, consume the available points for the pawn
+	LastUsedBoardPiece.Get()->ConsumeMovementPoints(PointsConsumed);
 
 	GetKPGameMode()->LeaveCell(LastUsedBoardPiece->GetCurrentCellId(), LastUsedBoardPiece.Get());
 	LastUsedBoardPiece->MoveToCell(SelectedCell->GetCellId(), SelectedCell->GetActorLocation());
@@ -170,7 +173,8 @@ void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 
 	// TODO:
 	// MovementPoints Calculation
-	NavSys->GetPossibleMovementsLocalData(LastUsedBoardPiece.Get(), StepsCounter, PossibleMovements);
+	// Check all the cells the board piecce can reach given the steps count and available movement points
+	NavSys->GetPossibleMovementsLocalData(LastUsedBoardPiece.Get(), FMath::Min(StepsCounter, LastUsedBoardPiece.Get()->GetAvailableMovementPoints()), PossibleMovements);
 
 	for (auto& MovementData : PossibleMovements) {
 		MovementData.CellTo->SetState(ECellState::SelectToNav);

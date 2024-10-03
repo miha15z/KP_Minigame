@@ -130,6 +130,27 @@ void ABoardPiece::SetupTeamMovementDirectionMultiplier(FBoardCoord DirectionMult
 	}
 }
 
+int32 ABoardPiece::GetAvailableMovementPoints() const
+{
+	return FMath::FloorToInt32(GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsMaxAttribute())) - MovementPointsConsumed;
+}
+
+void ABoardPiece::ResetAvailableMovementPoints()
+{
+	MovementPointsConsumed = 0;
+}
+
+void ABoardPiece::ConsumeMovementPoints(int32 Points)
+{
+	if (GetAvailableMovementPoints() >= Points) {
+		MovementPointsConsumed += Points;
+	}
+	else {
+		check(false);
+	}
+	
+}
+
 void ABoardPiece::OnChengSelection_Implementation()
 {
 	// only test

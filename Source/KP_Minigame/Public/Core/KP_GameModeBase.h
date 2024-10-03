@@ -36,6 +36,8 @@ public:
 	virtual void StartPlay();
 	void UpdateGameBoard();
 	void ResetCells();
+	// Resets Board Pieces at the end of the turn
+	void ResetBoardPieces();
 	//tags
 
 	//navigation

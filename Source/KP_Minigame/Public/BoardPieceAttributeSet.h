@@ -24,4 +24,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MovementPointsModifier;
 	ATTRIBUTE_ACCESSORS(UBoardPieceAttributeSet, MovementPointsModifier)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData MovementPointsMax;
+	ATTRIBUTE_ACCESSORS(UBoardPieceAttributeSet, MovementPointsMax)
+
 };
