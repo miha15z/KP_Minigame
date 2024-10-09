@@ -13,5 +13,4 @@ UCLASS()
 class KP_MINIGAME_API UGameplayAbilityFateStone : public UGameplayAbility
 {
 	GENERATED_BODY()
-	
 };

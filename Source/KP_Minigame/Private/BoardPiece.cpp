@@ -3,6 +3,7 @@
 #include "BoardPiece.h"
 #include "BoardPieceAttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "KP_AbilitySystemComponent.h"
 
 // Sets default values
 ABoardPiece::ABoardPiece()
@@ -10,7 +11,7 @@ ABoardPiece::ABoardPiece()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 }
 
 // Called when the game starts or when spawned
