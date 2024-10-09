@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+// Is it an overkill?
+#include "AbilitySystemComponent.h"
 #include "KP_Structs.generated.h"
 
 class ACell;
@@ -147,4 +149,13 @@ public:
 	float MovementPointsLeft;
 	UPROPERTY()
 	float MovementPointsConsumed;
+};
+
+// Structure to support turn-based active effect handling
+struct FActiveTurnBasedEffectHandle {
+public:
+	FActiveGameplayEffectHandle ActiveEffectHandle;
+
+	// -1 if the effect is permanent (like startup victory cells and kinging cells)
+	int32 TurnsLeft;
 };

@@ -152,5 +152,4 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void  LeaveCell(int32 CellId, ABoardPiece* BoardPiece);
 
-
 };
