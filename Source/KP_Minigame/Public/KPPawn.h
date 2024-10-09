@@ -52,7 +52,6 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdateMovomentInfo OnUpdateMovomentInfo;
 
-	bool CanSelectBoardPiece(ABoardPiece* BoardPiece) const;
 	void PreMakeStepData();
 	void MakeStepData(int32  StepPoints);
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
@@ -69,6 +68,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void TrySelectBoardPiece(ABoardPiece* BoardPiece);
+
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void RestSelectionCurrenBoardPiece();
 
 	// call on GM  for Player or cool AI  for bot
@@ -76,7 +77,7 @@ public:
 	void SelectCell(ACell* Cell);
 
 	UFUNCTION(BlueprintPure, Category = Gameplay)
-	bool CanMoveBoardPiece();
+	bool CanMoveBoardPiece() const;
 
 protected:
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
