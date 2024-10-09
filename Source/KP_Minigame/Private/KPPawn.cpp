@@ -38,11 +38,6 @@ void AKPPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-bool AKPPawn::CanSelectBoardPiece(ABoardPiece* BoardPiece) const
-{
-	return false;
-}
-
 void AKPPawn::PreMakeStepData()
 {
 	bCanRollDices = true;
@@ -130,7 +125,7 @@ void AKPPawn::SelectCell(ACell* Cell)
 	OnUpdateMovomentInfo.Broadcast();
 }
 
-bool AKPPawn::CanMoveBoardPiece()
+bool AKPPawn::CanMoveBoardPiece() const 
 {
 	return SelectedCell.IsValid() && SelectedBoardPiece.IsValid();
 }
