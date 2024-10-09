@@ -10,6 +10,7 @@
 class ACell;
 class ABoardPiece;
 class UGameplayAbilityCellToPawnBase;
+class UFateStoneData;
 
 USTRUCT(BlueprintType)
 struct FBoardCoord
@@ -84,6 +85,9 @@ public:
 	// Use for changing team movement on the board
 	UPROPERTY(EditInstanceOnly)
 	FBoardCoord PawnsDirectionMultiplier;
+
+	UPROPERTY(EditInstanceOnly)
+	TArray<TSoftObjectPtr<UFateStoneData>> StartupFateStones;
 };
 
 USTRUCT(BlueprintType)
