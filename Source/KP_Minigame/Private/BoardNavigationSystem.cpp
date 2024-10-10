@@ -15,17 +15,18 @@ void UBoardNavigationSystem::Init(FBoardData* NewBoardData)
 	BoardDataRef = NewBoardData;
 }
 
-void UBoardNavigationSystem::CalculateOrthogonalLength(ACell* Origin, ACell* Destination, float& Length)
+void UBoardNavigationSystem::CalculateOrthogonalLength(const ACell * Origin, const ACell * Destination, float& Length)
 {
 	Length = 0.f;//abs(Destination->CoordX - Origin->CoordX) - abs(Destination->CoordY - Origin->CoordY);
 	return;
 }
 
-void UBoardNavigationSystem::CalculateNeighbouringCoordsByMask(FBoardCoord ReferenceCoord, TArray<FBoardCoord> MovementMask, TArray<FBoardCoord>& NeighbouringCoords)
+void UBoardNavigationSystem::CalculateNeighbouringCoordsByMask(FBoardCoord ReferenceCoord, const TArray<FBoardCoord>& MovementMask, TArray<FBoardCoord>& NeighbouringCoords)
 {
 	TArray<FBoardCoord> ResultingArray;
 
-	for (FBoardCoord Direction : MovementMask) {
+	for (FBoardCoord Direction : MovementMask) 
+	{
 		FBoardCoord AffectedByMovement = ReferenceCoord;
 		AffectedByMovement.x += Direction.x;
 		AffectedByMovement.y += Direction.y;
@@ -36,7 +37,7 @@ void UBoardNavigationSystem::CalculateNeighbouringCoordsByMask(FBoardCoord Refer
 }
 
 // TODO: Finish or remove
-void UBoardNavigationSystem::SetupNeighbouringCellsByMask(TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask)
+void UBoardNavigationSystem::SetupNeighbouringCellsByMask(const TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask)
 {
 	int CellNum = CellsOnBoard.Num();
 	// For each cell on board
@@ -45,11 +46,14 @@ void UBoardNavigationSystem::SetupNeighbouringCellsByMask(TArray<ACell*>& CellsO
 		TArray<FBoardCoord> NeighbouringCoords;
 		UBoardNavigationSystem::CalculateNeighbouringCoordsByMask(OriginCell->Coord, MovementMask, NeighbouringCoords);
 		// And find them among other cells on the board
-		for (FBoardCoord NeighbouringCoord : NeighbouringCoords) {
+		for (FBoardCoord NeighbouringCoord : NeighbouringCoords) 
+		{
 			bool isFound = false;
-			for (int i = 0; (i < CellNum); i++) {
+			for (int i = 0; (i < CellNum); i++) 
+			{
 				ACell* currentCell = CellsOnBoard[i];
-				if (NeighbouringCoord == currentCell->Coord) {
+				if (NeighbouringCoord == currentCell->Coord) 
+				{
 					OriginCell->Neighbours.Add(currentCell);
 					break;
 				}
