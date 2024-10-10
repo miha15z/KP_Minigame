@@ -206,7 +206,8 @@ void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 
 void AKPPawn::ClearNavigationCell()
 {
-	for (auto& MovementData : PossibleMovements) {
+	for (auto& MovementData : PossibleMovements) 
+	{
 		MovementData.CellTo->Reset();
 	}
 	// to do;
