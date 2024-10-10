@@ -180,6 +180,9 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
         return false;
     }
 
+    // Decrease fate stone turn counter
+    Cast<UKP_AbilitySystemComponent>(AbilitySystemComponent)->DecreaseActiveTurnBasedEffectsCounters();
+
     // Resets Board Pieces at the end of the turn
     ResetBoardPieces();
 
