@@ -65,7 +65,7 @@ void ACell::SetState(const ECellState NewState)
 	ACell::SetState_BP(NewState);
 }
 
-void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn)
+void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece ** OutKilledPawn)
 {
 	check(Pawn);
 	if (PawnPtr.IsValid() && PawnPtr.Get()->GetOwnPlayerId() != Pawn->GetOwnPlayerId())
@@ -73,7 +73,7 @@ void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn)
 		PawnPtr->Kill(Pawn);
 		auto tempPawn = PawnPtr.Get();
 		*OutKilledPawn = tempPawn;
-		UE_LOG(LogTemp, Display, TEXT("Cell: Kill BoardPiece %s"), *(*OutKilledPawn)->GetHumanReadableName());
+		//UE_LOG(LogTemp, Display, TEXT("Cell: Kill BoardPiece %s"), *(*OutKilledPawn)->GetHumanReadableName());
 		//To Do:: Kill 
 	}
 

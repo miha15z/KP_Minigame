@@ -11,6 +11,8 @@
 
 class UGameplayAbility;
 class ABoardPiece;
+class UAbilitySystemComponent;
+class UCellAttributeSet;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCellChosenDelegate, ACell*, ChosenCell, int, PlayerID);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnSelectCell, ACell*);
@@ -71,16 +73,16 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	class UAbilitySystemComponent* AbilitySystemComponent;
+	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	const class UCellAttributeSet* AttributeSet;
+	const UCellAttributeSet* AttributeSet;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
 	ECellState CurrentState = ECellState::None;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
-	TWeakObjectPtr<ABoardPiece> PawnPtr;
+	TWeakObjectPtr<ABoardPiece> PawnPtr = nullptr;
 public:
 	// Sets default values for this actor's properties
 	ACell();
@@ -126,7 +128,7 @@ public:
 	}
 
 	//UFUNCTION(BlueprintCallable, Category = Cells)
-	void PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn);
+	void PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece ** OutKilledPawn);
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	void LeavePawn(const ABoardPiece * Pawn);
