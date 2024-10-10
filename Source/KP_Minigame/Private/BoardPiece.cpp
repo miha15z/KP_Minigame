@@ -39,7 +39,7 @@ void ABoardPiece::NotifyActorOnClicked(FKey ButtonPressed)
 	}
 }
 
-void ABoardPiece::SetNewCellId(int32 NewCellId)
+void ABoardPiece::SetNewCellId(const int32 NewCellId)
 {
 	CurrentCellId = NewCellId;
 }
@@ -49,7 +49,7 @@ int32 ABoardPiece::GetCurrentCellId() const
 	return CurrentCellId;
 }
 
-void ABoardPiece::SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor)
+void ABoardPiece::SetOwnPlayerData(const int32 PlayerId, const FColor& PlayerColor)
 {
 	OwnPlayerId = PlayerId;
 	OwnPlayerColor = PlayerColor;
@@ -58,7 +58,7 @@ void ABoardPiece::SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor)
 	SetOwnPlayerDataBP();
 }
 
-void ABoardPiece::EnableSelectability(bool NewState)
+void ABoardPiece::EnableSelectability(const bool NewState)
 {
 	if (NewState != bCandSelected)
 	{
@@ -96,7 +96,7 @@ bool ABoardPiece::IsAlive() const
 	return bAlive;
 }
 
-bool ABoardPiece::Kill(ABoardPiece* OherPawn)
+bool ABoardPiece::Kill(const ABoardPiece * Killer)
 {
 	if (IsAlive())
 	{
@@ -104,12 +104,18 @@ bool ABoardPiece::Kill(ABoardPiece* OherPawn)
 		bAlive = false;
 		SetActorHiddenInGame(true);
 		SetActorLocation(FVector(0.f, 0.f, -1000.f));
+		check(Killer);
+		UE_LOG(LogTemp, Display, TEXT("Player's (%d) the %s kill the %s (player's (%d))"), 
+			GetOwnPlayerId(), 
+			*GetHumanReadableName(),
+			*Killer->GetHumanReadableName(),
+			Killer->GetOwnPlayerId())
 		return true;
 	}
 	return false;
 }
 
-void ABoardPiece::MoveToCell(int32 CellId, FVector CellLocation)
+void ABoardPiece::MoveToCell(const int32 CellId, const FVector& CellLocation)
 {
 	CurrentCellId = CellId;
 	SetActorLocation(CellLocation);
@@ -120,13 +126,14 @@ const TArray<FBoardCoord>& ABoardPiece::GetMovementDirections() const
 	return MovementDirections;
 }
 
-void ABoardPiece::SetupTeamMovementDirectionMultiplier(FBoardCoord DirectionMultiplier)
+void ABoardPiece::SetupTeamMovementDirectionMultiplier(const FBoardCoord& DirectionMultiplier)
 {
 	// TODO
 	// normalize DirectionMultiplier
 
 	// modify movement direction according to the team multiplier
-	for (FBoardCoord& Direction : MovementDirections) {
+	for (FBoardCoord& Direction : MovementDirections) 
+	{
 		Direction = DirectionMultiplier * Direction;
 	}
 }
@@ -141,12 +148,14 @@ void ABoardPiece::ResetAvailableMovementPoints()
 	MovementPointsConsumed = 0;
 }
 
-void ABoardPiece::ConsumeMovementPoints(int32 Points)
+void ABoardPiece::ConsumeMovementPoints(const int32 Points)
 {
-	if (GetAvailableMovementPoints() >= Points) {
+	if (GetAvailableMovementPoints() >= Points)
+	{
 		MovementPointsConsumed += Points;
 	}
-	else {
+	else 
+	{
 		check(false);
 	}
 	

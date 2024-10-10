@@ -9,8 +9,9 @@
 #include "BoardPiece.generated.h"
 
 
-
+class UAbilitySystemComponent;
 class ACell;
+class UBoardPieceAttributeSet;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnTrySelectBoardPiece, ABoardPiece*)
 
@@ -21,11 +22,12 @@ class KP_MINIGAME_API ABoardPiece : public AActor, public IAbilitySystemInterfac
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	class UAbilitySystemComponent* AbilitySystemComponent;
+	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	const class UBoardPieceAttributeSet* AttributeSet;
+	const UBoardPieceAttributeSet* AttributeSet;
 
+	// maybe to use data from PlayerDataAsset
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FBoardCoord> MovementDirections;
 
@@ -47,20 +49,21 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
 	
+	//make private and use friendly Generator
 	UFUNCTION(BlueprintCallable, Category = BoardMove)
-	void SetNewCellId(int32 NewCellId);
+	void SetNewCellId(const int32 NewCellId);
 
 	UFUNCTION(BlueprintCallable, Category = BoardMove)
 	int32 GetCurrentCellId() const; 
 
 	UFUNCTION(BlueprintCallable, Category = Player)
-	FORCEINLINE int32 GetOwnPlayerId()const {return OwnPlayerId;}
+	FORCEINLINE int32 GetOwnPlayerId() const { return OwnPlayerId; }
 
 	UFUNCTION(BlueprintCallable, Category = Player)
-	void SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor);
+	void SetOwnPlayerData(const int32 PlayerId, const FColor& PlayerColor);
 
 	UFUNCTION(BlueprintCallable, Category = Input)
-	void EnableSelectability(bool NewState);
+	void EnableSelectability(const bool NewState);
 
 	UFUNCTION(BlueprintCallable, Category = Player)
 	EBoardPiece GetBoardPieceType() const;
@@ -71,13 +74,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Player)
 	bool IsAlive() const;
 
-	bool Kill(ABoardPiece* OherPawn);
+	bool Kill(const ABoardPiece * OherPawn);
 
 	UFUNCTION(BlueprintCallable, Category = Movement)
-	void MoveToCell(int32 CellId, FVector CellLocation);
+	void MoveToCell(const int32 CellId, const FVector& CellLocation);
 
 	const TArray<FBoardCoord>& GetMovementDirections() const;
-	void SetupTeamMovementDirectionMultiplier(FBoardCoord DirectionMultiplier);
+	void SetupTeamMovementDirectionMultiplier(const FBoardCoord& DirectionMultiplier);
 
 	// Get movements points available yet this turn
 	UFUNCTION(BlueprintCallable)
@@ -89,7 +92,7 @@ public:
 
 	// Detract points from the available points when the board piece moves
 	UFUNCTION(BlueprintCallable)
-	void ConsumeMovementPoints(int32 Points);
+	void ConsumeMovementPoints(const int32 Points);
 
 protected:
 	bool bAlive = true; // to do: chenge to atributes
@@ -114,7 +117,7 @@ protected:
 
 protected:
 	UPROPERTY(Transient)
-	int32 CurrentCellId;
+	int32 CurrentCellId = -1;
 
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
 	int32 OwnPlayerId = -1;
