@@ -120,6 +120,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FKPPlayerData> PlayersData;
+
+	ACell* GetGellByIdChecked(const int32 Id) const;
 };
 
 UENUM(BlueprintType)
