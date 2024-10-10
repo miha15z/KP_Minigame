@@ -13,7 +13,7 @@
 AKPPawn::AKPPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -44,7 +44,7 @@ void AKPPawn::PreMakeStepData()
 	OnUpdateCanRollState.Broadcast();
 }
 
-void AKPPawn::MakeStepData(int32 StepPoints)
+void AKPPawn::MakeStepData(const int32 StepPoints)
 {
 	SelectedBoardPiece = nullptr;
 	StepsCounter = StepPoints;
@@ -71,7 +71,7 @@ void AKPPawn::RollDices()
 {
 	if (CanRollDices() && GetKPGameMode()->RerollDices(this))
 	{
-		auto RollData = GM->GetLastRollData();
+		const FRollDicesData RollData = GM->GetLastRollData();
 		MakeStepData(RollData.Value1 > RollData.Value2 ? RollData.Value1 : RollData.Value2);
 		bCanRollDices = false;
 		OnUpdateCanRollState.Broadcast();
@@ -147,12 +147,12 @@ AKP_GameModeBase* AKPPawn::GetKPGameMode()
 void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 {
 	check(SelectedBoardPiece.IsValid() && SelectedCell.IsValid());
-	// Updatecounter
+	// Update counter
 	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();
 	TArray<FBoardAtomicMovement> PathToCell;
 	bool bMovementPossible;
 	NavSys->GetMovementPathToCell(PossibleMovements, GetKPGameMode()->GetCellByID(SelectedBoardPiece->GetCurrentCellId()), SelectedCell.Get(), bMovementPossible, PathToCell);
-	int32 PointsConsumed = FMath::CeilToInt((PathToCell.Last().MovementPointsConsumed + PathToCell.Last().MovementPointsLeft) - (PathToCell[0].MovementPointsLeft));
+	const int32 PointsConsumed = FMath::CeilToInt((PathToCell.Last().MovementPointsConsumed + PathToCell.Last().MovementPointsLeft) - (PathToCell[0].MovementPointsLeft));
 	StepsCounter -= PointsConsumed;
 	// When the move happens, consume the available points for the pawn
 	SelectedBoardPiece.Get()->ConsumeMovementPoints(PointsConsumed);

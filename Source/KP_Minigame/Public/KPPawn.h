@@ -57,7 +57,7 @@ public:
 	TArray<TSoftObjectPtr<UFateStoneData>> OwnedFateStones;
 
 	void PreMakeStepData();
-	void MakeStepData(int32  StepPoints);
+	void MakeStepData(const int32 StepPoints);
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
 	void InitBoardPieces(TArray<FKPPawnInfo>& PawnsInfo);
 
