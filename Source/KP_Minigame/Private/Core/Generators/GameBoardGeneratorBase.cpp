@@ -34,16 +34,22 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	}
 
 	// Setup Special Cell cases
-	for (FKPCellData CellData : GenData->GetCellsData()) {
-		for (ACell* Cell : BoardData.Cells) {
-			if (CellData.CellId == Cell->CellId) {
+	for (FKPCellData CellData : GenData->GetCellsData())
+	{
+		// to do chenge to find or binare sersh
+		for (ACell* Cell : BoardData.Cells) 
+		{
+			if (CellData.CellId == Cell->CellId) 
+			{
 				// Setup cell ability info holders
 				Cell->AbilityInfoHolders.Empty();
-				for (FGameplayAbilityCellToPawnInfo Info : CellData.StartupAbilitiesInfo) {
-					UGameplayAbilityCellToPawnInfoHolder* InfoHolder = NewObject<UGameplayAbilityCellToPawnInfoHolder>();
+				for (FGameplayAbilityCellToPawnInfo Info : CellData.StartupAbilitiesInfo) 
+				{
+					UGameplayAbilityCellToPawnInfoHolder* InfoHolder = NewObject<UGameplayAbilityCellToPawnInfoHolder>(World);
 					InfoHolder->SetInfo(Info);
 					Cell->AbilityInfoHolders.Add(InfoHolder);
 				}
+				break;
 			}
 		}
 	}
