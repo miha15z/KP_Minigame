@@ -49,7 +49,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorOnClicked(FKey ButtonPressed = EKeys::LeftMouseButton) override;
 	
-	//make private and use friendly Generator
 	UFUNCTION(BlueprintCallable, Category = BoardMove)
 	void SetNewCellId(const int32 NewCellId);
 
