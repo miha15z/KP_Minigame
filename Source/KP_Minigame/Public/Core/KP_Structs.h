@@ -148,9 +148,9 @@ struct FBoardAtomicMovement {
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(BlueprintReadOnly)
-	ACell* CellTo;
+	ACell* CellTo = nullptr;
 	UPROPERTY(BlueprintReadOnly)
-	ACell* CellFrom;
+	ACell* CellFrom = nullptr;
 	UPROPERTY()
 	float MovementPointsLeft;
 	UPROPERTY()
