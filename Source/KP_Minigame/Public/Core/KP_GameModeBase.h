@@ -52,6 +52,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Navigation")
 	TSubclassOf<UBoardNavigationSystem> BoardNavSystemClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
+	FGameplayTagContainer WinTags;
+
 	UFUNCTION()
 	void SelectCellForCurrentPlayer(ACell* Cell);
 public:
@@ -138,9 +141,6 @@ public:
 	bool EndTurn(AKPPawn* PlayerPawn);
 
 	bool CheckWinState() const ;
-
-	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-	void SelectNewBoardPiece(ABoardPiece* NewBoardPiece);
 
 	void SelectNextPawn();
 

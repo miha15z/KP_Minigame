@@ -20,9 +20,10 @@ AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
     return World->GetAuthGameMode< AKP_GameModeBase>();
 }
 
-AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
+AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
     AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+    WinTags.AddTag(KP_GameplayTags::Ability_ActivateWin);
 }
 
 void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -88,13 +89,14 @@ void AKP_GameModeBase::UpdateGameBoard()
 {
     ResetCells();
 
-    for (auto& PlayerData : BoardData.PlayersData)
-    {
-        for (auto& PawnInfo : PlayerData.Pawns)
-        {
-           // PawnInfo.Pawn->
-        }
-    }
+    //  to do: update pawns, apply abilities, update steps counters 
+    //for (auto& PlayerData : BoardData.PlayersData)
+    //{
+    //    for (auto& PawnInfo : PlayerData.Pawns)
+    //    {
+    //       // PawnInfo.Pawn->
+    //    }
+    //}
 }
 
 void AKP_GameModeBase::ResetCells()
@@ -148,10 +150,11 @@ bool AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
         LastRollData.Value1 = RollDice();
         LastRollData.Value2 = RollDice();
         OnRerollDices.Broadcast(LastRollData, PlayerPawn);
-        if (LastRollData.Value1 == LastRollData.Value2)
-        {
-            // to do: Get bonus
-        }
+
+        //if (LastRollData.Value1 == LastRollData.Value2)
+        //{
+        //    // to do: Get bonus
+        //}
 
         return true;
     }
@@ -170,7 +173,7 @@ ACell* AKP_GameModeBase::GetCellByID(int32 Id) const
 bool AKP_GameModeBase::IsWin_Implementation() const
 {
     check(AbilitySystemComponent);
-    return  AbilitySystemComponent->HasMatchingGameplayTag(KP_GameplayTags::Ability_ActivateWin);
+    return  AbilitySystemComponent->HasAnyMatchingGameplayTags(WinTags);
 }
 
 bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
@@ -207,10 +210,6 @@ bool AKP_GameModeBase::CheckWinState()const
     {
         return false;
     }
-}
-
-void AKP_GameModeBase::SelectNewBoardPiece(ABoardPiece* NewBoardPiece)
-{
 }
 
 void AKP_GameModeBase::SelectNextPawn()

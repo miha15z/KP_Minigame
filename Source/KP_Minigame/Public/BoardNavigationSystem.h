@@ -29,13 +29,13 @@ public:
 	void Init(FBoardData* NewBoardData);
 
 	UFUNCTION(BlueprintCallable)
-	void CalculateOrthogonalLength(ACell* Origin, ACell* Destination, float& Length);
+	void CalculateOrthogonalLength(const ACell * Origin, const ACell * Destination, float& Length);
 
 	UFUNCTION(BlueprintCallable)
-	void CalculateNeighbouringCoordsByMask(FBoardCoord ReferenceCoord, TArray<FBoardCoord> MovementMask, TArray<FBoardCoord>& NeighbouringCoords);
+	void CalculateNeighbouringCoordsByMask(FBoardCoord ReferenceCoord, const TArray<FBoardCoord>& MovementMask, TArray<FBoardCoord>& NeighbouringCoords);
 
 	UFUNCTION(BlueprintCallable)
-	void SetupNeighbouringCellsByMask(TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask);
+	void SetupNeighbouringCellsByMask(const TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask);
 	
 	UFUNCTION(BlueprintCallable)
 	void GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, ABoardPiece* OriginPiece, ACell* OriginCell, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
