@@ -59,7 +59,7 @@ void ACell::Reset()
 	SetState(ECellState::None);
 }
 
-void ACell::SetState(ECellState NewState)
+void ACell::SetState(const ECellState NewState)
 {
 	CurrentState = NewState;
 	ACell::SetState_BP(NewState);
@@ -82,7 +82,7 @@ void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn)
 	UE_LOG(LogTemp, Warning, TEXT("Put pawn %s to cell %d"), *Pawn->GetHumanReadableName(), CellId);
 }
 
-void ACell::LeavePawn(ABoardPiece* Pawn)
+void ACell::LeavePawn(const ABoardPiece * Pawn)
 {
 	// to do : reset cell abilities
 	UE_LOG(LogTemp, Warning, TEXT(" pawn %s leave from cell %d"), *Pawn->GetHumanReadableName(), CellId);
@@ -95,7 +95,7 @@ ABoardPiece* ACell::GetStoodPawn() const
 	return PawnPtr.Get();
 }
 
-void ACell::ActivateOwnedAbilitiesOnStoodPawn()
+void ACell::ActivateOwnedAbilitiesOnStoodPawn() const
 {
 	ABoardPiece* StandingBoardPiece = PawnPtr.Get();
 	if (StandingBoardPiece != NULL) {
@@ -103,11 +103,11 @@ void ACell::ActivateOwnedAbilitiesOnStoodPawn()
 	}
 }
 
-void ACell::ActivateOwnedAbilities(ABoardPiece* TargetBoardPiece)
+void ACell::ActivateOwnedAbilities(const ABoardPiece * TargetBoardPiece) const
 {
 	for (UGameplayAbilityCellToPawnInfoHolder* AbilityInfoHolder : AbilityInfoHolders) {
 		FGameplayAbilityCellToPawnInfo AbilityInfo = AbilityInfoHolder->GetInfo();
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityInfo.AbilityClass, 1, INDEX_NONE, this);
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityInfo.AbilityClass, 1, INDEX_NONE, const_cast<ACell*>(this));
 		FGameplayEventData EventData; //= FGameplayEventData(this, TargetBoardPiece);
 		EventData.Instigator = this;
 		EventData.Target = TargetBoardPiece;

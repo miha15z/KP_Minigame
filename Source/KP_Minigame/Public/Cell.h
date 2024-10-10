@@ -108,10 +108,10 @@ public:
 	void Reset();
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
-	void SetState(ECellState NewState);
+	void SetState(const ECellState NewState);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = Cell)
-	void SetState_BP(ECellState NewState);
+	void SetState_BP(const ECellState NewState);
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	FORCEINLINE ECellState GetCurrentState() const
@@ -129,14 +129,14 @@ public:
 	void PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece** OutKilledPawn);
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
-	void LeavePawn(ABoardPiece* Pawn);
+	void LeavePawn(const ABoardPiece * Pawn);
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	ABoardPiece* GetStoodPawn() const;
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
-	void ActivateOwnedAbilitiesOnStoodPawn();
+	void ActivateOwnedAbilitiesOnStoodPawn() const;
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
-	void ActivateOwnedAbilities(ABoardPiece* TargetBoardPiece);
+	void ActivateOwnedAbilities(const ABoardPiece * TargetBoardPiece) const;
 };
