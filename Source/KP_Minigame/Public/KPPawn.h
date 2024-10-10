@@ -10,6 +10,7 @@
 class ABoardPiece;
 class AKP_GameModeBase;
 class ACell;
+class UFateStoneData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateCanRollState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateSelectCell);
@@ -51,6 +52,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdateMovomentInfo OnUpdateMovomentInfo;
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<TSoftObjectPtr<UFateStoneData>> OwnedFateStones;
 
 	void PreMakeStepData();
 	void MakeStepData(int32  StepPoints);
@@ -104,6 +108,7 @@ protected:
 
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	TWeakObjectPtr<ACell> SelectedCell = nullptr;
+
 protected:
 	EBoardPiece LastUsedBoardPieceTipe;
 };

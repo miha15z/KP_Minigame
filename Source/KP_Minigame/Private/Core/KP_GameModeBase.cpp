@@ -10,6 +10,7 @@
 #include "BoardPiece.h"
 #include "Cell.h"
 #include "KP_GameplayTags.h"
+#include "KP_AbilitySystemComponent.h"
 #include "AbilitySystemComponent.h"
 
 AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
@@ -21,7 +22,7 @@ AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
 
 AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
-    AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+    AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 }
 
 void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -57,6 +58,8 @@ void AKP_GameModeBase::StartPlay()
     PlayerPawn->PlayerId = 0;
     PlayerPawn->SetGameModePtr(this);
     PlayerPawn->InitBoardPieces(BoardData.PlayersData[0].Pawns);
+    // Setup Startup fate stones
+    PlayerPawn->OwnedFateStones = GenDataAsset.Get()->GetPlayerData(0).StartupFateStones;
     //Make GameQueue
     QueuePawns.Enqueue(PlayerPawn);
     FActorSpawnParameters SpawnParams;

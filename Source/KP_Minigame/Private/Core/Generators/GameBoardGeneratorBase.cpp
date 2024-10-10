@@ -87,6 +87,7 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 		++CurrentPlayerId;
 	}
 
+
 	return BoardData;
 }
 
