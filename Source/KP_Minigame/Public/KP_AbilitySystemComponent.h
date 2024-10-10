@@ -15,7 +15,7 @@ class KP_MINIGAME_API UKP_AbilitySystemComponent : public UAbilitySystemComponen
 {
 	GENERATED_BODY()
 	
-	virtual FActiveGameplayEffectHandle ApplyGameplayEffectSpecToTarget(const FGameplayEffectSpec& GameplayEffect, UAbilitySystemComponent* Target, FPredictionKey PredictionKey = FPredictionKey());
+	virtual FActiveGameplayEffectHandle ApplyGameplayEffectSpecToTarget(const FGameplayEffectSpec& GameplayEffect, UAbilitySystemComponent* Target, FPredictionKey PredictionKey = FPredictionKey()) override;
 
 public:
 	static void DecreaseActiveTurnBasedEffectsCounters();
@@ -25,5 +25,5 @@ protected:
 	static TArray<FActiveTurnBasedEffectHandle> ActiveTurnBasedEffects;
 
 protected:
-	static void AddActiveEffectToTurnBasedEffects(FActiveGameplayEffectHandle ActiveEffectHandle, int32 Turns);
+	static void AddActiveEffectToTurnBasedEffects(const FActiveGameplayEffectHandle& ActiveEffectHandle, const int32 Turns);
 };
