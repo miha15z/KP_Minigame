@@ -36,21 +36,14 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	// Setup Special Cell cases
 	for (FKPCellData CellData : GenData->GetCellsData())
 	{
-		// to do chenge to find or binare sersh
-		for (ACell* Cell : BoardData.Cells) 
+		ACell* Cell = BoardData.GetGellByIdChecked(CellData.CellId);
+		// Setup cell ability info holders
+		Cell->AbilityInfoHolders.Empty();
+		for (FGameplayAbilityCellToPawnInfo Info : CellData.StartupAbilitiesInfo) 
 		{
-			if (CellData.CellId == Cell->CellId) 
-			{
-				// Setup cell ability info holders
-				Cell->AbilityInfoHolders.Empty();
-				for (FGameplayAbilityCellToPawnInfo Info : CellData.StartupAbilitiesInfo) 
-				{
-					UGameplayAbilityCellToPawnInfoHolder* InfoHolder = NewObject<UGameplayAbilityCellToPawnInfoHolder>(World);
-					InfoHolder->SetInfo(Info);
-					Cell->AbilityInfoHolders.Add(InfoHolder);
-				}
-				break;
-			}
+			UGameplayAbilityCellToPawnInfoHolder* InfoHolder = NewObject<UGameplayAbilityCellToPawnInfoHolder>(World);
+			InfoHolder->SetInfo(Info);
+			Cell->AbilityInfoHolders.Add(InfoHolder);
 		}
 	}
 
@@ -66,27 +59,19 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 			auto Pawn = World->SpawnActor<ABoardPiece>(PawnData.PawnClass);
 			Pawn->SetNewCellId(PawnData.CellId);
 			// Use Array.FindByPredicate or BinareSerch
-			if (PawnData.CellId >= 0 && PawnData.CellId < BoardData.Cells.Num())
-			{
-				ACell* Cell = BoardData.Cells[PawnData.CellId];
-				Pawn->SetActorLocation(Cell->GetActorLocation());
-				PlayerPawnsData.Pawns.Add({Pawn ,PawnData.CellId });
-				ABoardPiece** KilledPawn = nullptr;
-				Cell->PutPawnOnCell(Pawn, KilledPawn);
-				Pawn->SetOwnPlayerData(CurrentPlayerId, PlayerData.PlayerColor);
-				// Apply the Pawns Directoin multiplier for changing team movement direction
-				Pawn->SetupTeamMovementDirectionMultiplier(PlayerData.PawnsDirectionMultiplier);
-			}
-			else
-			{
-				check(false);
-			}
-			
+
+			ACell* Cell = BoardData.GetGellByIdChecked(PawnData.CellId);
+			Pawn->SetActorLocation(Cell->GetActorLocation());
+			PlayerPawnsData.Pawns.Add({Pawn ,PawnData.CellId });
+			ABoardPiece** KilledPawn = nullptr;
+			Cell->PutPawnOnCell(Pawn, KilledPawn);
+			Pawn->SetOwnPlayerData(CurrentPlayerId, PlayerData.PlayerColor);
+			// Apply the Pawns Directoin multiplier for changing team movement direction
+			Pawn->SetupTeamMovementDirectionMultiplier(PlayerData.PawnsDirectionMultiplier);	
 		}
 		BoardData.PlayersData.Add(MoveTemp(PlayerPawnsData));
 		++CurrentPlayerId;
 	}
-
 
 	return BoardData;
 }

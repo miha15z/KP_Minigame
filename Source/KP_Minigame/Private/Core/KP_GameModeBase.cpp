@@ -162,12 +162,9 @@ bool AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
     return false;
 }
 
-ACell* AKP_GameModeBase::GetCellByID(int32 ID) const
+ACell* AKP_GameModeBase::GetCellByID(int32 Id) const
 {
-    if (ID >= 0 && BoardData.Cells.Num() > ID) {
-        return BoardData.Cells[ID];
-    }
-    return nullptr;
+    return BoardData.GetGellByIdChecked(Id);
 }
 
 bool AKP_GameModeBase::IsWin_Implementation() const
@@ -261,8 +258,5 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer,bo
 
 void AKP_GameModeBase::LeaveCell(int32 CellId, ABoardPiece* BoardPiece)
 {
-    check(CellId >= 0 && CellId < BoardData.Cells.Num())
-    {
-        BoardData.Cells[CellId]->LeavePawn(BoardPiece);
-    }
+    BoardData.GetGellByIdChecked(CellId)->LeavePawn(BoardPiece);
 }

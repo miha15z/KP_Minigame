@@ -119,7 +119,7 @@ void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnB
 
 void UBoardNavigationSystem::GetPossibleMovementsLocalData(ABoardPiece* OriginPiece, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
 {
-	GetPossibleMovements(BoardDataRef->Cells, OriginPiece, BoardDataRef->Cells[OriginPiece->GetCurrentCellId()], MovementPoints, PossibleMovements);
+	GetPossibleMovements(BoardDataRef->Cells, OriginPiece, BoardDataRef->GetGellByIdChecked(OriginPiece->GetCurrentCellId()), MovementPoints, PossibleMovements);
 }
 
 void UBoardNavigationSystem::GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath)
