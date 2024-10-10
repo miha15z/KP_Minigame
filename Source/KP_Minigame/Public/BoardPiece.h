@@ -55,6 +55,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Player)
 	FORCEINLINE int32 GetOwnPlayerId()const {return OwnPlayerId;}
+
 	UFUNCTION(BlueprintCallable, Category = Player)
 	void SetOwnPlayerData(int32 PlayerId, const FColor& PlayerColor);
 
@@ -63,17 +64,19 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Player)
 	EBoardPiece GetBoardPieceType() const;
+
 	void ConfirmSelection();
 	void ResetSelection();
 
 	UFUNCTION(BlueprintCallable, Category = Player)
 	bool IsAlive() const;
+
 	bool Kill(ABoardPiece* OherPawn);
 
 	UFUNCTION(BlueprintCallable, Category = Movement)
 	void MoveToCell(int32 CellId, FVector CellLocation);
 
-	const TArray<FBoardCoord>& GetMovementDirections();
+	const TArray<FBoardCoord>& GetMovementDirections() const;
 	void SetupTeamMovementDirectionMultiplier(FBoardCoord DirectionMultiplier);
 
 	// Get movements points available yet this turn

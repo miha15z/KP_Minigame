@@ -115,7 +115,7 @@ void ABoardPiece::MoveToCell(int32 CellId, FVector CellLocation)
 	SetActorLocation(CellLocation);
 }
 
-const TArray<FBoardCoord>& ABoardPiece::GetMovementDirections()
+const TArray<FBoardCoord>& ABoardPiece::GetMovementDirections() const
 {
 	return MovementDirections;
 }

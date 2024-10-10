@@ -198,7 +198,8 @@ void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 	// Check all the cells the board piecce can reach given the steps count and available movement points
 	NavSys->GetPossibleMovementsLocalData(SelectedBoardPiece.Get(), FMath::Min(StepsCounter, SelectedBoardPiece.Get()->GetAvailableMovementPoints()), PossibleMovements);
 
-	for (auto& MovementData : PossibleMovements) {
+	for (auto& MovementData : PossibleMovements)
+	{
 		MovementData.CellTo->SetState(ECellState::SelectToNav);
 	}
 }

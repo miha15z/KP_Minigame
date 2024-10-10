@@ -21,35 +21,32 @@ void UBoardNavigationSystem::CalculateOrthogonalLength(const ACell * Origin, con
 	return;
 }
 
-void UBoardNavigationSystem::CalculateNeighbouringCoordsByMask(FBoardCoord ReferenceCoord, const TArray<FBoardCoord>& MovementMask, TArray<FBoardCoord>& NeighbouringCoords)
+void UBoardNavigationSystem::CalculateNeighbouringCoordsByMask(const FBoardCoord& ReferenceCoord, const TArray<FBoardCoord>& MovementMask, TArray<FBoardCoord>& NeighbouringCoords)
 {
-	TArray<FBoardCoord> ResultingArray;
-
-	for (FBoardCoord Direction : MovementMask) 
+	NeighbouringCoords.Empty();
+	for (const FBoardCoord& Direction : MovementMask) 
 	{
 		FBoardCoord AffectedByMovement = ReferenceCoord;
 		AffectedByMovement.x += Direction.x;
 		AffectedByMovement.y += Direction.y;
-		ResultingArray.Add(AffectedByMovement);
+		NeighbouringCoords.Add(AffectedByMovement);
 	}
-	
-	NeighbouringCoords = ResultingArray;
 }
 
 // TODO: Finish or remove
 void UBoardNavigationSystem::SetupNeighbouringCellsByMask(const TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask)
 {
-	int CellNum = CellsOnBoard.Num();
+	const int32 CellNum = CellsOnBoard.Num();
 	// For each cell on board
-	for (ACell* OriginCell : CellsOnBoard) {
+	for (ACell* OriginCell : CellsOnBoard) 
+	{
 		// Calculate coordinates for neighbouring cells
 		TArray<FBoardCoord> NeighbouringCoords;
 		UBoardNavigationSystem::CalculateNeighbouringCoordsByMask(OriginCell->Coord, MovementMask, NeighbouringCoords);
 		// And find them among other cells on the board
-		for (FBoardCoord NeighbouringCoord : NeighbouringCoords) 
+		for (const FBoardCoord& NeighbouringCoord : NeighbouringCoords) 
 		{
-			bool isFound = false;
-			for (int i = 0; (i < CellNum); i++) 
+			for (int32 i = 0; (i < CellNum); i++) 
 			{
 				ACell* currentCell = CellsOnBoard[i];
 				if (NeighbouringCoord == currentCell->Coord) 
@@ -63,7 +60,7 @@ void UBoardNavigationSystem::SetupNeighbouringCellsByMask(const TArray<ACell*>& 
 
 }
 
-void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, ABoardPiece* OriginPiece, ACell* OriginCell, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
+void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, const ABoardPiece * OriginPiece, const ACell * OriginCell, const int32 MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
 {
 	// populate initial "open" array
 	// in a while not empty loop over "open" queue:
@@ -79,40 +76,48 @@ void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnB
 	//TArray<UBoardAtomicMovement*> ClosedArray;
 
 	// create movement info to the origin's neighbouring cells
-	for (ACell* Neighbour : OriginCell->Neighbours) {
+	for (const auto& Neighbour : OriginCell->Neighbours) 
+	{
 		FBoardAtomicMovement ConstructedMovement;
-		UBoardNavigationSystem::CalculateAtomicMovement(OriginCell, Neighbour, OriginPiece, (float) MovementPoints, ConstructedMovement);
+		UBoardNavigationSystem::CalculateAtomicMovement(OriginCell, Neighbour, OriginPiece, (float)MovementPoints, ConstructedMovement);
 		OpenQueue.Enqueue(ConstructedMovement);
 	}
-	while (not OpenQueue.IsEmpty()) {
+	while (not OpenQueue.IsEmpty()) 
+	{
 		FBoardAtomicMovement CurrentMovement;
 		OpenQueue.Dequeue(CurrentMovement);
 
 		// check the movement possibility
 
-		if (CurrentMovement.MovementPointsLeft < -1*FLT_EPSILON) {
+		if (CurrentMovement.MovementPointsLeft < -1*FLT_EPSILON) 
+		{
 			continue;
 		}
 		
 		// find worse movements in the Closed Array and replace them
 		bool isUnique = true;
-		for (int i = 0; i < PossibleMovements.Num(); i++){
+		for (int32 i = 0; i < PossibleMovements.Num(); i++)
+		{
 			FBoardAtomicMovement ClosedMovement = PossibleMovements[i];
-			if (ClosedMovement.CellTo->Coord == CurrentMovement.CellTo->Coord){
+			if (ClosedMovement.CellTo->Coord == CurrentMovement.CellTo->Coord)
+			{
 				isUnique = false;
-				if (ClosedMovement.MovementPointsLeft < CurrentMovement.MovementPointsLeft) {
+				if (ClosedMovement.MovementPointsLeft < CurrentMovement.MovementPointsLeft) 
+				{
 					PossibleMovements[i] = CurrentMovement;
 				}
 			}
 		}
 		
 		// if no same-destination movements found, then add the new one
-		if (isUnique) {
+		if (isUnique)
+		{
 			PossibleMovements.Add(CurrentMovement);
 		}
 		
 		// add movements to the neighbouring cells to the "open" array
-		for (ACell* Neighbour : CurrentMovement.CellTo->Neighbours) {
+		for (const auto& Neighbour : CurrentMovement.CellTo->Neighbours) 
+		{
 			FBoardAtomicMovement ConstructedMovement;
 			CalculateAtomicMovement(CurrentMovement.CellTo, Neighbour, OriginPiece, (float)CurrentMovement.MovementPointsLeft, ConstructedMovement);
 			OpenQueue.Enqueue(ConstructedMovement);
@@ -121,26 +126,30 @@ void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnB
 	
 }
 
-void UBoardNavigationSystem::GetPossibleMovementsLocalData(ABoardPiece* OriginPiece, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
+void UBoardNavigationSystem::GetPossibleMovementsLocalData(const ABoardPiece * OriginPiece, const int32 MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
 {
 	GetPossibleMovements(BoardDataRef->Cells, OriginPiece, BoardDataRef->GetGellByIdChecked(OriginPiece->GetCurrentCellId()), MovementPoints, PossibleMovements);
 }
 
-void UBoardNavigationSystem::GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath)
+void UBoardNavigationSystem::GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, const ACell * OriginCell, const ACell * DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath)
 {
 	// check if origin cell is there
 	bool isOriginCellThere = false;
-	for (FBoardAtomicMovement Movement : PossibleMovements) {
-		if (Movement.CellFrom == OriginCell) {
+	for (const FBoardAtomicMovement& Movement : PossibleMovements) 
+	{
+		if (Movement.CellFrom == OriginCell)
+		{
 			isOriginCellThere = true;
 			break;
 		}
 	}
-	if (not isOriginCellThere) {
+	if (not isOriginCellThere)
+	{
 		isPossible = false;
 		return;
 	}
-	else {
+	else
+	{
 		isPossible = true;
 	}
 
@@ -148,29 +157,33 @@ void UBoardNavigationSystem::GetMovementPathToCell(const TArray<FBoardAtomicMove
 	// find the destination movement
 	FBoardAtomicMovement FirstBackTrackMovement;
 	bool isThereFirstBackTrackMovement = false;
-	for (FBoardAtomicMovement Movement : PossibleMovements) {
-		if (Movement.CellTo == DestinationCell) {
+	for (const FBoardAtomicMovement& Movement : PossibleMovements) 
+	{
+		if (Movement.CellTo == DestinationCell) 
+		{
 			FirstBackTrackMovement = Movement;
 			isThereFirstBackTrackMovement = true;
 			break;
 		}
 	}
-	if (not isThereFirstBackTrackMovement) {
+	if (not isThereFirstBackTrackMovement) 
+	{
 		isPossible = false;
 		return;
 	}
 
 	// find the successive back track movements until OriginCell
-	FBoardAtomicMovement CurrentBackTrackMovement = FirstBackTrackMovement;
-	ACell* CurrentCellFrom = CurrentBackTrackMovement.CellFrom;
-	MovementPath.Add(CurrentBackTrackMovement);
+	const ACell* CurrentCellFrom = FirstBackTrackMovement.CellFrom;
+	MovementPath.Add(FirstBackTrackMovement);
 
-	while (CurrentCellFrom != OriginCell) {
-		for (FBoardAtomicMovement Movement : PossibleMovements) {
-			if (Movement.CellTo == CurrentCellFrom) {
-				CurrentBackTrackMovement = Movement;
-				CurrentCellFrom = CurrentBackTrackMovement.CellFrom;
-				MovementPath.Add(CurrentBackTrackMovement);
+	while (CurrentCellFrom != OriginCell)
+	{
+		for (const FBoardAtomicMovement& Movement : PossibleMovements) 
+		{
+			if (Movement.CellTo == CurrentCellFrom) 
+			{
+				CurrentCellFrom = Movement.CellFrom;
+				MovementPath.Add(Movement);
 				break;
 			}
 		}
@@ -180,55 +193,62 @@ void UBoardNavigationSystem::GetMovementPathToCell(const TArray<FBoardAtomicMove
 	return;
 }
 
-void UBoardNavigationSystem::CalculateAtomicMovement(ACell* Origin, ACell* Destination, ABoardPiece* BoardPiece, float MovementPoints, FBoardAtomicMovement& AtomicMovement)
+void UBoardNavigationSystem::CalculateAtomicMovement(const ACell * Origin, const ACell * const Destination, const ABoardPiece* const  BoardPiece, const float MovementPoints, FBoardAtomicMovement& OutAtomicMovement)
 {
-	AtomicMovement.CellTo = Destination;
-	AtomicMovement.CellFrom = Origin;
+	OutAtomicMovement.CellTo = const_cast<ACell*>(Destination);
+	OutAtomicMovement.CellFrom = const_cast<ACell*>(Origin);
 	
-	FBoardCoord PendingMovementDirection = Destination->Coord - Origin->Coord;
+	const FBoardCoord PendingMovementDirection = Destination->Coord - Origin->Coord;
 	const TArray<FBoardCoord>& PossibleDirections = BoardPiece->GetMovementDirections();
 	
 	// Check if this direction is allowed for the pawn
 	bool bMovementDirectionAllowed = false;
-	for (FBoardCoord PossibleDirection : PossibleDirections) {
-		if (PossibleDirection == PendingMovementDirection) {
+	for (const FBoardCoord& PossibleDirection : PossibleDirections) 
+	{
+		if (PossibleDirection == PendingMovementDirection) 
+		{
 			bMovementDirectionAllowed = true;
 		}
 	}
 
 	// If the direction is not allowed, then cast the movement impossible
-	if (not bMovementDirectionAllowed) {
-		AtomicMovement.MovementPointsLeft = -1.0;
-		AtomicMovement.MovementPointsConsumed = MovementPoints - AtomicMovement.MovementPointsLeft;
+	if (not bMovementDirectionAllowed)
+	{
+		OutAtomicMovement.MovementPointsLeft = -1.0;
+		OutAtomicMovement.MovementPointsConsumed = MovementPoints - OutAtomicMovement.MovementPointsLeft;
 		return;
 	}
 
 	// Check if there is any BoardPiece in the destination.
-	ABoardPiece* DestinationBoardPiece = Destination->GetStoodPawn();
-	if (DestinationBoardPiece != NULL) {
+	const ABoardPiece* DestinationBoardPiece = Destination->GetStoodPawn();
+	if (DestinationBoardPiece != NULL) 
+	{
 		// If there is a board piece of the same team, do not allow to enter this cell
-		if (BoardPiece->GetOwnPlayerId() == DestinationBoardPiece->GetOwnPlayerId()) {
-			AtomicMovement.MovementPointsLeft = -1.0;
+		if (BoardPiece->GetOwnPlayerId() == DestinationBoardPiece->GetOwnPlayerId()) 
+		{
+			OutAtomicMovement.MovementPointsLeft = -1.0;
 		}
 		// If there is an enemy pawn, make that the final movement
-		else {
+		else 
+		{
 			const float MovementOut = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementOutAttribute());
 			const float MovementIn = Destination->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementInAttribute());
 			const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
 			// calculate movement points amount that is to be consumed
-			float MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
+			const float MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
 			// If there are any points left after this movement, dispose of them
-			float MovementPointsLeft = FMath::Min(MovementPoints - MovementPointsConsumed, 0.0);
-			AtomicMovement.MovementPointsLeft = MovementPointsLeft;
+			const float MovementPointsLeft = FMath::Min(MovementPoints - MovementPointsConsumed, 0.0);
+			OutAtomicMovement.MovementPointsLeft = MovementPointsLeft;
 		}
-		AtomicMovement.MovementPointsConsumed = MovementPoints - AtomicMovement.MovementPointsLeft;
+		OutAtomicMovement.MovementPointsConsumed = MovementPoints - OutAtomicMovement.MovementPointsLeft;
 	}
 	// If the cell is in the clear
-	else {
+	else 
+	{
 		const float MovementOut = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementOutAttribute());
 		const float MovementIn = Destination->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementInAttribute());
 		const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
-		AtomicMovement.MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
-		AtomicMovement.MovementPointsLeft = MovementPoints - AtomicMovement.MovementPointsConsumed;
+		OutAtomicMovement.MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
+		OutAtomicMovement.MovementPointsLeft = MovementPoints - OutAtomicMovement.MovementPointsConsumed;
 	}
 }

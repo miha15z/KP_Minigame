@@ -29,25 +29,25 @@ public:
 	void Init(FBoardData* NewBoardData);
 
 	UFUNCTION(BlueprintCallable)
-	void CalculateOrthogonalLength(const ACell * Origin, const ACell * Destination, float& Length);
+	static void CalculateOrthogonalLength(const ACell * Origin, const ACell * Destination, float& Length);
 
 	UFUNCTION(BlueprintCallable)
-	void CalculateNeighbouringCoordsByMask(FBoardCoord ReferenceCoord, const TArray<FBoardCoord>& MovementMask, TArray<FBoardCoord>& NeighbouringCoords);
+	static void CalculateNeighbouringCoordsByMask(const FBoardCoord& ReferenceCoord, const TArray<FBoardCoord>& MovementMask, TArray<FBoardCoord>& NeighbouringCoords);
 
 	UFUNCTION(BlueprintCallable)
-	void SetupNeighbouringCellsByMask(const TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask);
+	static void SetupNeighbouringCellsByMask(const TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask);
 	
 	UFUNCTION(BlueprintCallable)
-	void GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, ABoardPiece* OriginPiece, ACell* OriginCell, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
+	static void GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, const ABoardPiece * OriginPiece, const ACell * OriginCell, const int32 MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
 
 	UFUNCTION(BlueprintCallable)
-	void GetPossibleMovementsLocalData(ABoardPiece* OriginPiece, int MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
+	void GetPossibleMovementsLocalData(const ABoardPiece * OriginPiece, const int32 MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
 
 
 	//!!! Check in Blueprints - might not work
 	UFUNCTION(BlueprintCallable)
-	void GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, ACell* OriginCell, ACell* DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath);
+	static void GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, const ACell * OriginCell, const ACell * DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath);
 
 	UFUNCTION(BlueprintCallable)
-	void CalculateAtomicMovement(ACell* Origin, ACell* Destination, ABoardPiece* BoardPiece, float MovementPoints, FBoardAtomicMovement& AtomicMovement);
+	static void CalculateAtomicMovement(const ACell * Origin, const ACell * const Destination, const ABoardPiece* const BoardPiece, const float MovementPoints, FBoardAtomicMovement& AtomicMovement);
 };
