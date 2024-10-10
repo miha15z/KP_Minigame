@@ -114,7 +114,8 @@ void AKP_GameModeBase::ResetBoardPieces()
 {
     for (auto Player : BoardData.PlayersData)
     {
-        for (auto BoardPiece : Player.Pawns) {
+        for (auto BoardPiece : Player.Pawns) 
+        {
             BoardPiece.Pawn->ResetAvailableMovementPoints();
         }
     }
@@ -189,7 +190,7 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
     // Resets Board Pieces at the end of the turn
     ResetBoardPieces();
 
-    if(! CheckWinState())
+    if(not CheckWinState())
     {
         UpdateGameBoard();
         SelectNextPawn();
@@ -198,7 +199,7 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
     return true;
 }
 
-bool AKP_GameModeBase::CheckWinState()const
+bool AKP_GameModeBase::CheckWinState() const
 {
     if (IsWin())
     {
@@ -228,7 +229,7 @@ AKPPawn* AKP_GameModeBase::GetCurrentPawn() const
     return CurrentPawn;
 }
 
-void AKP_GameModeBase::EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer,bool NewState, EBoardPiece BoardPieceType)
+void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const AKPPawn * OwnerPlayer, const bool NewState, const EBoardPiece BoardPieceType)
 {
     check(OwnerPlayer);
     check(BoardData.PlayersData.Num() > OwnerPlayer->PlayerId);
@@ -244,7 +245,7 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer,bo
             }
         }
     }
-    //aplly for type
+    // apply for type
     else
     {
         for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)

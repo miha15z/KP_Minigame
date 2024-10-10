@@ -147,7 +147,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = RollDices)
 	AKPPawn* GetCurrentPawn()const;
 
-	void EnableSelectabilityForBoardPieces(AKPPawn* OwnerPlayer, bool NewState, EBoardPiece BoardPieceType = EBoardPiece::None);
+	void EnableSelectabilityForBoardPieces(const AKPPawn * OwnerPlayer, const bool NewState, const EBoardPiece BoardPieceType = EBoardPiece::None);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void  LeaveCell(int32 CellId, ABoardPiece* BoardPiece);
