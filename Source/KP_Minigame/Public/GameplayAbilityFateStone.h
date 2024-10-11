@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "Engine/DataAsset.h"
 #include "GameplayAbilityFateStone.generated.h"
+
+class UTexture2D;
 
 /**
  * 
@@ -22,5 +25,20 @@ class KP_MINIGAME_API UFateStoneData : public UDataAsset {
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbilityFateStone> GameplayAbility;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UTexture2D* IconUI = nullptr;
+
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	//UMaterialInterface* CellMaterial = nullptr;
+
+	// to do, work radius
+
+public:
+	UClass* GetGameplayAbilityClass() const;
+
+	UTexture2D* GetIconTexture() const;
+
+	//UMaterialInterface* GetCellMaterial() const;
 
 };
