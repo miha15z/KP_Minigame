@@ -83,6 +83,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
 	TWeakObjectPtr<ABoardPiece> PawnPtr = nullptr;
+
+	UPROPERTY(VisibleAnywhere,Category = Ability)
+	TArray<FGameplayAbilityCellToPawnInfo> AbilitiesInfo;
 public:
 	// Sets default values for this actor's properties
 	ACell();
@@ -102,6 +105,9 @@ protected:
 	UFUNCTION(BlueprintNativeEvent)
 	bool CanSelect() const;
 	virtual bool CanSelect_Implementation() const;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ApplyMaterial(const UMaterialInterface* InMaterial);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -147,5 +153,5 @@ public:
 	void AddAbility(const FGameplayAbilityCellToPawnInfo& Info);
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
-	void AddAbilities(const TArray<FGameplayAbilityCellToPawnInfo>& AbilitiesInfo);
+	void AddAbilities(const TArray<FGameplayAbilityCellToPawnInfo>& InAbilitiesInfo);
 };

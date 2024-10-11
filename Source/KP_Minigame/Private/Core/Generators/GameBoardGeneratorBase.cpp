@@ -37,14 +37,8 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	for (FKPCellData CellData : GenData->GetCellsData())
 	{
 		ACell* Cell = BoardData.GetGellByIdChecked(CellData.CellId);
-		// Setup cell ability info holders
-		Cell->AbilityInfoHolders.Empty();
-		for (FGameplayAbilityCellToPawnInfo Info : CellData.StartupAbilitiesInfo) 
-		{
-			UGameplayAbilityCellToPawnInfoHolder* InfoHolder = NewObject<UGameplayAbilityCellToPawnInfoHolder>(World);
-			InfoHolder->SetInfo(Info);
-			Cell->AbilityInfoHolders.Add(InfoHolder);
-		}
+		// Setup cell ability
+		Cell->AddAbilities(CellData.StartupAbilitiesInfo);
 	}
 
 	// spawn pawns
@@ -66,7 +60,7 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 			ABoardPiece* KilledPawn = nullptr;
 			Cell->PutPawnOnCell(Pawn, &KilledPawn);
 			Pawn->SetOwnPlayerData(CurrentPlayerId, PlayerData.PlayerColor);
-			// Apply the Pawns Directoin multiplier for changing team movement direction
+			// Apply the Pawns Direction multiplier for changing team movement direction
 			Pawn->SetupTeamMovementDirectionMultiplier(PlayerData.PawnsDirectionMultiplier);	
 		}
 		BoardData.PlayersData.Add(MoveTemp(PlayerPawnsData));
