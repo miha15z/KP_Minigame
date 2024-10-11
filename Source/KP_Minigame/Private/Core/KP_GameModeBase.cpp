@@ -89,12 +89,16 @@ void AKP_GameModeBase::UpdateGameBoard()
 {
     ResetCells();
 
+	// Decrease fate stone turn counter
+	Cast<UKP_AbilitySystemComponent>(AbilitySystemComponent)->DecreaseActiveTurnBasedEffectsCounters();
+
     //  to do: update pawns, apply abilities, update steps counters 
+    // 
     //for (auto& PlayerData : BoardData.PlayersData)
     //{
     //    for (auto& PawnInfo : PlayerData.Pawns)
     //    {
-    //       // PawnInfo.Pawn->
+    //       // PawnInfo.Pawn->...
     //    }
     //}
 }
@@ -184,9 +188,6 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
         return false;
     }
 
-    // Decrease fate stone turn counter
-    Cast<UKP_AbilitySystemComponent>(AbilitySystemComponent)->DecreaseActiveTurnBasedEffectsCounters();
-
     // Resets Board Pieces at the end of the turn
     ResetBoardPieces();
 
@@ -196,6 +197,7 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
         SelectNextPawn();
         OnFinishStep.Broadcast();
     }
+    StepsCounter++;
     return true;
 }
 

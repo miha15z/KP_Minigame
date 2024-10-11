@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "KP_Structs.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagContainer.h"
 #include "KP_GameModeBase.generated.h"
 
 class UBoardNavigationSystem;
@@ -51,9 +52,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Navigation")
 	TSubclassOf<UBoardNavigationSystem> BoardNavSystemClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
-	FGameplayTagContainer WinTags;
 
 	UFUNCTION()
 	void SelectCellForCurrentPlayer(ACell* Cell);
@@ -135,8 +133,19 @@ protected:
 	bool IsWin() const;
 	virtual bool IsWin_Implementation()const;
 
+	UPROPERTY(VisibleAnywhere, Category = Gameplay, Transient)
+	int32 StepsCounter = 0;
+
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
+	FGameplayTagContainer WinTags;
 
 public:
+	UFUNCTION(BlueprintPure, Category = Gameplay)
+	FORCEINLINE int32 GetCurrentStep() const 
+	{
+		return StepsCounter;
+	}
+
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	bool EndTurn(AKPPawn* PlayerPawn);
 
