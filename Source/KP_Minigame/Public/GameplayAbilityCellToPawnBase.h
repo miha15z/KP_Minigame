@@ -29,7 +29,7 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS(abstract)
 class KP_MINIGAME_API UGameplayAbilityCellToPawnBase : public UGameplayAbility
 {
 	GENERATED_BODY()
