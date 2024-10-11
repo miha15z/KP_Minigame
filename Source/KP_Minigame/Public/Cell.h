@@ -141,4 +141,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	void ActivateOwnedAbilities(const ABoardPiece * TargetBoardPiece) const;
+
+	
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void AddAbility(const FGameplayAbilityCellToPawnInfo& Info);
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void AddAbilities(const TArray<FGameplayAbilityCellToPawnInfo>& AbilitiesInfo);
 };
