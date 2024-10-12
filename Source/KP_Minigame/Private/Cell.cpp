@@ -5,6 +5,7 @@
 #include "KP_AbilitySystemComponent.h"
 #include "CellAttributeSet.h"
 #include "BoardPiece.h"
+#include "CellAbilityDataAsset.h"
 
 // Sets default values
 ACell::ACell()
@@ -105,14 +106,38 @@ void ACell::ActivateOwnedAbilitiesOnStoodPawn() const
 
 void ACell::ActivateOwnedAbilities(const ABoardPiece * TargetBoardPiece) const
 {
-	for (UGameplayAbilityCellToPawnInfoHolder* AbilityInfoHolder : AbilityInfoHolders) {
-		FGameplayAbilityCellToPawnInfo AbilityInfo = AbilityInfoHolder->GetInfo();
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityInfo.AbilityClass, 1, INDEX_NONE, const_cast<ACell*>(this));
+	for (const auto& Info : AbilitiesInfo)
+	{
+		UGameplayAbilityCellToPawnInfoHolder* InfoHolder = NewObject<UGameplayAbilityCellToPawnInfoHolder>();
+		InfoHolder->SetInfo(Info);
+		check(Info.Data.LoadSynchronous());
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Data->GetAbilityClass(), 1, INDEX_NONE, const_cast<ACell*>(this));
 		FGameplayEventData EventData; //= FGameplayEventData(this, TargetBoardPiece);
 		EventData.Instigator = this;
 		EventData.Target = TargetBoardPiece;
-		EventData.OptionalObject = AbilityInfoHolder;
+		EventData.OptionalObject = InfoHolder;
 		GetAbilitySystemComponent()->GiveAbilityAndActivateOnce(AbilitySpec, &EventData);
+	}
+}
+
+void ACell::AddAbility(const FGameplayAbilityCellToPawnInfo& Info)
+{
+	AbilitiesInfo.Add(Info);
+	// apply visual affect
+	const auto* AbilityDA = Info.Data.LoadSynchronous();
+	check(AbilityDA);
+	if (auto* OverrideCellMaterial = AbilityDA->GetCellMaterial())
+	{
+		ApplyMaterial(OverrideCellMaterial);
+	}
+}
+
+void ACell::AddAbilities(const TArray<FGameplayAbilityCellToPawnInfo>& InAbilitiesInfo)
+{
+	AbilityInfoHolders.Empty(); //  may be not need!!
+	for (const auto& Info : InAbilitiesInfo)
+	{
+		AddAbility(Info);
 	}
 }
 

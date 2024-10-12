@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-// Is it an overkill?
-#include "AbilitySystemComponent.h"
+#include "ActiveGameplayEffectHandle.h"
 #include "KP_Structs.generated.h"
 
 class ACell;
 class ABoardPiece;
 class UGameplayAbilityCellToPawnBase;
 class UFateStoneData;
+class UCellAbilityDataAsset;
 
 USTRUCT(BlueprintType)
 struct FBoardCoord
@@ -53,10 +53,13 @@ struct FGameplayAbilityCellToPawnInfo {
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayAbilityCellToPawnBase> AbilityClass;
+	TSoftObjectPtr<UCellAbilityDataAsset> Data;
+
+	//UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	//TSubclassOf<UGameplayAbilityCellToPawnBase> AbilityClass;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
-	int OwningPlayerID;
+	int32 OwningPlayerID = -1;;
 };
 
 USTRUCT(BlueprintType)
