@@ -23,10 +23,23 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Cell)
 	TSoftObjectPtr<UMaterialInterface> CellMaterial;
 
+	UPROPERTY(EditDefaultsOnly, Category = Cell)
+	FText Name;
+
+	//description 
+	UPROPERTY(EditDefaultsOnly, Category = Cell)
+	FText Description;
+
 public:
 	UFUNCTION(BlueprintCallable, Category = Cell)
 	UClass* GetAbilityClass() const;
 
 	UFUNCTION(BlueprintCallable, Category = Cell)
 	UMaterialInterface* GetCellMaterial() const;
+
+	UFUNCTION(BlueprintPure, Category = Cell)
+	const FText& GetName() const {return Name;}
+
+	UFUNCTION(BlueprintPure, Category = Cell)
+	const FText& GetDescription() const { return Description; }
 };
