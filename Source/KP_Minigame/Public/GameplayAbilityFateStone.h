@@ -23,12 +23,9 @@ class KP_MINIGAME_API UFateStoneData : public UDataAsset {
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText Name;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbilityFateStone> GameplayAbility;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FText AbilityName;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UTexture2D> Icon;
 
 };
