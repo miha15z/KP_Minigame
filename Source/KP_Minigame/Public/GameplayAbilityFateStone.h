@@ -16,11 +16,19 @@ class KP_MINIGAME_API UGameplayAbilityFateStone : public UGameplayAbility
 public:
 };
 
+
+// Data Asset that stores a Fate Stone configuration
 UCLASS(BlueprintType, Blueprintable)
 class KP_MINIGAME_API UFateStoneData : public UDataAsset {
 	GENERATED_BODY()
-protected:
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbilityFateStone> GameplayAbility;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText AbilityName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UTexture2D> Icon;
 
 };

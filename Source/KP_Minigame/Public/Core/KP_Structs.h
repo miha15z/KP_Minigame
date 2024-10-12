@@ -165,3 +165,21 @@ public:
 	// -1 if the effect is permanent (like startup victory cells and kinging cells)
 	int32 TurnsLeft;
 };
+
+USTRUCT(BlueprintType, Blueprintable)
+struct FFateStoneContainer {
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<TObjectPtr<UFateStoneData>> DataAssets;
+
+public:
+	FORCEINLINE bool MoveAtIndexToAnother(int32 Index, FFateStoneContainer& Another) {
+		if(DataAssets.IsValidIndex(Index)) 
+		{
+			// Will movement semantics be a problem?
+			Another.DataAssets.Add(DataAssets[Index]);
+			DataAssets.RemoveAt(Index);
+		}
+	}
+};
