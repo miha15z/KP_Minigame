@@ -158,6 +158,12 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 	SelectedBoardPiece.Get()->ConsumeMovementPoints(PointsConsumed);
 
 	GetKPGameMode()->LeaveCell(SelectedBoardPiece->GetCurrentCellId(), SelectedBoardPiece.Get());
+
+	FGameplayEventData GameplayEventData;
+	GameplayEventData.EventTag = KP_GameplayTags::GameplayEvent_MoveBoardPiece;
+	GameplayEventData.Instigator = this;
+	GameplayEventData.Target = SelectedCell.Get();
+	SelectedBoardPiece->GetAbilitySystemComponent()->HandleGameplayEvent(KP_GameplayTags::GameplayEvent_MoveBoardPiece, &GameplayEventData);
 	SelectedBoardPiece->MoveToCell(SelectedCell->GetCellId(), SelectedCell->GetActorLocation());
 
 	ABoardPiece* KilledPawn = nullptr;
@@ -171,7 +177,7 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 		if ((KilledPawn)->GetBoardPieceType() == EBoardPiece::King)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Kill King"));
-			GetKPGameMode()->GetAbilitySystemComponent()->AddLooseGameplayTag(KP_GameplayTags::Ability_ActivateWin_KillKing);
+			GetKPGameMode()->GetAbilitySystemComponent()->AddLooseGameplayTag(KP_GameplayTags::GameplayEvent_ActivateWin_KillKing);
 		}
 	}
 	else
