@@ -10,12 +10,12 @@
  * 
  */
 UCLASS()
-class KP_MINIGAME_API UGA_MoveToCell : public UGameplayAbility
+class KP_MINIGAME_API UGameplayAbility_MoveToCell : public UGameplayAbility
 {
 	GENERATED_BODY()
 public:
 
-	UGA_MoveToCell(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UGameplayAbility_MoveToCell(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;

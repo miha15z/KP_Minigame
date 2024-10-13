@@ -5,7 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "KP_GameplayTags.h"
 
-UGA_MoveToCell::UGA_MoveToCell(const FObjectInitializer& ObjectInitializer)
+UGameplayAbility_MoveToCell::UGameplayAbility_MoveToCell(const FObjectInitializer& ObjectInitializer)
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 
@@ -19,7 +19,7 @@ UGA_MoveToCell::UGA_MoveToCell(const FObjectInitializer& ObjectInitializer)
 	}
 }
 
-void UGA_MoveToCell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UGameplayAbility_MoveToCell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	if (TriggerEventData && bHasBlueprintActivateFromEvent)
 	{
@@ -71,7 +71,7 @@ void UGA_MoveToCell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 	//Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UGA_MoveToCell::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+void UGameplayAbility_MoveToCell::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 
 	auto* GASC = GetAbilitySystemComponentFromActorInfo();
