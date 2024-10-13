@@ -23,7 +23,7 @@ AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
 AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
     AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-    WinTags.AddTag(KP_GameplayTags::Ability_ActivateWin);
+    WinTags.AddTag(KP_GameplayTags::GameplayEvent_ActivateWin);
 }
 
 void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
