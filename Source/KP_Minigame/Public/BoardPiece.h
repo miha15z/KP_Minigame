@@ -12,6 +12,7 @@
 class UAbilitySystemComponent;
 class ACell;
 class UBoardPieceAttributeSet;
+class UGameplayAbility;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnTrySelectBoardPiece, ABoardPiece*)
 
@@ -28,8 +29,11 @@ protected:
 	const UBoardPieceAttributeSet* AttributeSet;
 
 	// maybe to use data from PlayerDataAsset
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Navigation)
 	TArray<FBoardCoord> MovementDirections;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS")
+	TArray<TSoftClassPtr<UGameplayAbility> > DefaultAbilities;
 
 public:	
 	// Sets default values for this actor's properties

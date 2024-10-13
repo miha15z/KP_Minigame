@@ -18,10 +18,19 @@ ABoardPiece::ABoardPiece()
 void ABoardPiece::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (IsValid(AbilitySystemComponent)) {
-		AttributeSet = AbilitySystemComponent->GetSet<UBoardPieceAttributeSet>();
+	check(AbilitySystemComponent);
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	// add def  abilities
+	for (auto& SoftAbilityClass : DefaultAbilities)
+	{
+		if (auto AbilityClass = SoftAbilityClass.LoadSynchronous())
+		{
+			FGameplayAbilitySpec Spec = FGameplayAbilitySpec(AbilityClass, 1, INDEX_NONE, this);;
+			AbilitySystemComponent->GiveAbility(Spec);
+		}
 	}
+	
+	AttributeSet = AbilitySystemComponent->GetSet<UBoardPieceAttributeSet>();
 }
 
 // Called every frame
@@ -118,7 +127,7 @@ bool ABoardPiece::Kill(const ABoardPiece * Killer)
 void ABoardPiece::MoveToCell(const int32 CellId, const FVector& CellLocation)
 {
 	CurrentCellId = CellId;
-	SetActorLocation(CellLocation);
+	//SetActorLocation(CellLocation);
 }
 
 const TArray<FBoardCoord>& ABoardPiece::GetMovementDirections() const
