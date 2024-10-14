@@ -29,10 +29,10 @@ public:
 	FText Name;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayAbilityFateStone> GameplayAbility;
+	TSoftClassPtr<UGameplayAbilityFateStone> GameplayAbility;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UTexture2D* IconUI = nullptr;
+	TSoftObjectPtr<UTexture2D> IconUI = nullptr;
 
 	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	//UMaterialInterface* CellMaterial = nullptr;

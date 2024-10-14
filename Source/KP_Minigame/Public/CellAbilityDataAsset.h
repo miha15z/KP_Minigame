@@ -18,7 +18,7 @@ class KP_MINIGAME_API UCellAbilityDataAsset : public UDataAsset
 	GENERATED_BODY()
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Cell)
-	TSubclassOf<UGameplayAbilityCellToPawnBase> AbilityClass;
+	TSoftClassPtr<UGameplayAbilityCellToPawnBase> AbilityClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = Cell)
 	TSoftObjectPtr<UMaterialInterface> CellMaterial;

@@ -25,7 +25,7 @@ protected:
 	int32 BoardSize = 8;
 
 	UPROPERTY(EditDefaultsOnly, Category = GameBoard)
-	TSubclassOf<ACell> CellClass;
+	TSoftClassPtr<ACell> CellClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = GameBoard)
 	FVector TopCellLocation;
@@ -59,7 +59,7 @@ public:
 	FORCEINLINE int32 GetBoardSize() const {return BoardSize;}
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE TSubclassOf<ACell> GetCellClass() const { return CellClass; }
+	UClass* GetCellClass() const;
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE TArray<FKPCellData> GetCellsData() const { return CellsData; }

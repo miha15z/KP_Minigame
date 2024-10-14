@@ -28,14 +28,17 @@ AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer):
 
 void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
+    AbilitySystemComponent->InitAbilityActorInfo(this, this);
     //To do: Read DataAsset(navigation system, Generator,..) in Options
 
     check(!GenDataAsset.IsNull())
     GenDataAsset.LoadSynchronous();
-    auto Generator = NewObject<UGameBoardGeneratorBase>(this);
+    check(!BoardGeneratorClass.IsNull());
+    auto Generator = NewObject<UGameBoardGeneratorBase>(this, BoardGeneratorClass.LoadSynchronous());
     BoardData = Generator->GenerateGameBoard(GenDataAsset.Get(), this);
 
-    BoardNavSystem = NewObject<UBoardNavigationSystem>(this);
+    check(!BoardNavSystemClass.IsNull())
+    BoardNavSystem = NewObject<UBoardNavigationSystem>(this, BoardNavSystemClass.LoadSynchronous());
     BoardNavSystem->Init(&BoardData);
     BoardNavSystem->SetupNeighbouringCellsByMask(BoardData.Cells, GenDataAsset->GetMovementPattern());
 
@@ -78,9 +81,12 @@ void AKP_GameModeBase::StartPlay()
     SelectNextPawn();
 
 	//ui
-	PlayerUI = CreateWidget(this->GetWorld(), UIClass);
-	PlayerUI->AddToViewport();
-
+    if (UIClass.LoadSynchronous())
+    {
+        PlayerUI = CreateWidget(this->GetWorld(), UIClass.Get());
+        PlayerUI->AddToViewport();
+    }
+;
     // firstInitUI and other
     OnFinishStep.Broadcast();
 }
@@ -127,7 +133,7 @@ void AKP_GameModeBase::ResetBoardPieces()
 
 void AKP_GameModeBase::SelectCellForCurrentPlayer(ACell* Cell)
 {
-    if (IsValid(CurrentPawn))
+    if (CurrentPawn.IsValid())
     {
         CurrentPawn->SelectCell(Cell);
     }
@@ -205,7 +211,7 @@ bool AKP_GameModeBase::CheckWinState() const
 {
     if (IsWin())
     {
-        check(CurrentPawn);
+        check(CurrentPawn.IsValid());
         OnWinKPGame.Broadcast(CurrentPawn->PlayerId);
         return true;
     }
@@ -217,18 +223,18 @@ bool AKP_GameModeBase::CheckWinState() const
 
 void AKP_GameModeBase::SelectNextPawn()
 {
-    if(IsValid(CurrentPawn))
+    if(CurrentPawn.IsValid())
     {
         QueuePawns.Enqueue(CurrentPawn);
     }
     QueuePawns.Dequeue(CurrentPawn);
-    check(CurrentPawn);
+    check(CurrentPawn.IsValid());
     CurrentPawn->PreMakeStepData();
 }
 
 AKPPawn* AKP_GameModeBase::GetCurrentPawn() const
 {
-    return CurrentPawn;
+    return CurrentPawn.Get();
 }
 
 void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const AKPPawn * OwnerPlayer, const bool NewState, const EBoardPiece BoardPieceType)
@@ -240,7 +246,7 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const AKPPawn * OwnerPl
     {
         for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)
         {
-            auto* BoardPiece = PawnsInfo.Pawn;
+            ABoardPiece* BoardPiece = PawnsInfo.Pawn;
             if (IsValid(BoardPiece) && BoardPiece->IsAlive())
             {
                 BoardPiece->EnableSelectability(NewState);
@@ -252,7 +258,7 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const AKPPawn * OwnerPl
     {
         for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)
         {
-            auto* BoardPiece = PawnsInfo.Pawn;
+            ABoardPiece* BoardPiece = PawnsInfo.Pawn;
             if (IsValid(BoardPiece) && BoardPiece->IsAlive() && BoardPiece->GetBoardPieceType() == BoardPieceType)
             {
                 BoardPiece->EnableSelectability(NewState);

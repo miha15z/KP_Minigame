@@ -22,7 +22,7 @@ UCLASS(Blueprintable, BlueprintType)
 class KP_MINIGAME_API UBoardNavigationSystem : public UObject
 {
 	GENERATED_BODY()
-
+	// use shared or weak
 	FBoardData* BoardDataRef = nullptr;
 
 public:

@@ -45,13 +45,13 @@ public:
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	UAbilitySystemComponent* AbilitySystemComponent;
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Board|Navigation")
-	UBoardNavigationSystem* BoardNavSystem;
+	TObjectPtr<UBoardNavigationSystem> BoardNavSystem;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Navigation")
-	TSubclassOf<UBoardNavigationSystem> BoardNavSystemClass;
+	TSoftClassPtr<UBoardNavigationSystem> BoardNavSystemClass;
 
 	UFUNCTION()
 	void SelectCellForCurrentPlayer(ACell* Cell);
@@ -66,13 +66,13 @@ public:
 	//generator
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Generator")
-	TSubclassOf<UGameBoardGeneratorBase> BoardGeneratorClass;
+	TSoftClassPtr<UGameBoardGeneratorBase> BoardGeneratorClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Generator")
 	TSoftObjectPtr<UGenDataAsset> GenDataAsset;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Generator")
-	TSubclassOf<AKPPawn> BotPawnClass;
+	TSoftClassPtr<AKPPawn> BotPawnClass;
 
 	//GameBoard
 	UPROPERTY(Transient)
@@ -87,10 +87,10 @@ public:
 	//UI
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Widgets)
-	TSubclassOf<UUserWidget> UIClass;
+	TSoftClassPtr<UUserWidget> UIClass;
 
 	UPROPERTY(VisibleAnywhere)
-	UUserWidget* PlayerUI;
+	TObjectPtr<UUserWidget> PlayerUI;
 
 protected:
 	//Roll the dices
@@ -127,8 +127,8 @@ public:
 protected:
 	//Maybe use TQueue
 	//UPROPERTY(VisibleInstanceOnly, Category = Gameplay)
-	TQueue<AKPPawn*> QueuePawns;
-	AKPPawn* CurrentPawn = nullptr;
+	TQueue<TWeakObjectPtr<AKPPawn>> QueuePawns;
+	TWeakObjectPtr<AKPPawn> CurrentPawn = nullptr;
 	UFUNCTION(BlueprintNativeEvent, Category = Gameplay)
 	bool IsWin() const;
 	virtual bool IsWin_Implementation()const;

@@ -40,7 +40,7 @@ struct FKPPawnData
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditInstanceOnly)
-	TSubclassOf<ABoardPiece> PawnClass;
+	TSoftClassPtr<ABoardPiece> PawnClass;
 
 	UPROPERTY(EditInstanceOnly)
 	int32 CellId = -1; // -1  =  not valid value!
@@ -99,7 +99,7 @@ struct FKPPawnInfo
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite)
-	ABoardPiece* Pawn;
+	TObjectPtr<ABoardPiece> Pawn;
 	UPROPERTY(BlueprintReadWrite)
 	int32 CellId;
 };
@@ -119,7 +119,7 @@ struct FBoardData
 	GENERATED_BODY();
 public:
 	UPROPERTY(BlueprintReadWrite)
-	TArray<ACell*> Cells;
+	TArray<TObjectPtr<ACell> > Cells;
 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FKPPlayerData> PlayersData;
@@ -151,9 +151,9 @@ struct FBoardAtomicMovement {
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(BlueprintReadOnly)
-	ACell* CellTo = nullptr;
+	TWeakObjectPtr<ACell> CellTo = nullptr;
 	UPROPERTY(BlueprintReadOnly)
-	ACell* CellFrom = nullptr;
+	TWeakObjectPtr<ACell> CellFrom = nullptr;
 	UPROPERTY()
 	float MovementPointsLeft;
 	UPROPERTY()
@@ -174,7 +174,7 @@ struct FFateStoneContainer {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<UFateStoneData*> DataAssets;
+	TArray<TObjectPtr<UFateStoneData> > DataAssets;
 
 public:
 	FORCEINLINE bool MoveAtIndexToAnother(int32 Index, FFateStoneContainer& Another) {

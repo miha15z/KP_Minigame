@@ -6,7 +6,7 @@
 
 UClass* UCellAbilityDataAsset::GetAbilityClass() const
 {
-    return *AbilityClass;
+    return AbilityClass.LoadSynchronous();
 }
 
 UMaterialInterface* UCellAbilityDataAsset::GetCellMaterial() const

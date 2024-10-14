@@ -119,7 +119,7 @@ void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnB
 		for (const auto& Neighbour : CurrentMovement.CellTo->Neighbours) 
 		{
 			FBoardAtomicMovement ConstructedMovement;
-			CalculateAtomicMovement(CurrentMovement.CellTo, Neighbour, OriginPiece, (float)CurrentMovement.MovementPointsLeft, ConstructedMovement);
+			CalculateAtomicMovement(CurrentMovement.CellTo.Get(), Neighbour, OriginPiece, (float)CurrentMovement.MovementPointsLeft, ConstructedMovement);
 			OpenQueue.Enqueue(ConstructedMovement);
 		}
 	}
@@ -173,7 +173,7 @@ void UBoardNavigationSystem::GetMovementPathToCell(const TArray<FBoardAtomicMove
 	}
 
 	// find the successive back track movements until OriginCell
-	const ACell* CurrentCellFrom = FirstBackTrackMovement.CellFrom;
+	const ACell* CurrentCellFrom = FirstBackTrackMovement.CellFrom.Get();
 	MovementPath.Add(FirstBackTrackMovement);
 
 	while (CurrentCellFrom != OriginCell)
@@ -182,7 +182,7 @@ void UBoardNavigationSystem::GetMovementPathToCell(const TArray<FBoardAtomicMove
 		{
 			if (Movement.CellTo == CurrentCellFrom) 
 			{
-				CurrentCellFrom = Movement.CellFrom;
+				CurrentCellFrom = Movement.CellFrom.Get();
 				MovementPath.Add(Movement);
 				break;
 			}

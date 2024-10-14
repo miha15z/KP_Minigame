@@ -57,26 +57,26 @@ public:
 	FBoardCoord Coord;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base")
-	TArray<UGameplayAbilityCellToPawnInfoHolder*> AbilityInfoHolders;
+	TArray<TObjectPtr<UGameplayAbilityCellToPawnInfoHolder> > AbilityInfoHolders;
 
 	// Populated automatically
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
-	TArray<ACell*> Neighbours;
+	TArray<TObjectPtr<ACell>> Neighbours;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCellChosenDelegate OnCellChosen;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	UCellConfigAsset* CellConfig;
+	TObjectPtr <UCellConfigAsset> CellConfig;
 
 	FOnSelectCell OnSelectCell;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	UAbilitySystemComponent* AbilitySystemComponent;
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	const UCellAttributeSet* AttributeSet;
+	TObjectPtr < const UCellAttributeSet> AttributeSet;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
 	ECellState CurrentState = ECellState::None;

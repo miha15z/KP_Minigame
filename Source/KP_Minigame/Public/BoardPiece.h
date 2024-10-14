@@ -23,10 +23,10 @@ class KP_MINIGAME_API ABoardPiece : public AActor, public IAbilitySystemInterfac
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	UAbilitySystemComponent* AbilitySystemComponent;
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	const UBoardPieceAttributeSet* AttributeSet;
+	TObjectPtr<const UBoardPieceAttributeSet> AttributeSet;
 
 	// maybe to use data from PlayerDataAsset
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Navigation)

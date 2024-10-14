@@ -11,7 +11,7 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	check(WorldContext);
 	auto World = WorldContext->GetWorld();
 	check(World && GenData);
-	auto CellClass = GenData->GetCellClass().Get();
+	auto CellClass = GenData->GetCellClass().;
 	check(CellClass);
 	const int32 BoardSize = GenData->GetBoardSize();
 	const FVector LeftOffset = GenData->GetCellLeftOffset();
@@ -48,9 +48,9 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 		FKPPlayerData PlayerPawnsData;
 		for (const auto& PawnData : PlayerData.Pawns)
 		{
-			check(PawnData.PawnClass.Get());
+			check(PawnData.PawnClass.LoadSynchronous());
 			// to do
-			auto Pawn = World->SpawnActor<ABoardPiece>(PawnData.PawnClass);
+			auto Pawn = World->SpawnActor<ABoardPiece>(PawnData.PawnClass.Get());
 			Pawn->SetNewCellId(PawnData.CellId);
 			// Use Array.FindByPredicate or BinareSerch
 

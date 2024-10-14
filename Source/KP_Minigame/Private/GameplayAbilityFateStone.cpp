@@ -5,12 +5,12 @@
 
 UClass* UFateStoneData::GetGameplayAbilityClass() const
 {
-    return *GameplayAbility;
+    return GameplayAbility.LoadSynchronous();
 }
 
 UTexture2D* UFateStoneData::GetIconTexture() const
 {
-    return IconUI;
+    return IconUI.LoadSynchronous();
 }
 
 // UMaterialInterface* UFateStoneData::GetCellMaterial() const
