@@ -29,7 +29,7 @@ void ABoardPiece::BeginPlay()
 			AbilitySystemComponent->GiveAbility(Spec);
 		}
 	}
-	
+
 	AttributeSet = AbilitySystemComponent->GetSet<UBoardPieceAttributeSet>();
 }
 
