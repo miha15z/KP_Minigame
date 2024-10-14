@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "GameModeAbilities/GameModeAbility.h"
-#include "GameplayAbilityGMRollSameNumer.generated.h"
+#include "GameModeAbility.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class KP_MINIGAME_API UGameplayAbilityGMRollSameNumer : public UGameModeAbility
+class KP_MINIGAME_API UGameModeAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 	

@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "GameModeAbilities/GameModeAbility.h"
 #include "GameplayAbilityRollingDices.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class KP_MINIGAME_API UGameplayAbilityGMRollingDices : public UGameplayAbility
+class KP_MINIGAME_API UGameplayAbilityGMRollingDices : public UGameModeAbility
 {
 	GENERATED_BODY()
 	

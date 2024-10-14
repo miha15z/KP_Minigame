@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "GameModeAbilities/GameModeAbility.h"
 #include "GameplayAbilityGMTurnStart.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class KP_MINIGAME_API UGameplayAbilityGMTurnStart : public UGameplayAbility
+class KP_MINIGAME_API UGameplayAbilityGMTurnStart : public UGameModeAbility
 {
 	GENERATED_BODY()
 	
