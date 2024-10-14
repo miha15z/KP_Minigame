@@ -11,7 +11,7 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 	check(WorldContext);
 	auto World = WorldContext->GetWorld();
 	check(World && GenData);
-	auto CellClass = GenData->GetCellClass().;
+	auto CellClass = GenData->GetCellClass();
 	check(CellClass);
 	const int32 BoardSize = GenData->GetBoardSize();
 	const FVector LeftOffset = GenData->GetCellLeftOffset();
