@@ -56,5 +56,28 @@ namespace KP_GameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(BoardPieceState_EndDead, "BoardPieceState.EndDead", "End Dead");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(BoardPieceState_Dead, "Dead", "Dead");
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_BoardPiece_Move, "GameplayCue.MoveBoardPiece", "MoveBoardPieceCue")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_BoardPiecce_PawnChooseToMove, "GameplayCue.BoardPiece.PawnChooseToMove", "Choose pawn for movement");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_BoardPiecce_KingChooseToMove, "GameplayCue.BoardPiece.KingChooseToMove", "Choose king for movement");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_BoardPiece_Move, "GameplayCue.BoardPiece.Move", "Move board piece");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_BoardPiece_PawnPromotion, "GameplayCue.BoardPiece.PawnPromotion", "Pawn has been promoted");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_BoardPiece_PawnKnockDown, "GameplayCue.BoardPiece.PawnKnockDown", "On pawn being knowckdown");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Basics_RollDices, "GameplayCue.Basics.RollDices", "Dices rolled");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Basics_RollSameNumber, "GameplayCue.Basics.RollSameNumber", "The same dice numbers rolled");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Basics_TurnStart, "GameplayCue.Basics.TurnStart", "The turn has started");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Basics_TurnEnd, "GameplayCue.Basics.TurnEnd", "The turn has started");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_FateStone_OpenFateBag, "GameplayCue.FateStone.OpenFateBag", "Fate bag opened");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_FateStone_DrawRandom, "GameplayCue.FateStone.DrawRandom", "Draw random fate stone");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_FateStone_SwitchSet, "GameplayCue.FateStone.SwitchSet", "Switching between sets of options");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_FateStone_PlaceInBag, "GameplayCue.FateStone.PlaceInBag", "When placing stone in Fate Bag");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_FateStone_Claim, "GameplayCue.FateStone.Claim", "Claim opponent's fate stone");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_FateStoneUse_Test, "GameplayCue.FateStoneUse.Test", "Use Test fate stone");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Victory_KingReachCorner, "GameplayCue.Victory.KingReachCorner", "King has reached the victory corner");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Victory_KingDefeat, "GameplayCue.Victory.KingDefeat", "The opponen't king has been defeated");
+
+
+
 }

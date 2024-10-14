@@ -174,7 +174,7 @@ struct FFateStoneContainer {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<TObjectPtr<UFateStoneData>> DataAssets;
+	TArray<UFateStoneData*> DataAssets;
 
 public:
 	FORCEINLINE bool MoveAtIndexToAnother(int32 Index, FFateStoneContainer& Another) {
