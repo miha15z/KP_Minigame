@@ -54,8 +54,9 @@ void UGameplayAbility_MoveToCell::ActivateAbility(const FGameplayAbilitySpecHand
 
 			auto* GASC = GetAbilitySystemComponentFromActorInfo();
 			GASC->SetLooseGameplayTagCount(KP_GameplayTags::BoardPieceState_Move, 1);
-			//to do Apply a GameplayEffect or a gameplayCue
-			//GASC->ApplyGameplayEffectToSelf()
+
+			// Execute corresponding Gameplay Cue
+			K2_ExecuteGameplayCue(KP_GameplayTags::GameplayCue_BoardPiece_Move, FGameplayEffectContextHandle());
 			
 			// to do  make Async Task for "Move"
 			OwningActor->SetActorLocation(TriggerEventData->Target->GetActorLocation());
