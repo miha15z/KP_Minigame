@@ -64,6 +64,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void RollDices();
 
+	void UpdateRollDicesData();
+
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void TurnEnd();
 

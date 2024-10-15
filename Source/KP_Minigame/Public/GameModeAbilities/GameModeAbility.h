@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(abstract)
 class KP_MINIGAME_API UGameModeAbility : public UGameplayAbility
 {
 	GENERATED_BODY()

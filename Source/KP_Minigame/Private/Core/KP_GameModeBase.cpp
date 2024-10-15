@@ -28,9 +28,6 @@ AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer):
 
 void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
-    AbilitySystemComponent->InitAbilityActorInfo(this, this);
-    //To do: Read DataAsset(navigation system, Generator,..) in Options
-
     check(!GenDataAsset.IsNull())
     GenDataAsset.LoadSynchronous();
     check(!BoardGeneratorClass.IsNull());
@@ -53,7 +50,7 @@ void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, 
 void AKP_GameModeBase::StartPlay()
 {
     Super::StartPlay();
-    check(BotPawnClass.Get())
+    check(BotPawnClass.LoadSynchronous())
     // Select first player
     auto World = GetWorld();
     check(World);
@@ -131,6 +128,22 @@ void AKP_GameModeBase::ResetBoardPieces()
     }
 }
 
+void AKP_GameModeBase::BeginPlay()
+{
+    Super::BeginPlay();
+    check(AbilitySystemComponent);
+    AbilitySystemComponent->InitAbilityActorInfo(this, this);
+    // add def  abilities
+    for (auto& SoftAbilityClass : DefaultAbilities)
+    {
+        if (auto AbilityClass = SoftAbilityClass.LoadSynchronous())
+        {
+            FGameplayAbilitySpec Spec = FGameplayAbilitySpec(AbilityClass, 1, INDEX_NONE, this);;
+            AbilitySystemComponent->GiveAbility(Spec);
+        }
+    }
+}
+
 void AKP_GameModeBase::SelectCellForCurrentPlayer(ACell* Cell)
 {
     if (CurrentPawn.IsValid())
@@ -144,36 +157,35 @@ FRollDicesData AKP_GameModeBase::GetLastRollData() const
     return LastRollData;
 }
 
-int32 AKP_GameModeBase::RollDice() const
+bool AKP_GameModeBase::IsBonusRollData() const
 {
-    return  FMath::RandRange(RollDiscesMinValue, RollDiscesMaxValue);
+    return LastRollData.Value1 == LastRollData.Value2;
 }
 
-bool AKP_GameModeBase::CanPlaerRollDices(AKPPawn* PlayerPawn)
+void AKP_GameModeBase::TryGiveBonus()
+{
+    // to do : show Bonus UI
+}
+
+int32 AKP_GameModeBase::RollDice() const
+{
+    return FMath::RandRange(RollDiscesMinValue, RollDiscesMaxValue);
+}
+
+void AKP_GameModeBase::RollDices()
+{
+	LastRollData.Value1 = RollDice();
+	LastRollData.Value2 = RollDice();
+}
+
+bool AKP_GameModeBase::CanPlaerRollDices(const AKPPawn* PlayerPawn)
 {
     return PlayerPawn == CurrentPawn ; //  to do
 }
 
-bool AKP_GameModeBase::RerollDices(AKPPawn* PlayerPawn)
+void AKP_GameModeBase::OnRollDices() const 
 {
-    if (CanPlaerRollDices(PlayerPawn))
-    {
-        LastRollData.Value1 = RollDice();
-        LastRollData.Value2 = RollDice();
-        OnRerollDices.Broadcast(LastRollData, PlayerPawn);
-
-        //if (LastRollData.Value1 == LastRollData.Value2)
-        //{
-        //    // to do: Get bonus
-        //}
-
-        return true;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Try reroll the dices, State is Lock"))
-    }
-    return false;
+    OnRerollDices.Broadcast(LastRollData, CurrentPawn.Get());
 }
 
 ACell* AKP_GameModeBase::GetCellByID(int32 Id) const

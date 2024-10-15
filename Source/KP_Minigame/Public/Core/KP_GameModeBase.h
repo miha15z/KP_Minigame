@@ -15,6 +15,7 @@ class UGenDataAsset;
 class UUserWidget;
 class AKPPawn;
 class UAbilitySystemComponent;
+class UGameplayAbility;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRerollDices, FRollDicesData, RollResult, AKPPawn*, Player);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishStep);
@@ -44,6 +45,7 @@ public:
 	//navigation
 protected:
 
+	virtual void BeginPlay() override;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
@@ -52,6 +54,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Navigation")
 	TSoftClassPtr<UBoardNavigationSystem> BoardNavSystemClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowedClasses = "/Script/KP_Minigame.GameModeAbility"))
+	TArray<TSoftClassPtr<UGameplayAbility> > DefaultAbilities;
 
 	UFUNCTION()
 	void SelectCellForCurrentPlayer(ACell* Cell);
@@ -82,8 +87,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Gameboard)
 	const FBoardData& GetGameBoradData() const {return BoardData;}
 
-	UFUNCTION(BlueprintCallable, Category = Gameboard)
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	FRollDicesData GetLastRollData()const;
+
+	UFUNCTION(BlueprintPure, Category = Gameplay)
+	bool IsBonusRollData() const;
+
+	void TryGiveBonus();
 	//UI
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Widgets)
@@ -116,10 +126,11 @@ private:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = RollDices)
-	bool CanPlaerRollDices(AKPPawn* PlayerPawn);
+	bool CanPlaerRollDices(const AKPPawn* PlayerPawn);
 
-	UFUNCTION(BlueprintCallable, Category = RollDices)
-	bool RerollDices(AKPPawn* PlayerPawn);
+	void OnRollDices() const;
+
+	void RollDices();
 
 	ACell* GetCellByID(int32 ID) const;
 
