@@ -21,11 +21,11 @@ protected:
 	TArray<TSubclassOf<AActor>> TargetClasses;
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	bool CanUseFateStone(AActor* Target, AActor* Owner, int32 FateStoneActions = 0);
-//	virtual bool CanUseFateStone_Implementation(AActor* Target, AActor* Owner, int32 FateStoneActions);
+	bool CanUseFateStone(const AActor* Target, const AActor* Owner, int32 FateStoneActions = 0) const;
+	virtual bool CanUseFateStone_Implementation(const AActor * Target, const AActor * Owner, int32 FateStoneActions) const;
 
 	UFUNCTION(BlueprintCallable)
-	TArray<TSubclassOf<AActor>> GetTargetClasses();
+	TArray<TSubclassOf<AActor>> GetTargetClasses() const ;
 
 };
 

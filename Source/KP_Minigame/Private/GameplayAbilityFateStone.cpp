@@ -4,14 +4,14 @@
 #include "GameplayAbilityFateStone.h"
 
 
-bool UGameplayAbilityFateStone::CanUseFateStone_Implementation(AActor* Target, AActor* Owner, int32 FateStoneActions)
+bool UGameplayAbilityFateStone::CanUseFateStone_Implementation(const AActor * Target, const AActor * Owner, int32 FateStoneActions) const 
 {
     check(Target != nullptr && Owner != nullptr);
 
     return FateStoneActions > 0 ;
 }
 
-TArray<TSubclassOf<AActor>> UGameplayAbilityFateStone::GetTargetClasses()
+TArray<TSubclassOf<AActor>> UGameplayAbilityFateStone::GetTargetClasses() const 
 {
     return TargetClasses;
 }
