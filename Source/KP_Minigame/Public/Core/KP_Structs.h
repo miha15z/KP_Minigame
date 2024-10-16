@@ -9,27 +9,31 @@
 class ACell;
 class ABoardPiece;
 class UGameplayAbilityCellToPawnBase;
-class UFateStoneData;
 class UCellAbilityDataAsset;
+class UFateStoneDataAsset;
 
 USTRUCT(BlueprintType)
 struct FBoardCoord
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 x;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 y;
 
-	FBoardCoord operator*(FBoardCoord const& other) const {
+	FBoardCoord operator*(FBoardCoord const& other) const 
+	{
 		return FBoardCoord{ (this->x * other.x), (this->y * other.y) };
 	}
 
-	FBoardCoord operator-(FBoardCoord const& other) const {
+	FBoardCoord operator-(FBoardCoord const& other) const 
+	{
 		return FBoardCoord{ (this->x - other.x), (this->y - other.y) };
 	}
 
-	bool operator==(FBoardCoord const& other) const {
+	bool operator==(FBoardCoord const& other) const 
+	{
 		return (this->x == other.x) and (this->y == other.y);
 	}
 };
@@ -89,8 +93,9 @@ public:
 	UPROPERTY(EditInstanceOnly)
 	FBoardCoord PawnsDirectionMultiplier;
 
+	// may be only bots
 	UPROPERTY(EditInstanceOnly)
-	TArray<TSoftObjectPtr<UFateStoneData>> StartupFateStones;
+	TArray<TSoftObjectPtr<UFateStoneDataAsset> > StartupFateStones;
 };
 
 USTRUCT(BlueprintType)
@@ -174,7 +179,7 @@ struct FFateStoneContainer {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<TObjectPtr<UFateStoneData> > DataAssets;
+	TArray<TObjectPtr<UFateStoneDataAsset> > DataAssets;
 
 public:
 	FORCEINLINE bool MoveAtIndexToAnother(int32 Index, FFateStoneContainer& Another) {

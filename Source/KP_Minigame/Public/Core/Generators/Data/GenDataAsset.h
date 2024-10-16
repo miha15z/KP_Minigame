@@ -9,6 +9,7 @@
 
 
 class ACell;
+class UFateStoneDataAsset;
 /**
  * 
  */
@@ -42,6 +43,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "GameBoard | Cells")
 	TArray<FKPCellData> CellsData;
 
+	UPROPERTY(EditDefaultsOnly, Category = "GameBoard | FateStones")
+	TArray <TSoftObjectPtr<UFateStoneDataAsset> > GM_FateStones;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -69,4 +73,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FVector GetCellLeftOffset() const { return LeftOffset; }
+
+	//UFUNCTION(BlueprintCallable)
+	FORCEINLINE const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& GetGMFateStonesData() const { return GM_FateStones; }
 };

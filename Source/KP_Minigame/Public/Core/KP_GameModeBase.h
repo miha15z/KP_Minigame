@@ -16,6 +16,7 @@ class UUserWidget;
 class AKPPawn;
 class UAbilitySystemComponent;
 class UGameplayAbility;
+class UFateStoneStoreComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRerollDices, FRollDicesData, RollResult, AKPPawn*, Player);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishStep);
@@ -29,10 +30,11 @@ class KP_MINIGAME_API AKP_GameModeBase : public AGameModeBase, public IAbilitySy
 {
 	GENERATED_BODY()
 public:
+	AKP_GameModeBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+
 	UFUNCTION(BlueprintCallable)
 	static AKP_GameModeBase* GetKPGameMode(UObject* WorldContext);
-
-	AKP_GameModeBase(const FObjectInitializer& ObjectInitializer /*= FObjectInitializer::Get()*/);
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void StartPlay();
@@ -58,9 +60,21 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowedClasses = "/Script/KP_Minigame.GameModeAbility"))
 	TArray<TSoftClassPtr<UGameplayAbility> > DefaultAbilities;
 
+	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UFateStonePlayerStoreComponent> FateStoneStore;
+
 	UFUNCTION()
 	void SelectCellForCurrentPlayer(ACell* Cell);
 public:
+	UFUNCTION(BlueprintCallable, Category = Store)
+	void InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& InitData);
+
+	UFUNCTION(BlueprintCallable, Category = Store)
+	UFateStonePlayerStoreComponent* GetFateStoneStore() const;
+
+	UFUNCTION(BlueprintCallable, Category = Store)
+	bool TryCurrentPawnGiveFateStone(int32 FateStoneId);
+
 	UFUNCTION(BlueprintCallable, Category ="Board|Navigation")
 	UBoardNavigationSystem* GetBoardNavSystem() const { return BoardNavSystem; }
 

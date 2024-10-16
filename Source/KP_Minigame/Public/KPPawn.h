@@ -10,12 +10,14 @@
 class ABoardPiece;
 class AKP_GameModeBase;
 class ACell;
-class UFateStoneData;
+class UFateStoneDataAsset;
+class UFateStonePlayerStoreComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateCanRollState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateSelectCell);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateStepsCounter);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateMovomentInfo);
+
 
 UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API AKPPawn : public APawn
@@ -53,9 +55,6 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdateMovomentInfo OnUpdateMovomentInfo;
 
-	UPROPERTY(BlueprintReadOnly)
-	TArray<TSoftObjectPtr<UFateStoneData>> OwnedFateStones;
-
 	void PreMakeStepData();
 	void MakeStepData(const int32 StepPoints);
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
@@ -85,12 +84,31 @@ public:
 	UFUNCTION(BlueprintPure, Category = Gameplay)
 	bool CanMoveBoardPiece() const;
 
+	UFUNCTION(BlueprintCallable, Category = Store)
+	UFateStonePlayerStoreComponent* GetFateStoneStore() const ;
+
+	UFUNCTION(BlueprintCallable, Category = Store)
+	void InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& InitData);
+
+	UFUNCTION(BlueprintCallable, Category = Store)
+	void SelectFateStone(int32 Index);
+
+	UFUNCTION(BlueprintPure, Category = Store)
+	bool CanGiveFateStone() const;
+
+	UFUNCTION(BlueprintCallable, Category = Store)
+	bool TryAddFateStone(UFateStoneDataAsset* FateStoneData);
+
 protected:
+
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	TWeakObjectPtr<ABoardPiece> SelectedBoardPiece;
 
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	int32 StepsCounter = 0;
+
+	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UFateStonePlayerStoreComponent> FateStoneStore;
 
 	UPROPERTY(Transient)
 	TWeakObjectPtr<AKP_GameModeBase> GM;

@@ -8,6 +8,8 @@
 #include "Cell.h"
 #include "AbilitySystemComponent.h"
 #include "KP_GameplayTags.h"
+#include "FateStoneDataAsset.h"
+#include "FateStonePlayerStoreComponent.h"
 
 // Sets default values
 AKPPawn::AKPPawn()
@@ -15,6 +17,7 @@ AKPPawn::AKPPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	FateStoneStore = CreateDefaultSubobject<UFateStonePlayerStoreComponent>(TEXT("FateStoneStore"));
 }
 
 // Called when the game starts or when spawned
@@ -137,6 +140,31 @@ void AKPPawn::SelectCell(ACell* Cell)
 bool AKPPawn::CanMoveBoardPiece() const 
 {
 	return SelectedCell.IsValid() && SelectedBoardPiece.IsValid();
+}
+
+UFateStonePlayerStoreComponent* AKPPawn::GetFateStoneStore() const
+{
+	return  FateStoneStore;
+}
+
+void AKPPawn::InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset>>& InitData)
+{
+	FateStoneStore->Init(InitData);
+}
+
+void AKPPawn::SelectFateStone(int32 Index)
+{
+}
+
+bool AKPPawn::CanGiveFateStone() const
+{
+	// to do : once select in turn
+	return not FateStoneStore->IsFull();;
+}
+
+bool AKPPawn::TryAddFateStone(UFateStoneDataAsset* FateStoneData)
+{
+	return FateStoneStore->TryAddFateStone(FateStoneData);
 }
 
 AKP_GameModeBase* AKPPawn::GetKPGameMode()

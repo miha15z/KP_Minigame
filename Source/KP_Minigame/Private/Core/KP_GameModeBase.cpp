@@ -12,6 +12,9 @@
 #include "KP_GameplayTags.h"
 #include "KP_AbilitySystemComponent.h"
 #include "AbilitySystemComponent.h"
+#include "FateStoneDataAsset.h"
+#include "FateStonePlayerStoreComponent.h"
+
 
 AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
 {
@@ -24,6 +27,8 @@ AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer):
 {
     AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
     WinTags.AddTag(KP_GameplayTags::GameplayEvent_ActivateWin);
+
+    FateStoneStore = CreateDefaultSubobject<UFateStonePlayerStoreComponent>(TEXT("FateStoneStore"));
 }
 
 void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -60,7 +65,8 @@ void AKP_GameModeBase::StartPlay()
     PlayerPawn->SetGameModePtr(this);
     PlayerPawn->InitBoardPieces(BoardData.PlayersData[0].Pawns);
     // Setup Startup fate stones
-    PlayerPawn->OwnedFateStones = GenDataAsset.LoadSynchronous()->GetPlayerData(0).StartupFateStones;
+    PlayerPawn->InitFateStore(GenDataAsset.LoadSynchronous()->GetPlayerData(0).StartupFateStones);
+
     //Make GameQueue
     QueuePawns.Enqueue(PlayerPawn);
     FActorSpawnParameters SpawnParams;
@@ -72,10 +78,13 @@ void AKP_GameModeBase::StartPlay()
         PawnAI->PlayerId = i;
         PawnAI->SetGameModePtr(this);
         PawnAI->InitBoardPieces(BoardData.PlayersData[i].Pawns);
+        PawnAI->InitFateStore(GenDataAsset->GetPlayerData(i).StartupFateStones);
         QueuePawns.Enqueue(PawnAI);
     }
     UpdateGameBoard();
     SelectNextPawn();
+
+    InitFateStore(GenDataAsset->GetGMFateStonesData());
 
 	//ui
     if (auto UIClassPtr = UIClass.LoadSynchronous())
@@ -150,6 +159,29 @@ void AKP_GameModeBase::SelectCellForCurrentPlayer(ACell* Cell)
     {
         CurrentPawn->SelectCell(Cell);
     }
+}
+
+void AKP_GameModeBase::InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset>>& InitData)
+{
+    FateStoneStore->Init(InitData);
+}
+
+UFateStonePlayerStoreComponent* AKP_GameModeBase::GetFateStoneStore() const
+{
+    return  FateStoneStore;
+}
+
+bool AKP_GameModeBase::TryCurrentPawnGiveFateStone(int32 FateStoneId)
+{
+    if (CurrentPawn->CanGiveFateStone())
+    {
+        UFateStoneDataAsset* FateStoneData = FateStoneStore->GiveFateStone(FateStoneId);
+        if (FateStoneData)
+        {
+            return  CurrentPawn->TryAddFateStone(FateStoneData);
+        }
+    }
+    return false;
 }
 
 FRollDicesData AKP_GameModeBase::GetLastRollData() const
