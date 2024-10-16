@@ -124,6 +124,19 @@ bool ABoardPiece::Kill(const ABoardPiece * Killer)
 	return false;
 }
 
+bool ABoardPiece::ForceKill()
+{
+	if (IsAlive())
+	{
+		// to do
+		bAlive = false;
+		SetActorHiddenInGame(true);
+		SetActorLocation(FVector(0.f, 0.f, -1000.f));
+		return true;
+	}
+	return false;
+}
+
 void ABoardPiece::MoveToCell(const int32 CellId, const FVector& CellLocation)
 {
 	CurrentCellId = CellId;
