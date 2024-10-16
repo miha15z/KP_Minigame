@@ -60,7 +60,7 @@ void AKP_GameModeBase::StartPlay()
     PlayerPawn->SetGameModePtr(this);
     PlayerPawn->InitBoardPieces(BoardData.PlayersData[0].Pawns);
     // Setup Startup fate stones
-    PlayerPawn->OwnedFateStones = GenDataAsset.Get()->GetPlayerData(0).StartupFateStones;
+    PlayerPawn->OwnedFateStones = GenDataAsset.LoadSynchronous()->GetPlayerData(0).StartupFateStones;
     //Make GameQueue
     QueuePawns.Enqueue(PlayerPawn);
     FActorSpawnParameters SpawnParams;
