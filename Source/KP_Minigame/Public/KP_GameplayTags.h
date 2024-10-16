@@ -68,4 +68,6 @@ namespace KP_GameplayTags
 	KP_MINIGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_King_Defeat);
 
 
+	KP_MINIGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Gameplay_Ability_EndTurn)
+
 }
