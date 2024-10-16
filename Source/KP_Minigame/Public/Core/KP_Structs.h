@@ -141,9 +141,9 @@ struct FRollDicesData
 {
 	GENERATED_BODY();
 	UPROPERTY(BlueprintReadOnly)
-	int32 Value1;
+	int32 Value1 =-1; // Value1 != Value2
 	UPROPERTY(BlueprintReadOnly)
-	int32 Value2;
+	int32 Value2 = 0; // Value1 != Value2
 };
 
 USTRUCT(BlueprintType, Blueprintable)

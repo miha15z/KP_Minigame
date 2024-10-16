@@ -69,13 +69,22 @@ void AKPPawn::InitBoardPieces(TArray<FKPPawnInfo>& PawnsInfo)
 
 void AKPPawn::RollDices()
 {
-	if (CanRollDices() && GetKPGameMode()->RerollDices(this))
+	if (CanRollDices())
 	{
-		const FRollDicesData RollData = GM->GetLastRollData();
-		MakeStepData(RollData.Value1 > RollData.Value2 ? RollData.Value1 : RollData.Value2);
-		bCanRollDices = false;
-		OnUpdateCanRollState.Broadcast();
+		FGameplayEventData GameplayEventData;
+		GameplayEventData.EventTag = KP_GameplayTags::GameplayEvent_MoveBoardPiece;
+		GameplayEventData.Instigator = this;
+		GM->GetAbilitySystemComponent()->HandleGameplayEvent(KP_GameplayTags::GameplayEvent_RollDices, &GameplayEventData);
+		UpdateRollDicesData();
 	}
+}
+
+void AKPPawn::UpdateRollDicesData() 
+{
+	const FRollDicesData RollData = GM->GetLastRollData();
+	MakeStepData(RollData.Value1 > RollData.Value2 ? RollData.Value1 : RollData.Value2);
+	bCanRollDices = false;
+	OnUpdateCanRollState.Broadcast();
 }
 
 void AKPPawn::TurnEnd()

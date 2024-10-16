@@ -7,16 +7,27 @@
 #include "GameModeAbilities/GameModeAbility.h"
 #include "GameplayAbilityRollingDices.generated.h"
 
+class AKPPawn;
 /**
- * 
+ *	 rolling dices and try give bonus
  */
 UCLASS()
 class KP_MINIGAME_API UGameplayAbilityGMRollingDices : public UGameModeAbility
 {
 	GENERATED_BODY()
-	
-public:
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-	//virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
+public:
+	UGameplayAbilityGMRollingDices(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	//virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
+	virtual bool ShouldAbilityRespondToEvent(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* Payload) const override;
+
+	TWeakObjectPtr<AKPPawn> Pawn = nullptr;
+
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = GameplayCue)
+	bool bAutoActivateGameplayCue = true;
 };
