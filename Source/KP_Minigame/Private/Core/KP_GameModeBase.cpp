@@ -78,9 +78,9 @@ void AKP_GameModeBase::StartPlay()
     SelectNextPawn();
 
 	//ui
-    if (UIClass.LoadSynchronous())
+    if (auto UIClassPtr = UIClass.LoadSynchronous())
     {
-        PlayerUI = CreateWidget(this->GetWorld(), UIClass.Get());
+        PlayerUI = CreateWidget(GetWorld(), UIClassPtr);
         PlayerUI->AddToViewport();
     }
 ;
