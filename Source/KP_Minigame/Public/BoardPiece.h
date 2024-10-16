@@ -79,6 +79,9 @@ public:
 
 	bool Kill(const ABoardPiece * OherPawn);
 
+	UFUNCTION(BlueprintCallable)
+	bool ForceKill();
+
 	UFUNCTION(BlueprintCallable, Category = Movement)
 	void MoveToCell(const int32 CellId, const FVector& CellLocation);
 

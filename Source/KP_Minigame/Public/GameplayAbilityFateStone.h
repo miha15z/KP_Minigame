@@ -16,7 +16,17 @@ UCLASS(BlueprintType, Blueprintable)
 class KP_MINIGAME_API UGameplayAbilityFateStone : public UGameplayAbility
 {
 	GENERATED_BODY()
+protected:
+	UPROPERTY(EditDefaultsOnly, Category="Fate Stone")
+	TArray<TSubclassOf<AActor>> TargetClasses;
 public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool CanUseFateStone(AActor* Target, AActor* Owner, int32 FateStoneActions = 0);
+//	virtual bool CanUseFateStone_Implementation(AActor* Target, AActor* Owner, int32 FateStoneActions);
+
+	UFUNCTION(BlueprintCallable)
+	TArray<TSubclassOf<AActor>> GetTargetClasses();
+
 };
 
 
