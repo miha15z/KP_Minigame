@@ -25,12 +25,13 @@ void UGameplayAbilityGMRollingDices::ActivateAbility(const FGameplayAbilitySpecH
 	AKP_GameModeBase* GM = Cast<AKP_GameModeBase>(GetOwningActorFromActorInfo());
 	check(GM && TriggerEventData && TriggerEventData->Instigator);
 	GM->RollDices();
-	Pawn = const_cast<AKPPawn*>(Cast<const AKPPawn>(TriggerEventData->Instigator));
-
-	FGameplayCueParameters CueParams;
-	// to do : init params
-	K2_AddGameplayCueWithParams(KP_GameplayTags::GameplayCue_Basics_RollDices, CueParams);
-
+	//Pawn = const_cast<AKPPawn*>(Cast<const AKPPawn>(TriggerEventData->Instigator));
+	if (bAutoActivateGameplayCue)
+	{
+		FGameplayCueParameters CueParams;
+		// to do : init params
+		K2_AddGameplayCueWithParams(KP_GameplayTags::GameplayCue_Basics_RollDices, CueParams);
+	}
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 

@@ -9,7 +9,7 @@
 
 class AKPPawn;
 /**
- * Only visualization and call activate bonus
+ *	 rolling dices and try give bonus
  */
 UCLASS()
 class KP_MINIGAME_API UGameplayAbilityGMRollingDices : public UGameModeAbility
@@ -25,4 +25,9 @@ public:
 	virtual bool ShouldAbilityRespondToEvent(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* Payload) const override;
 
 	TWeakObjectPtr<AKPPawn> Pawn = nullptr;
+
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = GameplayCue)
+	bool bAutoActivateGameplayCue = true;
 };
