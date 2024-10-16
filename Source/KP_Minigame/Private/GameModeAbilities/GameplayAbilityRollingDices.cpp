@@ -25,7 +25,8 @@ void UGameplayAbilityGMRollingDices::ActivateAbility(const FGameplayAbilitySpecH
 	AKP_GameModeBase* GM = Cast<AKP_GameModeBase>(GetOwningActorFromActorInfo());
 	check(GM && TriggerEventData && TriggerEventData->Instigator);
 	GM->RollDices();
-	//Pawn = const_cast<AKPPawn*>(Cast<const AKPPawn>(TriggerEventData->Instigator));
+	//save pawn ptr
+	Pawn = const_cast<AKPPawn*>(Cast<const AKPPawn>(TriggerEventData->Instigator));
 	if (bAutoActivateGameplayCue)
 	{
 		FGameplayCueParameters CueParams;
@@ -50,7 +51,7 @@ void UGameplayAbilityGMRollingDices::EndAbility(const FGameplayAbilitySpecHandle
 			GM->TryGiveBonus();
 		}
 	}
-
+	Pawn = nullptr;
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
