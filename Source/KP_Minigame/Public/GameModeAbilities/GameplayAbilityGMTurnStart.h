@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(abstract)
 class KP_MINIGAME_API UGameplayAbilityGMTurnStart : public UGameModeAbility
 {
 	GENERATED_BODY()

@@ -11,7 +11,7 @@ class AKPPawn;
 /**
  *	 rolling dices and try give bonus
  */
-UCLASS()
+UCLASS(abstract)
 class KP_MINIGAME_API UGameplayAbilityGMRollingDices : public UGameModeAbility
 {
 	GENERATED_BODY()
@@ -27,7 +27,5 @@ public:
 	TWeakObjectPtr<AKPPawn> Pawn = nullptr;
 
 protected:
-	
-	UPROPERTY(EditDefaultsOnly, Category = GameplayCue)
-	bool bAutoActivateGameplayCue = true;
+
 };

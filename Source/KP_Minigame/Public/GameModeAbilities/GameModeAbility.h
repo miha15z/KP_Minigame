@@ -13,5 +13,10 @@ UCLASS(abstract)
 class KP_MINIGAME_API UGameModeAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = GameplayCue)
+	bool bAutoActivateGameplayCue = true;
 	
 };
