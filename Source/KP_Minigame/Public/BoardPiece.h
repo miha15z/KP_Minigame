@@ -71,6 +71,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Player)
 	EBoardPiece GetBoardPieceType() const;
 
+	UFUNCTION(BlueprintCallable, Category = Spawn)
+	void CopyState(const ABoardPiece* Other);
+
 	void ConfirmSelection();
 	void ResetSelection();
 
