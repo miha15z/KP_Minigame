@@ -21,6 +21,7 @@ class UFateStoneStoreComponent;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRerollDices, FRollDicesData, RollResult, AKPPawn*, Player);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishStep);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWinKPGame, int32, PlayerId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGiveBonus, int32, PlayerId);
 
 /**
  * 
@@ -134,6 +135,10 @@ public:
 	FOnWinKPGame OnWinKPGame;
 	UPROPERTY(BlueprintAssignable, Category = RollDices)
 	FOnFinishStep OnFinishStep;
+	UPROPERTY(BlueprintAssignable, Category = Gameplay)
+	FOnGiveBonus OnGiveBonus;
+	UPROPERTY(BlueprintAssignable, Category = Gameplay)
+	FOnFinishStep OnBonusTaken;
 
 private:
 	int32 RollDice() const;
