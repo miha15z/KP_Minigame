@@ -8,6 +8,7 @@
 
 class UGameplayAbilityFateStone;
 class UTexture;
+class UGameplayAbility;
 /**
  * 
  */
@@ -35,7 +36,7 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	UClass* GetGameplayAbilityClass() const;
+	TSubclassOf<UGameplayAbility> GetGameplayAbilityClass() const;
 
 	UFUNCTION(BlueprintCallable)
 	UTexture2D* GetIconTexture() const;

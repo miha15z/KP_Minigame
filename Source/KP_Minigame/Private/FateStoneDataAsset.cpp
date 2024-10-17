@@ -4,7 +4,7 @@
 #include "FateStoneDataAsset.h"
 #include "GameplayAbilityFateStone.h"
 
-UClass* UFateStoneDataAsset::GetGameplayAbilityClass() const
+TSubclassOf<UGameplayAbility> UFateStoneDataAsset::GetGameplayAbilityClass() const
 {
 	return GameplayAbility.LoadSynchronous();
 }

@@ -11,6 +11,8 @@
 #include "FateStoneDataAsset.h"
 #include "FateStonePlayerStoreComponent.h"
 #include "KP_AbilitySystemComponent.h"
+#include "GameplayAbilityFateStone.h"
+#include "GameplayAbilitySpec.h"
 
 // Sets default values
 AKPPawn::AKPPawn()
@@ -64,11 +66,12 @@ void AKPPawn::MakeStepData(const int32 StepPoints)
 {
 	SelectedBoardPiece = nullptr;
 	StepsCounter = StepPoints;
-	GetKPGameMode()->EnableSelectabilityForBoardPieces(this, true);
+	GetKPGameMode()->EnableSelectabilityForBoardPieces(PlayerId, true);
 	OnUpdateStepsCounter.Broadcast();
 	LastUsedBoardPieceTipe = EBoardPiece::None;
 	FateStoneStore->ResetNumberOfUse();
 	OnUpdateUseFateStoneState.Broadcast(true);
+	OnUsingFateStoneDataRedy.Broadcast(false);
 }
 
 void AKPPawn::SetGameModePtr(AKP_GameModeBase* GM_Ptr)
@@ -108,7 +111,7 @@ void AKPPawn::UpdateRollDicesData()
 void AKPPawn::TurnEnd()
 {
 	RestSelectionCurrenBoardPiece();
-	GetKPGameMode()->EnableSelectabilityForBoardPieces(this, false);
+	GetKPGameMode()->EnableSelectabilityForBoardPieces(PlayerId, false);
 	GetKPGameMode()->EndTurn(this);
 	OnUpdateUseFateStoneState.Broadcast(false);
 }
@@ -120,20 +123,35 @@ bool AKPPawn::CanRollDices() const
 
 void AKPPawn::TrySelectBoardPiece(ABoardPiece* BoardPiece)
 {
+	if (GetKPGameMode()->GetCurrentPawn() != this)
+	{
+		return;
+	}
 	// TO DO :Check Can Select BoardPiece type
 	check(BoardPiece);
-	if (LastUsedBoardPieceTipe != EBoardPiece::None && BoardPiece->GetBoardPieceType() != LastUsedBoardPieceTipe)
+	if (!bForFateStone)
 	{
-		// lock selection for next sub step
-		return; 
+		if (LastUsedBoardPieceTipe != EBoardPiece::None && BoardPiece->GetBoardPieceType() != LastUsedBoardPieceTipe)
+		{
+			// lock selection for next sub step
+			return;
+		}
 	}
+
 
 	RestSelectionCurrenBoardPiece();
 	
 	BoardPiece->ConfirmSelection();
 	SelectedBoardPiece = BoardPiece;
-	ClearNavigationCell();
-	ShowNavigationCellForCurentBoardPiece();
+	if (bForFateStone)
+	{
+		OnUsingFateStoneDataRedy.Broadcast(true);
+	}
+	else
+	{
+		ClearNavigationCell();
+		ShowNavigationCellForCurentBoardPiece();
+	}
 }
 
 void AKPPawn::RestSelectionCurrenBoardPiece()
@@ -148,9 +166,21 @@ void AKPPawn::RestSelectionCurrenBoardPiece()
 
 void AKPPawn::SelectCell(ACell* Cell)
 {
+	if (GetKPGameMode()->GetCurrentPawn() != this)
+	{
+		return;
+	}
+
 	SelectedCell = Cell;
-	OnUpdateSelectCell.Broadcast();
-	OnUpdateMovomentInfo.Broadcast();
+	if (bForFateStone)
+	{
+		OnUsingFateStoneDataRedy.Broadcast(true);
+	}
+	else
+	{
+		OnUpdateSelectCell.Broadcast();
+		OnUpdateMovomentInfo.Broadcast();
+	}
 }
 
 bool AKPPawn::CanMoveBoardPiece() const 
@@ -176,6 +206,21 @@ void AKPPawn::SelectFateStone(int32 Index)
 		SelectedFateStoneData.Index = Index;
 		OnSelectFateStone.Broadcast();
 		//to do: Make data for using
+
+		const UGameplayAbilityFateStone* FateStoneAbilityCDO = GetDefault<UGameplayAbilityFateStone>(SelectedFateStoneData.SelectedFateStone->GetGameplayAbilityClass());
+		if (FateStoneAbilityCDO)
+		{
+			for (const auto& TargetClass : FateStoneAbilityCDO->GetTargetClasses())
+			{
+				// To do MakeRedyDataForUseStone;
+				//Example;
+				GetKPGameMode()->EnableSelectabilityForBoardPieces(PlayerId, false);
+				GetKPGameMode()->EnableSelectabilityForBoardPiecesForOtherPlayers(PlayerId, true, EBoardPiece::Pawn);
+			}
+			// enable selection for FateStone;
+			
+		}
+		SetEnableFateStone(true);
 	}
 }
 
@@ -185,18 +230,61 @@ void AKPPawn::CancelUsingFateStone()
 	SelectedFateStoneData.SelectedFateStone = nullptr;
 	SelectedFateStoneData.Index = -1;
 	OnUseOrCancelUseFateStone.Broadcast();
+	SetEnableFateStone(false);
+	SelectedCell = nullptr;
+	SelectedBoardPiece->ResetSelection();
+	SelectedBoardPiece = nullptr;
+	OnUsingFateStoneDataRedy.Broadcast(false);
+	PrepareBoardToPlayer();
 }
 
 void AKPPawn::UseFateStone()
 {
 	if (SelectedFateStoneData.SelectedFateStone.IsValid())
 	{
+		const UGameplayAbilityFateStone* FateStoneAbilityCDO = GetDefault<UGameplayAbilityFateStone>(SelectedFateStoneData.SelectedFateStone->GetGameplayAbilityClass());
+		if (SelectedCell.IsValid() && FateStoneAbilityCDO->CanUseFateStone(SelectedCell.Get(), this, 1))
+		{
+			FGameplayEventData EventData;
+			EventData.Instigator = this;
+			EventData.Target = SelectedCell.Get();
+			FGameplayAbilitySpec Spec = FGameplayAbilitySpec(SelectedFateStoneData.SelectedFateStone->GetGameplayAbilityClass(), 1, -1, this);
+			SelectedCell->GetAbilitySystemComponent()->GiveAbilityAndActivateOnce(Spec, &EventData);
+			GM->ResetCells();
+			SelectedCell = nullptr;
+		}
+		else if (SelectedBoardPiece.IsValid() && FateStoneAbilityCDO->CanUseFateStone(SelectedBoardPiece.Get(), this, 1))
+		{
+			FGameplayEventData EventData;
+			EventData.Instigator = this;
+			EventData.Target = SelectedBoardPiece.Get();
+			FGameplayAbilitySpec Spec = FGameplayAbilitySpec(SelectedFateStoneData.SelectedFateStone->GetGameplayAbilityClass(), 1, -1, this);
+			SelectedBoardPiece->GetAbilitySystemComponent()->GiveAbilityAndActivateOnce(Spec, &EventData);
+			SelectedBoardPiece->ResetSelection();
+			SelectedBoardPiece = nullptr;
+		}
+		else
+		{
+			// !!!
+			check(false);
+		}
+
+		SetEnableFateStone(false);
 		auto* FateStoneData = FateStoneStore->TryUseFateStone(SelectedFateStoneData.Index);
+		check(FateStoneData);
 		GM->AddFateStoneData(FateStoneData);
-		//to do: use
+		OnUsingFateStoneDataRedy.Broadcast(false);
+		PrepareBoardToPlayer();
 		OnUseOrCancelUseFateStone.Broadcast();
 		OnUpdateUseFateStoneState.Broadcast(FateStoneStore->CanUseFateStone());
 	}
+}
+
+void AKPPawn::PrepareBoardToPlayer()
+{
+	GetKPGameMode()->ResetCells();
+	GetKPGameMode()->EnableSelectabilityForBoardPiecesForAllPlayer(false);
+	GetKPGameMode()->EnableSelectabilityForBoardPieces(PlayerId, true);
 }
 
 bool AKPPawn::CanGiveFateStone() const
@@ -298,5 +386,12 @@ void AKPPawn::ClearNavigationCell()
 	}
 	// to do;
 	SelectCell(nullptr);
+}
+
+void AKPPawn::SetEnableFateStone(bool NewState)
+{
+	bForFateStone = NewState;
+	FString PrintStr (bForFateStone ? TEXT("True") : TEXT("False"));
+	UE_LOG(LogTemp, Display, TEXT("bForFateStone = %s"), *PrintStr);
 }
 

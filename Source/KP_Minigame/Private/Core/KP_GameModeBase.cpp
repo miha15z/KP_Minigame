@@ -65,7 +65,11 @@ void AKP_GameModeBase::StartPlay()
     check(PlayerPawn);
     PlayerPawn->PlayerId = 0;
     PlayerPawn->SetGameModePtr(this);
-    PlayerPawn->InitBoardPieces(BoardData.PlayersData[0].Pawns);
+    for (auto& PlayerData : BoardData.PlayersData)
+    {
+        PlayerPawn->InitBoardPieces(PlayerData.Pawns);
+    }
+    
     // Setup Startup fate stones
     PlayerPawn->InitFateStore(GenDataAsset.LoadSynchronous()->GetPlayerData(0).StartupFateStones);
 
@@ -79,8 +83,11 @@ void AKP_GameModeBase::StartPlay()
         auto PawnAI = World->SpawnActor<AKPPawn>(BotPawnClass.Get(), SpawnTransform, SpawnParams);
         PawnAI->PlayerId = i;
         PawnAI->SetGameModePtr(this);
-        PawnAI->InitBoardPieces(BoardData.PlayersData[i].Pawns);
         PawnAI->InitFateStore(GenDataAsset->GetPlayerData(i).StartupFateStones);
+        for (auto& PlayerData : BoardData.PlayersData)
+        {
+            PawnAI->InitBoardPieces(PlayerData.Pawns);
+        }
         QueuePawns.Enqueue(PawnAI);
     }
     UpdateGameBoard();
@@ -297,14 +304,13 @@ AKPPawn* AKP_GameModeBase::GetCurrentPawn() const
     return CurrentPawn.Get();
 }
 
-void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const AKPPawn * OwnerPlayer, const bool NewState, const EBoardPiece BoardPieceType)
+void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const int32 OwnerPlayerId, const bool NewState, const EBoardPiece BoardPieceType)
 {
-    check(OwnerPlayer);
-    check(BoardData.PlayersData.Num() > OwnerPlayer->PlayerId);
+    check(BoardData.PlayersData.Num() > OwnerPlayerId);
     // apply for all
     if (BoardPieceType == EBoardPiece::None)
     {
-        for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)
+        for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayerId].Pawns)
         {
             ABoardPiece* BoardPiece = PawnsInfo.Pawn;
             if (IsValid(BoardPiece) && BoardPiece->IsAlive())
@@ -316,7 +322,7 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const AKPPawn * OwnerPl
     // apply for type
     else
     {
-        for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayer->PlayerId].Pawns)
+        for (auto& PawnsInfo : BoardData.PlayersData[OwnerPlayerId].Pawns)
         {
             ABoardPiece* BoardPiece = PawnsInfo.Pawn;
             if (IsValid(BoardPiece) && BoardPiece->IsAlive() && BoardPiece->GetBoardPieceType() == BoardPieceType)
@@ -324,6 +330,26 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const AKPPawn * OwnerPl
                 BoardPiece->EnableSelectability(NewState);
             }
         }
+    }
+}
+
+void AKP_GameModeBase::EnableSelectabilityForBoardPiecesForAllPlayer(const bool NewState, const EBoardPiece BoardPieceType)
+{
+    for (int32 i = 0; i < BoardData.PlayersData.Num(); ++i)
+    {
+        EnableSelectabilityForBoardPieces(i, NewState, BoardPieceType);
+    }
+}
+
+void AKP_GameModeBase::EnableSelectabilityForBoardPiecesForOtherPlayers(const int32 PlayerId, const bool NewState, const EBoardPiece BoardPieceType)
+{
+    for (int32 i = 0; i < BoardData.PlayersData.Num(); ++i)
+    {
+        if (PlayerId == i)
+        {
+            continue;
+        }
+        EnableSelectabilityForBoardPieces(i, NewState, BoardPieceType);
     }
 }
 

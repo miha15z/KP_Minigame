@@ -22,6 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateMovomentInfo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectFateStone);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUseOrCancelUseFateStone);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUpdateUseFateStoneState, bool, bCanUseFateStone);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUsingFateStoneDataRedy, bool, bRedy);
 
 USTRUCT(Blueprintable)
 struct FSelectedFateStoneData
@@ -91,6 +92,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdateUseFateStoneState OnUpdateUseFateStoneState;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnUsingFateStoneDataRedy OnUsingFateStoneDataRedy;
+
 	void PreMakeStepData();
 	void MakeStepData(const int32 StepPoints);
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
@@ -136,6 +140,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Store)
 	void UseFateStone();
 
+	void PrepareBoardToPlayer();
+
 	UFUNCTION(BlueprintPure, Category = Store)
 	bool CanGiveFateStone() const;
 
@@ -177,4 +183,7 @@ protected:
 
 protected:
 	EBoardPiece LastUsedBoardPieceTipe;
+	void SetEnableFateStone(bool NewState);
+private:
+	bool bForFateStone = false;
 };
