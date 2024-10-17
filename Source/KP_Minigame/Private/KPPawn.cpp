@@ -17,7 +17,7 @@ AKPPawn::AKPPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	c = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	FateStoneStore = CreateDefaultSubobject<UFateStonePlayerStoreComponent>(TEXT("FateStoneStore"));
 }
@@ -67,6 +67,8 @@ void AKPPawn::MakeStepData(const int32 StepPoints)
 	GetKPGameMode()->EnableSelectabilityForBoardPieces(this, true);
 	OnUpdateStepsCounter.Broadcast();
 	LastUsedBoardPieceTipe = EBoardPiece::None;
+	FateStoneStore->ResetNumberOfUse();
+	OnUpdateUseFateStoneState.Broadcast(true);
 }
 
 void AKPPawn::SetGameModePtr(AKP_GameModeBase* GM_Ptr)
@@ -108,6 +110,7 @@ void AKPPawn::TurnEnd()
 	RestSelectionCurrenBoardPiece();
 	GetKPGameMode()->EnableSelectabilityForBoardPieces(this, false);
 	GetKPGameMode()->EndTurn(this);
+	OnUpdateUseFateStoneState.Broadcast(false);
 }
 
 bool AKPPawn::CanRollDices() const
@@ -167,7 +170,33 @@ void AKPPawn::InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset>>& I
 
 void AKPPawn::SelectFateStone(int32 Index)
 {
+	SelectedFateStoneData.SelectedFateStone = FateStoneStore->GetFateStone(Index);
+	if (SelectedFateStoneData.SelectedFateStone.IsValid())
+	{
+		SelectedFateStoneData.Index = Index;
+		OnSelectFateStone.Broadcast();
+		//to do: Make data for using
+	}
+}
 
+
+void AKPPawn::CancelUsingFateStone()
+{
+	SelectedFateStoneData.SelectedFateStone = nullptr;
+	SelectedFateStoneData.Index = -1;
+	OnUseOrCancelUseFateStone.Broadcast();
+}
+
+void AKPPawn::UseFateStone()
+{
+	if (SelectedFateStoneData.SelectedFateStone.IsValid())
+	{
+		auto* FateStoneData = FateStoneStore->TryUseFateStone(SelectedFateStoneData.Index);
+		GM->AddFateStoneData(FateStoneData);
+		//to do: use
+		OnUseOrCancelUseFateStone.Broadcast();
+		OnUpdateUseFateStoneState.Broadcast(FateStoneStore->CanUseFateStone());
+	}
 }
 
 bool AKPPawn::CanGiveFateStone() const

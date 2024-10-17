@@ -187,6 +187,11 @@ bool AKP_GameModeBase::TryCurrentPawnGiveFateStone(int32 FateStoneId)
     return false;
 }
 
+bool AKP_GameModeBase::AddFateStoneData(UFateStoneDataAsset* Data)
+{
+    return  FateStoneStore->TryAddFateStone(Data);
+}
+
 FRollDicesData AKP_GameModeBase::GetLastRollData() const
 {
     return LastRollData;

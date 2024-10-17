@@ -77,3 +77,32 @@ bool UFateStonePlayerStoreComponent::IsFull() const
 	return OwnedFateStones.Num() == MaxStoreSize;
 }
 
+UFateStoneDataAsset* UFateStonePlayerStoreComponent::TryUseFateStone(const int32 Id)
+{
+	if (CanUseFateStone())
+	{
+		++CurrentNumberOfUsePerTurn;
+		return GiveFateStone(Id);
+	}
+	return nullptr;
+}
+
+bool UFateStonePlayerStoreComponent::CanUseFateStone() const
+{
+	return CurrentNumberOfUsePerTurn < MaxNumberOfUsesPerTurn;
+}
+
+void UFateStonePlayerStoreComponent::ResetNumberOfUse()
+{
+	CurrentNumberOfUsePerTurn = 0;
+}
+
+const UFateStoneDataAsset* UFateStonePlayerStoreComponent::GetFateStone(const int32 Id)
+{
+	if (Id >= 0, Id < OwnedFateStones.Num())
+	{
+		return OwnedFateStones[Id];
+	}
+	return nullptr;
+}
+

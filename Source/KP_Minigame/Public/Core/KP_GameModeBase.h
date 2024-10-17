@@ -76,6 +76,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Store)
 	bool TryCurrentPawnGiveFateStone(int32 FateStoneId);
 
+	UFUNCTION(BlueprintCallable, Category = Store)
+	bool AddFateStoneData(UFateStoneDataAsset* Data);
+
 	UFUNCTION(BlueprintCallable, Category ="Board|Navigation")
 	UBoardNavigationSystem* GetBoardNavSystem() const { return BoardNavSystem; }
 

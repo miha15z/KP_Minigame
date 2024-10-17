@@ -48,6 +48,24 @@ public:
 	UFUNCTION(BlueprintPure, Category = Store)
 	bool IsFull() const;
 
+	UFUNCTION(BlueprintCallable, Category = Store)
+	UFateStoneDataAsset* TryUseFateStone(const int32 Id);
+
+	UFUNCTION(BlueprintPure, Category = Store)
+	bool CanUseFateStone() const;
+
+	UFUNCTION(BlueprintCallable, Category = Store)
+	void ResetNumberOfUse();
+
+	UFUNCTION(BlueprintCallable, Category = Store)
+	const UFateStoneDataAsset* GetFateStone(const int32 Id);
+
+protected:
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Gameplay)
+	int32 MaxNumberOfUsesPerTurn = 1;
+
+	UPROPERTY(Transient, BlueprintReadOnly, VisibleAnywhere, Category = Gameplay)
+	int32 CurrentNumberOfUsePerTurn = 0;
 private:
 	UPROPERTY(Transient)
 	TArray<TObjectPtr<UFateStoneDataAsset>> OwnedFateStones;

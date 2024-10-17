@@ -13,12 +13,26 @@ class AKP_GameModeBase;
 class ACell;
 class UFateStoneDataAsset;
 class UFateStonePlayerStoreComponent;
+class UGameplayAbility;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateCanRollState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateSelectCell);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateStepsCounter);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateMovomentInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectFateStone);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUseOrCancelUseFateStone);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUpdateUseFateStoneState, bool, bCanUseFateStone);
 
+USTRUCT(Blueprintable)
+struct FSelectedFateStoneData
+{
+	GENERATED_BODY()
+	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
+	TWeakObjectPtr<const UFateStoneDataAsset> SelectedFateStone;
+
+	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
+	int32 Index = -1;
+};
 
 UCLASS(Blueprintable, BlueprintType, abstract)
 class KP_MINIGAME_API AKPPawn : public APawn, public IAbilitySystemInterface
@@ -68,6 +82,15 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdateMovomentInfo OnUpdateMovomentInfo;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnSelectFateStone OnSelectFateStone;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnUseOrCancelUseFateStone OnUseOrCancelUseFateStone;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnUpdateUseFateStoneState OnUpdateUseFateStoneState;
+
 	void PreMakeStepData();
 	void MakeStepData(const int32 StepPoints);
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
@@ -106,6 +129,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Store)
 	void SelectFateStone(int32 Index);
 
+	// cancel use 
+	UFUNCTION(BlueprintCallable, Category = Store)
+	void CancelUsingFateStone();
+
+	UFUNCTION(BlueprintCallable, Category = Store)
+	void UseFateStone();
+
 	UFUNCTION(BlueprintPure, Category = Store)
 	bool CanGiveFateStone() const;
 
@@ -141,6 +171,9 @@ protected:
 
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	TWeakObjectPtr<ACell> SelectedCell = nullptr;
+
+	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
+	FSelectedFateStoneData SelectedFateStoneData;
 
 protected:
 	EBoardPiece LastUsedBoardPieceTipe;
