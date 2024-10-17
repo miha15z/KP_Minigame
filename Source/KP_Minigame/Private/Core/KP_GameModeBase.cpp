@@ -29,6 +29,8 @@ AKP_GameModeBase::AKP_GameModeBase(const FObjectInitializer& ObjectInitializer):
     WinTags.AddTag(KP_GameplayTags::GameplayEvent_ActivateWin);
 
     FateStoneStore = CreateDefaultSubobject<UFateStonePlayerStoreComponent>(TEXT("FateStoneStore"));
+    //  need GMStones + Player0 + Player1...
+    FateStoneStore->MaxStoreSize = 100;
 }
 
 void AKP_GameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -176,9 +178,10 @@ bool AKP_GameModeBase::TryCurrentPawnGiveFateStone(int32 FateStoneId)
     if (CurrentPawn->CanGiveFateStone())
     {
         UFateStoneDataAsset* FateStoneData = FateStoneStore->GiveFateStone(FateStoneId);
-        if (FateStoneData)
+        if (FateStoneData && CurrentPawn->TryAddFateStone(FateStoneData))
         {
-            return  CurrentPawn->TryAddFateStone(FateStoneData);
+            OnBonusTaken.Broadcast();
+            return  true;
         }
     }
     return false;
@@ -196,7 +199,8 @@ bool AKP_GameModeBase::IsBonusRollData() const
 
 void AKP_GameModeBase::TryGiveBonus()
 {
-    // to do : show Bonus UI
+    OnGiveBonus.Broadcast(CurrentPawn->PlayerId);
+    //to do :ActivateGameCue  or ability GameplayAbilityGMRollSameNumer
 }
 
 int32 AKP_GameModeBase::RollDice() const
