@@ -83,8 +83,23 @@ void AKPPawn::InitBoardPieces(TArray<FKPPawnInfo>& PawnsInfo)
 {
 	for (auto& PawnInfo : PawnsInfo)
 	{
-		check(PawnInfo.Pawn);
-		PawnInfo.Pawn->OnTrySelectBoardPiece.AddUObject(this, &AKPPawn::TrySelectBoardPiece);
+		InitBoardPiece(PawnInfo);
+		//check(PawnInfo.Pawn);
+		//PawnInfo.Pawn->OnTrySelectBoardPiece.AddUObject(this, &AKPPawn::TrySelectBoardPiece);
+	}
+}
+
+void AKPPawn::InitBoardPiece(FKPPawnInfo PawnInfo)
+{
+	check(PawnInfo.Pawn);
+	PawnInfo.Pawn->OnTrySelectBoardPiece.AddUObject(this, &AKPPawn::TrySelectBoardPiece);
+}
+
+void AKPPawn::TerminateBoardPiece(FKPPawnInfo PawnInfo)
+{
+	if (PawnInfo.Pawn)
+	{
+		PawnInfo.Pawn->OnTrySelectBoardPiece.RemoveAll(this);
 	}
 }
 

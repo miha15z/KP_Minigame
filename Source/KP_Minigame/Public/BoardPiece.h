@@ -135,6 +135,9 @@ protected:
 	FColor OwnPlayerColor;
 
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
+	FBoardCoord TeamMovementMultiplier;
+
+	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)
 	bool bCandSelected = false;
 
 	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly)

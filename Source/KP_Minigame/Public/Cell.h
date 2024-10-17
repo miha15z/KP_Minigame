@@ -140,6 +140,9 @@ public:
 	void LeavePawn(const ABoardPiece * Pawn);
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
+	void ReplaceByPawn(ABoardPiece* Pawn);
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
 	ABoardPiece* GetStoodPawn() const;
 
 	UFUNCTION(BlueprintCallable, Category = Cells)

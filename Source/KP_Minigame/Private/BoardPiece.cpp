@@ -85,10 +85,11 @@ void ABoardPiece::CopyState(const ABoardPiece* Other)
 {
 	// Copy the identifying parameters
 	CurrentCellId = Other->CurrentCellId;
-	OwnPlayerColor = Other->OwnPlayerColor;
-	OwnPlayerColor = Other->OwnPlayerColor;
+	SetOwnPlayerData(Other->OwnPlayerId, Other->OwnPlayerColor);
 	bCandSelected = Other->bCandSelected;
-	bSelected = Other->bSelected;
+	//bSelected = Other->bSelected;
+	TeamMovementMultiplier = Other->TeamMovementMultiplier;
+	SetupTeamMovementDirectionMultiplier(TeamMovementMultiplier);
 	MovementPointsConsumed = Other->MovementPointsConsumed;
 }
 
@@ -161,6 +162,7 @@ const TArray<FBoardCoord>& ABoardPiece::GetMovementDirections() const
 
 void ABoardPiece::SetupTeamMovementDirectionMultiplier(const FBoardCoord& DirectionMultiplier)
 {
+	TeamMovementMultiplier = DirectionMultiplier;
 	// TODO
 	// normalize DirectionMultiplier
 

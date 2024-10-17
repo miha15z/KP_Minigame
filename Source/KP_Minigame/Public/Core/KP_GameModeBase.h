@@ -161,6 +161,7 @@ protected:
 	//Maybe use TQueue
 	//UPROPERTY(VisibleInstanceOnly, Category = Gameplay)
 	TQueue<TWeakObjectPtr<AKPPawn>> QueuePawns;
+	TArray<TWeakObjectPtr<AKPPawn>> Pawns;
 	TWeakObjectPtr<AKPPawn> CurrentPawn = nullptr;
 	UFUNCTION(BlueprintNativeEvent, Category = Gameplay)
 	bool IsWin() const;
@@ -188,6 +189,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = RollDices)
 	AKPPawn* GetCurrentPawn()const;
+
+	UFUNCTION(BlueprintCallable, Category = Player)
+	AKPPawn* GetPlayerPawnById(int32 Id);
 
 	void EnableSelectabilityForBoardPieces(const int32 OwnerPlayerId, const bool NewState, const EBoardPiece BoardPieceType = EBoardPiece::None);
 	void EnableSelectabilityForBoardPiecesForAllPlayer(const bool NewState, const EBoardPiece BoardPieceType = EBoardPiece::None);

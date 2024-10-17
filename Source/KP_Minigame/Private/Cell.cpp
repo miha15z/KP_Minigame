@@ -91,6 +91,12 @@ void ACell::LeavePawn(const ABoardPiece * Pawn)
 
 }
 
+void ACell::ReplaceByPawn(ABoardPiece* Pawn)
+{
+	check(Pawn);
+	PawnPtr = Pawn;
+}
+
 ABoardPiece* ACell::GetStoodPawn() const
 {
 	return PawnPtr.Get();

@@ -99,6 +99,8 @@ public:
 	void MakeStepData(const int32 StepPoints);
 	void SetGameModePtr(AKP_GameModeBase* GM_Ptr);
 	void InitBoardPieces(TArray<FKPPawnInfo>& PawnsInfo);
+	void InitBoardPiece(FKPPawnInfo PawnInfo);
+	void TerminateBoardPiece(FKPPawnInfo PawnInfo);
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void RollDices();

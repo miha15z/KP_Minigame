@@ -75,6 +75,7 @@ void AKP_GameModeBase::StartPlay()
 
     //Make GameQueue
     QueuePawns.Enqueue(PlayerPawn);
+    Pawns.Add(PlayerPawn);
     FActorSpawnParameters SpawnParams;
     SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     const FTransform SpawnTransform;
@@ -89,6 +90,7 @@ void AKP_GameModeBase::StartPlay()
             PawnAI->InitBoardPieces(PlayerData.Pawns);
         }
         QueuePawns.Enqueue(PawnAI);
+        Pawns.Add(PawnAI);
     }
     UpdateGameBoard();
     SelectNextPawn();
@@ -302,6 +304,22 @@ void AKP_GameModeBase::SelectNextPawn()
 AKPPawn* AKP_GameModeBase::GetCurrentPawn() const
 {
     return CurrentPawn.Get();
+}
+
+AKPPawn* AKP_GameModeBase::GetPlayerPawnById(int32 Id)
+{
+    AKPPawn* Result = nullptr;
+
+    for (auto& Pawn : Pawns)
+    {
+        if (Pawn->PlayerId == Id)
+        {
+            Result = Pawn.Get();
+            break;
+        }
+    }
+
+    return Result;
 }
 
 void AKP_GameModeBase::EnableSelectabilityForBoardPieces(const int32 OwnerPlayerId, const bool NewState, const EBoardPiece BoardPieceType)

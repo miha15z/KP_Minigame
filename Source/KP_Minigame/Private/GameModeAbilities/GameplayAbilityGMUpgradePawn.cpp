@@ -3,6 +3,10 @@
 
 #include "GameModeAbilities/GameplayAbilityGMUpgradePawn.h"
 #include "KP_GameplayTags.h"
+#include "BoardPiece.h"
+#include "Core/KP_GameModeBase.h"
+#include "Cell.h"
+#include "KPPawn.h"
 
 UGameplayAbilityGMUpgradePawn::UGameplayAbilityGMUpgradePawn(const FObjectInitializer& ObjectInitializer)
 {
@@ -20,13 +24,43 @@ UGameplayAbilityGMUpgradePawn::UGameplayAbilityGMUpgradePawn(const FObjectInitia
 
 void UGameplayAbilityGMUpgradePawn::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	check(TriggerEventData);
+	// Replace the existing pawn with the new one
+	ABoardPiece* InitialPawn = Cast<ABoardPiece>(const_cast<AActor*>(TriggerEventData->Target.Get()));
+	check(InitialPawn && GetWorld())
+	
+	if (InitialPawn->StaticClass() == UpgradeClass)
+	{
+		CancelAbility(Handle, ActorInfo, ActivationInfo, false);
+	}
+	FVector InitialActorLocation = InitialPawn->GetActorLocation();
+	FRotator InitialActorRotation = InitialPawn->GetActorRotation();
 
-	// Create new pawn of upgraded type
-
-	// Replace the existing pawn woth the newe one
+	ABoardPiece* NewPawn = GetWorld()->SpawnActor<ABoardPiece>(UpgradeClass, InitialActorLocation, InitialActorRotation);
+	NewPawn->CopyState(InitialPawn);
 
 	// Replace all outer references to the old pawn with references to the new one
+	auto* GM = Cast<AKP_GameModeBase>(GetOwningActorFromActorInfo());
+	check(GM);
+
+	ACell* LocationCell = GM->GetCellByID(NewPawn->GetCurrentCellId());
+	LocationCell->ReplaceByPawn(NewPawn);
+
+	TArray<FKPPawnInfo>& PawnsArray = const_cast<FBoardData&>(GM->GetGameBoradData()).PlayersData[NewPawn->GetOwnPlayerId()].Pawns;
+	for (auto& PawnsInfo : PawnsArray)
+	{
+		if (PawnsInfo.Pawn == InitialPawn)
+		{
+			GM->GetPlayerPawnById(NewPawn->GetOwnPlayerId())->TerminateBoardPiece(PawnsInfo);
+			PawnsInfo.Pawn = NewPawn;
+			GM->GetPlayerPawnById(NewPawn->GetOwnPlayerId())->InitBoardPiece(PawnsInfo);
+			break;
+		}
+	}
+
+	// Deactivate Initial Pawn
+	InitialPawn->ForceKill();
+
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
 
