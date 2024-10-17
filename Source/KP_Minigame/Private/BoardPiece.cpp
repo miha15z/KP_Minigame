@@ -81,6 +81,17 @@ EBoardPiece ABoardPiece::GetBoardPieceType() const
 	return BoardPieceType;
 }
 
+void ABoardPiece::CopyState(const ABoardPiece* Other)
+{
+	// Copy the identifying parameters
+	CurrentCellId = Other->CurrentCellId;
+	OwnPlayerColor = Other->OwnPlayerColor;
+	OwnPlayerColor = Other->OwnPlayerColor;
+	bCandSelected = Other->bCandSelected;
+	bSelected = Other->bSelected;
+	MovementPointsConsumed = Other->MovementPointsConsumed;
+}
+
 void ABoardPiece::ConfirmSelection()
 {
 	if (bSelected != true)
