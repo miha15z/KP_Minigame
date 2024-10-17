@@ -10,12 +10,14 @@
 #include "KP_GameplayTags.h"
 #include "FateStoneDataAsset.h"
 #include "FateStonePlayerStoreComponent.h"
+#include "KP_AbilitySystemComponent.h"
 
 // Sets default values
 AKPPawn::AKPPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	c = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	FateStoneStore = CreateDefaultSubobject<UFateStonePlayerStoreComponent>(TEXT("FateStoneStore"));
 }
@@ -24,7 +26,18 @@ AKPPawn::AKPPawn()
 void AKPPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	check(AbilitySystemComponent);
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+	// add def  abilities
+	for (auto& SoftAbilityClass : DefaultAbilities)
+	{
+		if (auto AbilityClass = SoftAbilityClass.LoadSynchronous())
+		{
+			FGameplayAbilitySpec Spec = FGameplayAbilitySpec(AbilityClass, 1, INDEX_NONE, this);;
+			AbilitySystemComponent->GiveAbility(Spec);
+		}
+	}
 }
 
 // Called every frame
@@ -154,6 +167,7 @@ void AKPPawn::InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset>>& I
 
 void AKPPawn::SelectFateStone(int32 Index)
 {
+
 }
 
 bool AKPPawn::CanGiveFateStone() const

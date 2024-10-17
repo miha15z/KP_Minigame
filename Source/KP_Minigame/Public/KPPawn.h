@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Core/KP_Structs.h"
+#include "AbilitySystemInterface.h"
 #include "KPPawn.generated.h"
 
 class ABoardPiece;
@@ -20,7 +21,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateMovomentInfo);
 
 
 UCLASS(Blueprintable, BlueprintType, abstract)
-class KP_MINIGAME_API AKPPawn : public APawn
+class KP_MINIGAME_API AKPPawn : public APawn, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -38,6 +39,18 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//Ability interface
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
+	{
+		return AbilitySystemComponent;
+	}
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowedClasses = "/Script/KP_Minigame.PlayerPawnGameplayAbilityBase"))
+	TArray<TSoftClassPtr<UGameplayAbility> > DefaultAbilities;
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerData)
