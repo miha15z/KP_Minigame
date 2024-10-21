@@ -256,21 +256,26 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
         return false;
     }
 
-    // may be need  event ability?
     //activate TurnEndAbility
     check(AbilitySystemComponent);
     FGameplayTagContainer TempTagConteiner;
     TempTagConteiner.AddTag(KP_GameplayTags::Gameplay_Ability_EndTurn);
     AbilitySystemComponent->TryActivateAbilitiesByTag(TempTagConteiner);
 
-    // Resets Board Pieces at the end of the turn
-    ResetBoardPieces();
-
     if(not CheckWinState())
     {
+        // Resets Board Pieces at the end of the turn
+        ResetBoardPieces();
         UpdateGameBoard();
         SelectNextPawn();
         OnFinishStep.Broadcast();
+
+        // may be used only TurnEndAbility
+        //activate TurnStartAbility
+        check(AbilitySystemComponent);
+        FGameplayTagContainer TempStartTagConteiner;
+        TempStartTagConteiner.AddTag(KP_GameplayTags::Gameplay_Ability_StartTurn);
+        AbilitySystemComponent->TryActivateAbilitiesByTag(TempStartTagConteiner);
     }
     StepsCounter++;
     return true;

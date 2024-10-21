@@ -251,7 +251,6 @@ void AKPPawn::SelectFateStone(int32 Index)
 					if (IsValid(BoardPiece) && BoardPiece->IsAlive())
 					{
 						bool bSouldSelectBoardPiece = FateStoneAbilityCDO->CanUseFateStone(BoardPiece, this, CurrentNumberOfUsePerTurn);
-						// TODO: Revert to prev state, not deselect
 						BoardPiece->EnableSelectability(bSouldSelectBoardPiece);
 					}
 				}

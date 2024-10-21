@@ -81,5 +81,7 @@ namespace KP_GameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_Victory_KingDefeat, "GameplayCue.Victory.KingDefeat", "The opponen't king has been defeated");
 
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Gameplay_Ability_EndTurn,"Gameplay.Ability.EndTurn", "Abylyty's tag - EndTurn")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Gameplay_Ability_EndTurn, "Gameplay.Ability.EndTurn", "Abylyty's tag - EndTurn");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Gameplay_Ability_StartTurn, "Gameplay.Ability.StartTurn", "Abylyty's tag - StartTurn");
+	
 }

@@ -15,4 +15,9 @@ class KP_MINIGAME_API UGameplayAbilityGMTurnStart : public UGameModeAbility
 {
 	GENERATED_BODY()
 	
+public:
+	UGameplayAbilityGMTurnStart(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	
 };
