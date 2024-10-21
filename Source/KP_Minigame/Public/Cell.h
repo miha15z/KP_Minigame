@@ -82,6 +82,9 @@ protected:
 	ECellState CurrentState = ECellState::None;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
+	ECellState OldState = ECellState::None;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base")
 	TWeakObjectPtr<ABoardPiece> PawnPtr = nullptr;
 
 	UPROPERTY(VisibleAnywhere,Category = Ability)
@@ -117,6 +120,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	void SetState(const ECellState NewState);
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void SetPastState();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = Cell)
 	void SetState_BP(const ECellState NewState);

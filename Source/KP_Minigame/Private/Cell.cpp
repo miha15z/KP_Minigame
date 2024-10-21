@@ -62,8 +62,14 @@ void ACell::Reset()
 
 void ACell::SetState(const ECellState NewState)
 {
+	OldState = CurrentState;
 	CurrentState = NewState;
 	ACell::SetState_BP(NewState);
+}
+
+void ACell::SetPastState()
+{
+	SetState(OldState);
 }
 
 void ACell::PutPawnOnCell(ABoardPiece* Pawn, ABoardPiece ** OutKilledPawn)

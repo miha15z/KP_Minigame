@@ -186,6 +186,12 @@ void AKPPawn::SelectCell(ACell* Cell)
 		return;
 	}
 
+	// set old cell's state
+	if (SelectedCell.IsValid())
+	{
+		SelectedCell->SetPastState();
+	}
+
 	SelectedCell = Cell;
 	if (bForFateStone)
 	{
