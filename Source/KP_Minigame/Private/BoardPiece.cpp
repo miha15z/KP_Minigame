@@ -205,7 +205,7 @@ void ABoardPiece::OnChengSelection_Implementation()
 	}
 	else
 	{
-		this->SetActorScale3D(FVector(1.f));
+		this->SetActorScale3D(FVector(1.2f));
 	}
 	// To do : update visualObject;
 }
