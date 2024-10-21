@@ -269,7 +269,7 @@ void AKPPawn::CancelUsingFateStone()
 	OnUseOrCancelUseFateStone.Broadcast();
 	SetEnableFateStone(false);
 	SelectedCell = nullptr;
-	SelectedBoardPiece->ResetSelection();
+	//SelectedBoardPiece->ResetSelection();
 	SelectedBoardPiece = nullptr;
 	OnUsingFateStoneDataRedy.Broadcast(false);
 	PrepareBoardToPlayer();
@@ -306,7 +306,7 @@ void AKPPawn::UseFateStone()
 			check(false);
 		}
 
-		// call in the baseAbility
+		// call in the baseAbility (End)
 		//EndUseFateStone();
 	}
 }
@@ -321,6 +321,13 @@ void AKPPawn::EndUseFateStone()
 	PrepareBoardToPlayer();
 	OnUseOrCancelUseFateStone.Broadcast();
 	OnUpdateUseFateStoneState.Broadcast(FateStoneStore->CanUseFateStone());
+
+	//Place a stone in the bag (Ability)
+	FGameplayEventData GameplayEventData;
+	GameplayEventData.EventTag = KP_GameplayTags::GameplayEvent_PlaceStoneInBag;
+	GameplayEventData.Instigator = this;
+	GameplayEventData.OptionalObject = FateStoneData;
+	GetKPGameMode()->GetAbilitySystemComponent()->HandleGameplayEvent(KP_GameplayTags::GameplayEvent_PlaceStoneInBag, &GameplayEventData);
 }
 
 void AKPPawn::PrepareBoardToPlayer()
