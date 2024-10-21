@@ -239,7 +239,7 @@ void AKPPawn::SelectFateStone(int32 Index)
 				if (IsValid(Cell) && !Cell->IsHidden()) 
 				{
 					bool bShouldSelectCell = FateStoneAbilityCDO->CanUseFateStone(Cell, this, CurrentNumberOfUsePerTurn);
-					Cell->SetState(bShouldSelectCell ? ECellState::None : ECellState::ShowPath);
+					Cell->SetState(bShouldSelectCell ? ECellState::SelectToNav : ECellState::None);
 				}
 			}
 			// traverse board pieces
