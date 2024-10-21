@@ -225,15 +225,32 @@ void AKPPawn::SelectFateStone(int32 Index)
 		const UGameplayAbilityFateStone* FateStoneAbilityCDO = GetDefault<UGameplayAbilityFateStone>(SelectedFateStoneData.SelectedFateStone->GetGameplayAbilityClass());
 		if (FateStoneAbilityCDO)
 		{
-			for (const auto& TargetClass : FateStoneAbilityCDO->GetTargetClasses())
+			// TODO: Add target class check
+			// traverse cells
+			int32 CurrentNumberOfUsePerTurn = FateStoneStore->GetCurrentNumberOfUseLeft();
+			for (auto& Cell : GetKPGameMode() -> GetGameBoradData().Cells) 
 			{
-				// To do MakeRedyDataForUseStone;
-				//Example;
-				GetKPGameMode()->EnableSelectabilityForBoardPieces(PlayerId, false);
-				GetKPGameMode()->EnableSelectabilityForBoardPiecesForOtherPlayers(PlayerId, true, EBoardPiece::Pawn);
+				if (IsValid(Cell) && !Cell->IsHidden()) 
+				{
+					bool bShouldSelectCell = FateStoneAbilityCDO->CanUseFateStone(Cell, this, CurrentNumberOfUsePerTurn);
+					Cell->SetState(bShouldSelectCell ? ECellState::None : ECellState::ShowPath);
+				}
 			}
-			// enable selection for FateStone;
-			
+			// traverse board pieces
+			for (auto& Player : GetKPGameMode()->GetGameBoradData().PlayersData)
+			{
+				for (auto& BoardPieceInfo : Player.Pawns)
+				{
+					ABoardPiece* BoardPiece = BoardPieceInfo.Pawn;
+					if (IsValid(BoardPiece) && BoardPiece->IsAlive())
+					{
+						bool bSouldSelectBoardPiece = FateStoneAbilityCDO->CanUseFateStone(BoardPiece, this, CurrentNumberOfUsePerTurn);
+						// TODO: Revert to prev state, not deselect
+						BoardPiece->EnableSelectability(bSouldSelectBoardPiece);
+					}
+				}
+			}
+			// TODO?: Traverse Players
 		}
 		SetEnableFateStone(true);
 	}

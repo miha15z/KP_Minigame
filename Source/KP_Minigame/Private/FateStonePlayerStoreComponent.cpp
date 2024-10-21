@@ -106,3 +106,12 @@ const UFateStoneDataAsset* UFateStonePlayerStoreComponent::GetFateStone(const in
 	return nullptr;
 }
 
+int32 UFateStonePlayerStoreComponent::GetCurrentNumberOfUsePerTurn()
+{
+	return CurrentNumberOfUsePerTurn;
+}
+
+int32 UFateStonePlayerStoreComponent::GetCurrentNumberOfUseLeft()
+{
+	return MaxNumberOfUsesPerTurn - CurrentNumberOfUsePerTurn;
+}
