@@ -29,4 +29,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MovementOut;
 	ATTRIBUTE_ACCESSORS(UCellAttributeSet, MovementOut)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData MaxMovementPointsOverride;
+	ATTRIBUTE_ACCESSORS(UCellAttributeSet, MaxMovementPointsOverride)
 };

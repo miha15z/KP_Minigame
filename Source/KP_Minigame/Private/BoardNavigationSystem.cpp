@@ -219,6 +219,10 @@ void UBoardNavigationSystem::CalculateAtomicMovement(const ACell * Origin, const
 		return;
 	}
 
+	// Trim available movement points
+	const float MaxMovementPointsOverride = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMaxMovementPointsOverrideAttribute());
+	const float AvailableMovementPoints =  (MaxMovementPointsOverride < -DBL_EPSILON) ? MovementPoints : FMath::Min(MaxMovementPointsOverride, MovementPoints);
+
 	// Check if there is any BoardPiece in the destination.
 	const ABoardPiece* DestinationBoardPiece = Destination->GetStoodPawn();
 	if (DestinationBoardPiece != NULL) 
@@ -237,7 +241,7 @@ void UBoardNavigationSystem::CalculateAtomicMovement(const ACell * Origin, const
 			// calculate movement points amount that is to be consumed
 			const float MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
 			// If there are any points left after this movement, dispose of them
-			const float MovementPointsLeft = FMath::Min(MovementPoints - MovementPointsConsumed, 0.0);
+			const float MovementPointsLeft = FMath::Min(AvailableMovementPoints - MovementPointsConsumed, 0.0);
 			OutAtomicMovement.MovementPointsLeft = MovementPointsLeft;
 		}
 		OutAtomicMovement.MovementPointsConsumed = MovementPoints - OutAtomicMovement.MovementPointsLeft;
@@ -248,7 +252,9 @@ void UBoardNavigationSystem::CalculateAtomicMovement(const ACell * Origin, const
 		const float MovementOut = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementOutAttribute());
 		const float MovementIn = Destination->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMovementInAttribute());
 		const float BoardPieceMovementPointsModifier = BoardPiece->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsModifierAttribute());
-		OutAtomicMovement.MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
-		OutAtomicMovement.MovementPointsLeft = MovementPoints - OutAtomicMovement.MovementPointsConsumed;
+		const float MovementPointsConsumed = FMath::Max(MovementIn, MovementOut) * BoardPieceMovementPointsModifier;
+		const float MovementPointsLeft = AvailableMovementPoints - MovementPointsConsumed;
+		OutAtomicMovement.MovementPointsLeft = MovementPointsLeft;
+		OutAtomicMovement.MovementPointsConsumed = MovementPoints - OutAtomicMovement.MovementPointsLeft;
 	}
 }
