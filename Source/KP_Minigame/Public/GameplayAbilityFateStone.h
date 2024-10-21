@@ -7,7 +7,7 @@
 #include "Engine/DataAsset.h"
 #include "GameplayAbilityFateStone.generated.h"
 
-class UTexture2D;
+class AKPPawn;
 
 /**
  * 
@@ -26,6 +26,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TArray<TSubclassOf<AActor>> GetTargetClasses() const ;
+
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+
+protected:
+
+	TWeakObjectPtr<AKPPawn> Instigator;
 
 };
 
