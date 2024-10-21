@@ -41,7 +41,8 @@ namespace KP_GameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_ActivateWin_KillKing, "GameplayEvent.WinCondition.KillKing", "Win : Kill King");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_ActivateWin_ReachThePoint, "GameplayEvent.WinCondition.ReachThePoint", "Win : Reach the point ");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_RollDices, "GameplayEvent.Gameplay.RollDices", "Roll dices");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_SelectFateStone, "GameplayEvent.Gameplay.SelectFateStoneData", "Select FateStoneData")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_SelectFateStone, "GameplayEvent.Gameplay.SelectFateStoneData", "Select FateStoneData");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_PlaceStoneInBag, "GameplayEvent.Gameplay.PlaceStoneInBag", "Place the stone in GM's bag");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameState_ShowGameResult, "WonPlayer", "Won player");
 
