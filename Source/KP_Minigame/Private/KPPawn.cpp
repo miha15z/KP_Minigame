@@ -269,7 +269,7 @@ void AKPPawn::CancelUsingFateStone()
 	OnUseOrCancelUseFateStone.Broadcast();
 	SetEnableFateStone(false);
 	SelectedCell = nullptr;
-	SelectedBoardPiece->ResetSelection();
+	//SelectedBoardPiece->ResetSelection();
 	SelectedBoardPiece = nullptr;
 	OnUsingFateStoneDataRedy.Broadcast(false);
 	PrepareBoardToPlayer();
