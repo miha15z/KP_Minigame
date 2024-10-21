@@ -142,6 +142,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Store)
 	void UseFateStone();
 
+	void EndUseFateStone();
+
 	void PrepareBoardToPlayer();
 
 	UFUNCTION(BlueprintPure, Category = Store)

@@ -306,15 +306,21 @@ void AKPPawn::UseFateStone()
 			check(false);
 		}
 
-		SetEnableFateStone(false);
-		auto* FateStoneData = FateStoneStore->TryUseFateStone(SelectedFateStoneData.Index);
-		check(FateStoneData);
-		GM->AddFateStoneData(FateStoneData);
-		OnUsingFateStoneDataRedy.Broadcast(false);
-		PrepareBoardToPlayer();
-		OnUseOrCancelUseFateStone.Broadcast();
-		OnUpdateUseFateStoneState.Broadcast(FateStoneStore->CanUseFateStone());
+		// call in the baseAbility
+		//EndUseFateStone();
 	}
+}
+
+void AKPPawn::EndUseFateStone()
+{
+	SetEnableFateStone(false);
+	auto* FateStoneData = FateStoneStore->TryUseFateStone(SelectedFateStoneData.Index);
+	check(FateStoneData);
+	GM->AddFateStoneData(FateStoneData);
+	OnUsingFateStoneDataRedy.Broadcast(false);
+	PrepareBoardToPlayer();
+	OnUseOrCancelUseFateStone.Broadcast();
+	OnUpdateUseFateStoneState.Broadcast(FateStoneStore->CanUseFateStone());
 }
 
 void AKPPawn::PrepareBoardToPlayer()
