@@ -241,15 +241,24 @@ bool AKP_GameModeBase::IsBonusRollData() const
 
 void AKP_GameModeBase::TryGiveBonus()
 {
-    OnGiveBonus.Broadcast(CurrentPawn->PlayerId);
+    
     if (IsDrawingRandomFateStone())
     {
         FGameplayEventData EventData;
         EventData.Target = CurrentPawn.Get();
         AbilitySystemComponent->HandleGameplayEvent(KP_GameplayTags::GameplayEvent_SelectRandomFateStone, &EventData);
     }
+    else if(CanGiveFateStone(CurrentPawn.Get()))
+    {
+        ShowGiveBonusUI();
+    }
 
     //to do :ActivateGameCue  or ability GameplayAbilityGMRollSameNumer
+}
+
+void AKP_GameModeBase::ShowGiveBonusUI()
+{
+    OnGiveBonus.Broadcast(CurrentPawn->PlayerId);
 }
 
 int32 AKP_GameModeBase::RollDice() const

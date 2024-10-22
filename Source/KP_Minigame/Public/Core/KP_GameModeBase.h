@@ -132,6 +132,7 @@ public:
 	bool IsBonusRollData() const;
 
 	void TryGiveBonus();
+	void ShowGiveBonusUI();
 	//UI
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Widgets)

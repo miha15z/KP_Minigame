@@ -29,7 +29,7 @@ void UGameplayAbilityGMDrawRandStone::ActivateAbility(const FGameplayAbilitySpec
 	check(GM);
 	IndexStone = GM->GetRandomFateStoneIndex();
 	SelectedFateStoneData = GM->GetFateStoneData(IndexStone);
-
+	GM->ShowGiveBonusUI();
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
