@@ -84,8 +84,6 @@ void AKPPawn::InitBoardPieces(TArray<FKPPawnInfo>& PawnsInfo)
 	for (auto& PawnInfo : PawnsInfo)
 	{
 		InitBoardPiece(PawnInfo);
-		//check(PawnInfo.Pawn);
-		//PawnInfo.Pawn->OnTrySelectBoardPiece.AddUObject(this, &AKPPawn::TrySelectBoardPiece);
 	}
 }
 
@@ -125,8 +123,9 @@ void AKPPawn::UpdateRollDicesData()
 
 void AKPPawn::TurnEnd()
 {
+	// to do: may be call EndTurnAbility
 	RestSelectionCurrenBoardPiece();
-	GetKPGameMode()->EnableSelectabilityForBoardPieces(PlayerId, false);
+	//GetKPGameMode()->EnableSelectabilityForBoardPieces(PlayerId, false);
 	GetKPGameMode()->EndTurn(this);
 	OnUpdateUseFateStoneState.Broadcast(false);
 }

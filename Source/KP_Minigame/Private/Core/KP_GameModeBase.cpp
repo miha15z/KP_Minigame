@@ -144,6 +144,8 @@ void AKP_GameModeBase::ResetBoardPieces()
         for (auto BoardPiece : Player.Pawns) 
         {
             BoardPiece.Pawn->ResetAvailableMovementPoints();
+            BoardPiece.Pawn->ResetSelection();
+            BoardPiece.Pawn->EnableSelectability(false);
         }
     }
 }
