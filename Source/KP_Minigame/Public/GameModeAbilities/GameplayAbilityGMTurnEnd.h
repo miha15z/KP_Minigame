@@ -7,6 +7,7 @@
 #include "GameModeAbilities/GameModeAbility.h"
 #include "GameplayAbilityGMTurnEnd.generated.h"
 
+class AKPPawn;
 /**
  * 
  */
@@ -19,5 +20,10 @@ public:
 	UGameplayAbilityGMTurnEnd(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-	
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	virtual bool ShouldAbilityRespondToEvent(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayEventData* Payload) const override;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GA_Data)
+	TWeakObjectPtr<AKPPawn> PlayerPawn;
 };

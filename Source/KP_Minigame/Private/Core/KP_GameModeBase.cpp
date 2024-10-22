@@ -258,11 +258,12 @@ bool AKP_GameModeBase::EndTurn(AKPPawn* PlayerPawn)
         return false;
     }
 
+    // We make the GameplayEvent in a PlayerPawn
     //activate TurnEndAbility
-    check(AbilitySystemComponent);
-    FGameplayTagContainer TempTagConteiner;
-    TempTagConteiner.AddTag(KP_GameplayTags::Gameplay_Ability_EndTurn);
-    AbilitySystemComponent->TryActivateAbilitiesByTag(TempTagConteiner);
+    //check(AbilitySystemComponent);
+    //FGameplayTagContainer TempTagConteiner;
+    //TempTagConteiner.AddTag(KP_GameplayTags::Gameplay_Ability_EndTurn);
+    //AbilitySystemComponent->TryActivateAbilitiesByTag(TempTagConteiner);
 
     if(not CheckWinState())
     {

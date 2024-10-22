@@ -123,10 +123,12 @@ void AKPPawn::UpdateRollDicesData()
 
 void AKPPawn::TurnEnd()
 {
-	// to do: may be call EndTurnAbility
 	RestSelectionCurrenBoardPiece();
-	//GetKPGameMode()->EnableSelectabilityForBoardPieces(PlayerId, false);
-	GetKPGameMode()->EndTurn(this);
+
+	FGameplayEventData EventData;
+	EventData.Instigator = this;
+	GetKPGameMode()->GetAbilitySystemComponent()->HandleGameplayEvent(KP_GameplayTags::GameplayEvent_EndTurn, &EventData);
+
 	OnUpdateUseFateStoneState.Broadcast(false);
 }
 
@@ -141,7 +143,6 @@ void AKPPawn::TrySelectBoardPiece(ABoardPiece* BoardPiece)
 	{
 		return;
 	}
-	// TO DO :Check Can Select BoardPiece type
 	check(BoardPiece);
 	if (!bForFateStone)
 	{
@@ -151,7 +152,6 @@ void AKPPawn::TrySelectBoardPiece(ABoardPiece* BoardPiece)
 			return;
 		}
 	}
-
 
 	RestSelectionCurrenBoardPiece();
 	
@@ -225,7 +225,6 @@ void AKPPawn::SelectFateStone(int32 Index)
 	{
 		SelectedFateStoneData.Index = Index;
 		OnSelectFateStone.Broadcast();
-		//to do: Make data for using
 
 		const UGameplayAbilityFateStone* FateStoneAbilityCDO = GetDefault<UGameplayAbilityFateStone>(SelectedFateStoneData.SelectedFateStone->GetGameplayAbilityClass());
 		if (FateStoneAbilityCDO)
@@ -259,7 +258,6 @@ void AKPPawn::SelectFateStone(int32 Index)
 		SetEnableFateStone(true);
 	}
 }
-
 
 void AKPPawn::CancelUsingFateStone()
 {
