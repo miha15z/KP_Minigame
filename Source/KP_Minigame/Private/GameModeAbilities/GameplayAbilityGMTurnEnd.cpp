@@ -30,19 +30,19 @@ void UGameplayAbilityGMTurnEnd::ActivateAbility(const FGameplayAbilitySpecHandle
 		K2_AddGameplayCueWithParams(KP_GameplayTags::GameplayCue_Basics_TurnEnd, CueParams);
 	}
 	check(TriggerEventData && TriggerEventData->Instigator);
-	PlayerPawn = const_cast<AKPPawn*>(Cast<const AKPPawn>(TriggerEventData->Instigator));
+	Pawn = const_cast<AKPPawn*>(Cast<const AKPPawn>(TriggerEventData->Instigator));
 
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
 void UGameplayAbilityGMTurnEnd::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	if (not bWasCancelled && PlayerPawn.IsValid())
+	if (not bWasCancelled && Pawn.IsValid())
 	{
 		auto* GM = Cast<AKP_GameModeBase>(GetOwningActorFromActorInfo());
 		check(GM);
-		GM->EndTurn(PlayerPawn.Get());
-		PlayerPawn = nullptr;
+		GM->EndTurn(Pawn.Get());
+		Pawn = nullptr;
 	}
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
@@ -53,7 +53,7 @@ bool UGameplayAbilityGMTurnEnd::ShouldAbilityRespondToEvent(const FGameplayAbili
 	if (Payload)
 	{
 		//to do:   check CanPlaerEndTurn 
-		return true && Super::ShouldAbilityRespondToEvent(ActorInfo, Payload);
+		return /*... && */Super::ShouldAbilityRespondToEvent(ActorInfo, Payload);
 	}
 	return false;
 }

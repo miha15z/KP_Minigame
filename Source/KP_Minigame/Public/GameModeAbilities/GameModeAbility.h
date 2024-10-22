@@ -6,6 +6,8 @@
 #include "Abilities/GameplayAbility.h"
 #include "GameModeAbility.generated.h"
 
+
+class AKPPawn;
 /**
  * 
  */
@@ -18,5 +20,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = GameplayCue)
 	bool bAutoActivateGameplayCue = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GA_Data)
+	TWeakObjectPtr<AKPPawn> Pawn = nullptr;
 	
 };
