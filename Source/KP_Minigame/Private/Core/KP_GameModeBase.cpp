@@ -184,7 +184,7 @@ UFateStonePlayerStoreComponent* AKP_GameModeBase::GetFateStoneStore() const
     return  FateStoneStore;
 }
 
-bool AKP_GameModeBase::TryCurrentPawnGiveFateStone(int32 FateStoneId)
+bool AKP_GameModeBase::TryCurrentPawnGiveFateStone(const int32 FateStoneId)
 {
     if (CurrentPawn->CanGiveFateStone())
     {
@@ -201,6 +201,26 @@ bool AKP_GameModeBase::TryCurrentPawnGiveFateStone(int32 FateStoneId)
 bool AKP_GameModeBase::AddFateStoneData(UFateStoneDataAsset* Data)
 {
     return  FateStoneStore->TryAddFateStone(Data);
+}
+
+bool AKP_GameModeBase::IsDrawingRandomFateStone() const
+{
+    return bDrawingRandomFateStone;
+}
+
+int32 AKP_GameModeBase::GetRandomFateStoneIndex() const
+{
+    int32 NumStones = FateStoneStore->Num();
+    if (NumStones > 0)
+    {
+        return FMath::RandRange(0, NumStones - 1);
+    }
+    return -1;
+}
+
+const UFateStoneDataAsset* AKP_GameModeBase::GetFateStoneData(const int32 Index)
+{
+    return FateStoneStore->GetFateStone(Index);
 }
 
 FRollDicesData AKP_GameModeBase::GetLastRollData() const

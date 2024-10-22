@@ -43,29 +43,43 @@ public:
 	void ResetCells();
 	// Resets Board Pieces at the end of the turn
 	void ResetBoardPieces();
-	//tags
+protected:
+	virtual void BeginPlay() override;
 
 	//navigation
 protected:
-
-	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-
 	UPROPERTY(VisibleInstanceOnly, Category = "Board|Navigation")
 	TObjectPtr<UBoardNavigationSystem> BoardNavSystem;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Navigation")
 	TSoftClassPtr<UBoardNavigationSystem> BoardNavSystemClass;
 
+	UFUNCTION()
+	void SelectCellForCurrentPlayer(ACell* Cell);
+
+public:
+	UFUNCTION(BlueprintCallable, Category ="Board|Navigation")
+	UBoardNavigationSystem* GetBoardNavSystem() const { return BoardNavSystem; }
+
+	//AbilitySystem
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowedClasses = "/Script/KP_Minigame.GameModeAbility"))
 	TArray<TSoftClassPtr<UGameplayAbility> > DefaultAbilities;
-
+public:
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
+	{
+		return AbilitySystemComponent;
+	}
+	//Stones of Fate
+protected:
 	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UFateStonePlayerStoreComponent> FateStoneStore;
 
-	UFUNCTION()
-	void SelectCellForCurrentPlayer(ACell* Cell);
+	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadWrite)
+	bool bDrawingRandomFateStone = false;
 public:
 	UFUNCTION(BlueprintCallable, Category = Store)
 	void InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& InitData);
@@ -74,18 +88,21 @@ public:
 	UFateStonePlayerStoreComponent* GetFateStoneStore() const;
 
 	UFUNCTION(BlueprintCallable, Category = Store)
-	bool TryCurrentPawnGiveFateStone(int32 FateStoneId);
+	bool TryCurrentPawnGiveFateStone(const int32 FateStoneId);
 
 	UFUNCTION(BlueprintCallable, Category = Store)
 	bool AddFateStoneData(UFateStoneDataAsset* Data);
 
-	UFUNCTION(BlueprintCallable, Category ="Board|Navigation")
-	UBoardNavigationSystem* GetBoardNavSystem() const { return BoardNavSystem; }
+	UFUNCTION(BlueprintPure, Category = Store)
+	bool IsDrawingRandomFateStone() const;
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
-	{
-		return AbilitySystemComponent;
-	}
+	// return -1 if don't have stones or return stone's index
+	UFUNCTION(BlueprintCallable, Category = Store)
+	int32 GetRandomFateStoneIndex() const;
+	
+	UFUNCTION(BlueprintCallable, Category = Store)
+	const UFateStoneDataAsset* GetFateStoneData(const int32 Index);
+
 	//generator
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Board|Generator")

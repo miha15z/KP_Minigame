@@ -60,11 +60,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Store)
 	const UFateStoneDataAsset* GetFateStone(const int32 Id);
 
-	UFUNCTION(BlueprintCallable, Category = Store)
+	UFUNCTION(BlueprintPure, Category = Store)
 	int32 GetCurrentNumberOfUsePerTurn();
 
 	UFUNCTION(BlueprintCallable, Category = Store)
 	int32 GetCurrentNumberOfUseLeft();
+
+	UFUNCTION(BlueprintPure, Category = Store)
+	int32 Num() const;
 protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Gameplay)
 	int32 MaxNumberOfUsesPerTurn = 1;

@@ -115,3 +115,8 @@ int32 UFateStonePlayerStoreComponent::GetCurrentNumberOfUseLeft()
 {
 	return MaxNumberOfUsesPerTurn - CurrentNumberOfUsePerTurn;
 }
+
+int32 UFateStonePlayerStoreComponent::Num() const
+{
+	return OwnedFateStones.Num();
+}
