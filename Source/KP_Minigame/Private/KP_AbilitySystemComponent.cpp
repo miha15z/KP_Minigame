@@ -9,7 +9,7 @@ FActiveGameplayEffectHandle UKP_AbilitySystemComponent::ApplyGameplayEffectSpecT
 {
 	FActiveGameplayEffectHandle ActiveEffectHandle = UAbilitySystemComponent::ApplyGameplayEffectSpecToTarget(GameplayEffect, Target, PredictionKey);
 	// Register ActiveEffectHandle
-	AddActiveEffectToTurnBasedEffects(ActiveEffectHandle, 1 /*for now, TODO: get turn data from FGameplayEffectSpec::Def*/);
+	AddActiveEffectToTurnBasedEffects(ActiveEffectHandle, 6 /*for now, TODO: get turn data from FGameplayEffectSpec::Def*/);
 	return FActiveGameplayEffectHandle();
 }
 
