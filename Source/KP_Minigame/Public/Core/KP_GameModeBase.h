@@ -78,7 +78,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UFateStonePlayerStoreComponent> FateStoneStore;
 
-	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay, BlueprintReadWrite)
 	bool bDrawingRandomFateStone = false;
 public:
 	UFUNCTION(BlueprintCallable, Category = Store)
@@ -95,6 +95,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = Store)
 	bool IsDrawingRandomFateStone() const;
+
+	UFUNCTION(BlueprintPure, Category = Store)
+	bool CanGiveFateStone(const AKPPawn* Pawn);
 
 	// return -1 if don't have stones or return stone's index
 	UFUNCTION(BlueprintCallable, Category = Store)

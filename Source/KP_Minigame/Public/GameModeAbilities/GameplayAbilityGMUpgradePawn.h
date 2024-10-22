@@ -10,7 +10,7 @@ class ABoardPiece;
 /**
  * 
  */
-UCLASS()
+UCLASS(abstract)
 class KP_MINIGAME_API UGameplayAbilityGMUpgradePawn : public UGameModeAbility
 {
 	GENERATED_BODY()

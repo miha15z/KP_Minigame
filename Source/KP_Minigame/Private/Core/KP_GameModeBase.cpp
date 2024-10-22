@@ -208,6 +208,12 @@ bool AKP_GameModeBase::IsDrawingRandomFateStone() const
     return bDrawingRandomFateStone;
 }
 
+bool AKP_GameModeBase::CanGiveFateStone(const AKPPawn* Pawn)
+{
+    //to do
+    return Pawn == CurrentPawn && FateStoneStore->Num() > 0 /*&& 1 stone 1 turn*/;
+}
+
 int32 AKP_GameModeBase::GetRandomFateStoneIndex() const
 {
     int32 NumStones = FateStoneStore->Num();
@@ -236,6 +242,13 @@ bool AKP_GameModeBase::IsBonusRollData() const
 void AKP_GameModeBase::TryGiveBonus()
 {
     OnGiveBonus.Broadcast(CurrentPawn->PlayerId);
+    if (IsDrawingRandomFateStone())
+    {
+        FGameplayEventData EventData;
+        EventData.Target = CurrentPawn.Get();
+        AbilitySystemComponent->HandleGameplayEvent(KP_GameplayTags::GameplayEvent_SelectRandomFateStone, &EventData);
+    }
+
     //to do :ActivateGameCue  or ability GameplayAbilityGMRollSameNumer
 }
 

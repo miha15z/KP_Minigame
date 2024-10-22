@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(abstract)
 class KP_MINIGAME_API UGameplayAbilityGMPlaceStoneInBag : public UGameModeAbility
 {
 	GENERATED_BODY()
