@@ -40,8 +40,8 @@ void UGameplayAbilityGMRollingDices::EndAbility(const FGameplayAbilitySpecHandle
 {
 
 	AKP_GameModeBase* GM = Cast<AKP_GameModeBase>(GetOwningActorFromActorInfo());
-	check(GM && Pawn.IsValid());
-	if (not bWasCancelled)
+	check(GM);
+	if (not bWasCancelled && Pawn.IsValid())
 	{
 		GM->OnRollDices();
 		Pawn->UpdateRollDicesData();
@@ -68,7 +68,7 @@ bool UGameplayAbilityGMRollingDices::ShouldAbilityRespondToEvent(const FGameplay
 		AKP_GameModeBase* GM = Cast<AKP_GameModeBase>(OwningActor);
 		check(GM);
 		const AKPPawn* PawnPtr = Cast<const AKPPawn>(Payload->Instigator);
-		return PawnPtr && GM->CanPlaerRollDices(PawnPtr);
+		return PawnPtr && GM->CanPlaerRollDices(PawnPtr) && Super::ShouldAbilityRespondToEvent(ActorInfo, Payload);
 	}
 	return false;
 }
