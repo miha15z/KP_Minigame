@@ -16,7 +16,7 @@
 #include "FateStonePlayerStoreComponent.h"
 
 
-AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(UObject* WorldContext)
+AKP_GameModeBase* AKP_GameModeBase::GetKPGameMode(const UObject* WorldContext)
 {
     auto World = WorldContext->GetWorld();
     check(World);
@@ -103,7 +103,7 @@ void AKP_GameModeBase::StartPlay()
         PlayerUI = CreateWidget(GetWorld(), UIClassPtr);
         PlayerUI->AddToViewport();
     }
-;
+
     // firstInitUI and other
     OnFinishStep.Broadcast();
 }
@@ -424,4 +424,10 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPiecesForOtherPlayers(const in
 void AKP_GameModeBase::LeaveCell(int32 CellId, ABoardPiece* BoardPiece)
 {
     BoardData.GetGellByIdChecked(CellId)->LeavePawn(BoardPiece);
+}
+
+const TArray<FKPPawnInfo>& AKP_GameModeBase::GetBoardPiecesForPlayer(const int32 PlayerId) const
+{
+    check(PlayerId >= 0 && PlayerId < BoardData.PlayersData.Num());
+    return BoardData.PlayersData[PlayerId].Pawns;
 }

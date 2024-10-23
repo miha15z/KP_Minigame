@@ -35,7 +35,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	static AKP_GameModeBase* GetKPGameMode(UObject* WorldContext);
+	static AKP_GameModeBase* GetKPGameMode(const UObject* WorldContext);
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void StartPlay();
@@ -220,5 +220,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void  LeaveCell(int32 CellId, ABoardPiece* BoardPiece);
+
+	const TArray<FKPPawnInfo>& GetBoardPiecesForPlayer(const int32 PlayerId) const;
+
 
 };
