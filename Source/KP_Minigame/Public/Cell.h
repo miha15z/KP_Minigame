@@ -163,4 +163,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	void AddAbilities(const TArray<FGameplayAbilityCellToPawnInfo>& InAbilitiesInfo);
+
+	UFUNCTION(BlueprintCallable, Category = Cells)
+	void GetNeighbourByDepth(int32 Depth, TArray<ACell*>& OutNeighbours);
 };

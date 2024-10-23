@@ -36,6 +36,7 @@ void UKP_AbilitySystemComponent::DecreaseActiveTurnBasedEffectsCounters()
 				FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ActiveTurnBasedEffect.ActiveEffectHandle;
 				if (ActiveGameplayEffectHandle.IsValid())
 				{
+
 					ActiveGameplayEffectHandle.GetOwningAbilitySystemComponent()->RemoveActiveGameplayEffect(ActiveGameplayEffectHandle);
 				}
 			}

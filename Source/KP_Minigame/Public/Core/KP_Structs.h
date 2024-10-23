@@ -32,6 +32,11 @@ public:
 		return FBoardCoord{ (this->x - other.x), (this->y - other.y) };
 	}
 
+	FBoardCoord operator+(FBoardCoord const& other) const
+	{
+		return FBoardCoord{ (this->x + other.x), (this->y + other.y) };
+	}
+
 	bool operator==(FBoardCoord const& other) const 
 	{
 		return (this->x == other.x) and (this->y == other.y);

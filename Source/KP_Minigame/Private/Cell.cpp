@@ -153,3 +153,26 @@ void ACell::AddAbilities(const TArray<FGameplayAbilityCellToPawnInfo>& InAbiliti
 	}
 }
 
+void ACell::GetNeighbourByDepth(int32 Depth, TArray<ACell*>& OutNeighbours)
+{
+	OutNeighbours.Empty();
+	OutNeighbours.Add(this);
+	TArray<ACell*> Frontier = { this };
+	TArray<ACell*> PendingNeighbours;
+	
+	for (int32 CurrentDepth = 0; CurrentDepth < Depth; CurrentDepth++)
+	{
+		for (auto& Cell : Frontier)
+		{
+			auto& CellNeighbours = Cell->Neighbours;
+			for (auto& Neighbour : CellNeighbours)
+			{
+				PendingNeighbours.AddUnique(Neighbour);
+				OutNeighbours.AddUnique(Neighbour);
+			}
+		}
+		Frontier = PendingNeighbours;
+		PendingNeighbours.Empty();
+	}
+}
+
