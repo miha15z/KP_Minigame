@@ -125,6 +125,10 @@ void AKPPawn::TurnEnd()
 {
 	RestSelectionCurrenBoardPiece();
 
+	// reset steps
+	StepsCounter = 0;
+	OnUpdateStepsCounter.Broadcast();
+
 	FGameplayEventData EventData;
 	EventData.Instigator = this;
 	GetKPGameMode()->GetAbilitySystemComponent()->HandleGameplayEvent(KP_GameplayTags::GameplayEvent_EndTurn, &EventData);
@@ -196,7 +200,7 @@ void AKPPawn::SelectCell(ACell* Cell)
 	{
 		OnUsingFateStoneDataRedy.Broadcast(true);
 	}
-	else
+	//else
 	{
 		OnUpdateSelectCell.Broadcast();
 		OnUpdateMovomentInfo.Broadcast();
@@ -205,7 +209,53 @@ void AKPPawn::SelectCell(ACell* Cell)
 
 bool AKPPawn::CanMoveBoardPiece() const 
 {
-	return SelectedCell.IsValid() && SelectedBoardPiece.IsValid();
+	// no steps
+	if (StepsCounter <= 0)
+	{
+		return false;
+	}
+	bool  bCanMoveBoardPiece = false;
+	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();
+	TArray<FBoardAtomicMovement> TempMovement;
+
+	auto CheckCanMoveLambda = [&](const TFunction<bool(const ABoardPiece*)>& Predicate)
+		{
+			for (const auto& PawnInfo : this->GetKPGameMode()->GetBoardPiecesForPlayer(PlayerId))
+			{
+				if (Predicate(PawnInfo.Pawn))
+				{
+					continue;
+				}
+				NavSys->GetPossibleMovementsLocalData(PawnInfo.Pawn, FMath::Min(StepsCounter, PawnInfo.Pawn->GetAvailableMovementPoints()), TempMovement);
+				if (TempMovement.Num() > 0)
+				{
+					UE_LOG(LogTemp, Display, TEXT("BoardPiece %s have %d PossibleMovements"), *PawnInfo.Pawn->GetHumanReadableName(), TempMovement.Num())
+						bCanMoveBoardPiece = true;
+					break;
+				}
+			}
+		};
+
+	if (LastUsedBoardPieceTipe == EBoardPiece::None)
+	{
+		CheckCanMoveLambda([](const ABoardPiece* BoardPiece) 
+			{
+				return not BoardPiece->IsAlive(); 
+			});
+	}
+	else
+	{
+		CheckCanMoveLambda([&](const ABoardPiece* BoardPiece) 
+			{
+				return not BoardPiece->IsAlive() || BoardPiece->GetBoardPieceType() != LastUsedBoardPieceTipe;
+			});
+	}
+	return bCanMoveBoardPiece;
+}
+
+bool AKPPawn::CanMoveToSelectedCell() const
+{
+	return StepsCounter > 0 &&  SelectedCell.IsValid() && PossibleMovements.Num() > 0;
 }
 
 UFateStonePlayerStoreComponent* AKPPawn::GetFateStoneStore() const
@@ -225,7 +275,7 @@ void AKPPawn::SelectFateStone(int32 Index)
 	{
 		SelectedFateStoneData.Index = Index;
 		OnSelectFateStone.Broadcast();
-
+		
 		const UGameplayAbilityFateStone* FateStoneAbilityCDO = GetDefault<UGameplayAbilityFateStone>(SelectedFateStoneData.SelectedFateStone->GetGameplayAbilityClass());
 		if (FateStoneAbilityCDO)
 		{
@@ -345,7 +395,7 @@ bool AKPPawn::TryAddFateStone(UFateStoneDataAsset* FateStoneData)
 	return FateStoneStore->TryAddFateStone(FateStoneData);
 }
 
-AKP_GameModeBase* AKPPawn::GetKPGameMode()
+AKP_GameModeBase* AKPPawn::GetKPGameMode() const 
 {
 	if (GM.IsValid())
 	{ 
@@ -383,6 +433,8 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 
 	ABoardPiece* KilledPawn = nullptr;
 	SelectedCell->PutPawnOnCell(SelectedBoardPiece.Get(), &KilledPawn);
+	SelectedCell->Reset();
+	SelectedCell = nullptr;
 	// if have kill - reset all steps
 
 	if (KilledPawn != nullptr)
@@ -431,6 +483,8 @@ void AKPPawn::ClearNavigationCell()
 	{
 		MovementData.CellTo->Reset();
 	}
+
+	PossibleMovements.Empty();
 	// to do;
 	SelectCell(nullptr);
 }

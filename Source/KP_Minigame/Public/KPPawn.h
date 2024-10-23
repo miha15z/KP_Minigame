@@ -126,6 +126,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = Gameplay)
 	bool CanMoveBoardPiece() const;
 
+	UFUNCTION(BlueprintPure, Category = Gameplay)
+	bool CanMoveToSelectedCell() const;
+
 	UFUNCTION(BlueprintCallable, Category = Store)
 	UFateStonePlayerStoreComponent* GetFateStoneStore() const ;
 
@@ -164,9 +167,9 @@ protected:
 	TObjectPtr<UFateStonePlayerStoreComponent> FateStoneStore;
 
 	UPROPERTY(Transient)
-	TWeakObjectPtr<AKP_GameModeBase> GM;
+	mutable TWeakObjectPtr<AKP_GameModeBase> GM;
 
-	AKP_GameModeBase* GetKPGameMode();
+	AKP_GameModeBase* GetKPGameMode() const;
 
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly)
 	bool bCanRollDices = false;
