@@ -38,6 +38,9 @@ public:
 	static void SetupNeighbouringCellsByMask(const TArray<ACell*>& CellsOnBoard, const TArray<FBoardCoord>& MovementMask);
 	
 	UFUNCTION(BlueprintCallable)
+	static void FindCellsByMask(const TArray<ACell*>& CellsOnBoard, const ACell* OriginCell, const TArray<FBoardCoord>& Mask, TArray<ACell*>& OutCells);
+
+	UFUNCTION(BlueprintCallable)
 	static void GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, const ABoardPiece * OriginPiece, const ACell * OriginCell, const int32 MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
 
 	UFUNCTION(BlueprintCallable)

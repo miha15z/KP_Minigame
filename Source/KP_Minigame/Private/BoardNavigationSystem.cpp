@@ -60,6 +60,28 @@ void UBoardNavigationSystem::SetupNeighbouringCellsByMask(const TArray<ACell*>& 
 
 }
 
+void UBoardNavigationSystem::FindCellsByMask(const TArray<ACell*>& CellsOnBoard, const ACell* OriginCell, const TArray<FBoardCoord>& Mask, TArray<ACell*>& OutCells)
+{
+	FBoardCoord OriginCoord = OriginCell->Coord;
+	TArray<FBoardCoord> TargetCoords = Mask;
+	for (auto& Coord : TargetCoords)
+	{
+		Coord = OriginCoord + Coord;
+	}
+
+	for (ACell* Cell : CellsOnBoard)
+	{
+		for (auto TargetCoord : TargetCoords)
+		{
+			if (TargetCoord == Cell->Coord)
+			{
+				OutCells.Add(Cell);
+				break;
+			}
+		}
+	}
+}
+
 void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnBoard, const ABoardPiece * OriginPiece, const ACell * OriginCell, const int32 MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements)
 {
 	// populate initial "open" array
