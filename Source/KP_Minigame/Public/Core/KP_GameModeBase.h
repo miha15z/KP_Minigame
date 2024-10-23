@@ -16,7 +16,7 @@ class UUserWidget;
 class AKPPawn;
 class UAbilitySystemComponent;
 class UGameplayAbility;
-class UFateStoneStoreComponent;
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRerollDices, FRollDicesData, RollResult, AKPPawn*, Player);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishStep);
@@ -133,12 +133,27 @@ public:
 
 	void TryGiveBonus();
 	void ShowGiveBonusUI();
+	//may be used coldStore
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& GetStonesInGameForPlayer(const int32 PlayerId) const;
+
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	TSoftObjectPtr<UFateStoneDataAsset> RemoveFateStoneInGameForPlayer(int32 IndexStone, int32 PlayerId);
+
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	void AddFateStoneInGameForPlayer(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData, int32 PlayerId);
+
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	void TakePlayersFateStones();
 	//UI
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Widgets)
 	TSoftClassPtr<UUserWidget> UIClass;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditDefaultsOnly, Category = Widgets)
+	TSoftClassPtr<UUserWidget> UISelectStonesToGameClass;
+
+	UPROPERTY(Transient)
 	TObjectPtr<UUserWidget> PlayerUI;
 
 protected:

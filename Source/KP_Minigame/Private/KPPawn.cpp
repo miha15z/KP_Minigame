@@ -13,6 +13,7 @@
 #include "KP_AbilitySystemComponent.h"
 #include "GameplayAbilityFateStone.h"
 #include "GameplayAbilitySpec.h"
+#include "FateStoneColdStoreComponent.h"
 
 // Sets default values
 AKPPawn::AKPPawn()
@@ -22,6 +23,7 @@ AKPPawn::AKPPawn()
 	AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	FateStoneStore = CreateDefaultSubobject<UFateStonePlayerStoreComponent>(TEXT("FateStoneStore"));
+	FateStoneColdStore = CreateDefaultSubobject<UFateStoneColdStoreComponent>(TEXT("FateStoneColdStore"));
 }
 
 // Called when the game starts or when spawned
@@ -261,6 +263,11 @@ bool AKPPawn::CanMoveToSelectedCell() const
 UFateStonePlayerStoreComponent* AKPPawn::GetFateStoneStore() const
 {
 	return  FateStoneStore;
+}
+
+UFateStoneColdStoreComponent* AKPPawn::GetFateStonesColdStore() const
+{
+	return FateStoneColdStore;;
 }
 
 void AKPPawn::InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset>>& InitData)

@@ -121,6 +121,9 @@ struct FKPPlayerData
 public:
 	UPROPERTY(EditInstanceOnly)
 	TArray<FKPPawnInfo> Pawns;
+
+	UPROPERTY(Transient)
+	TArray<TSoftObjectPtr<UFateStoneDataAsset> > FateStonesInGame;
 };
 
 USTRUCT(BlueprintType)

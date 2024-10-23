@@ -50,7 +50,7 @@ UFateStoneDataAsset* UFateStonePlayerStoreComponent::GiveFateStone(const int32 I
 	if (Id >= 0, Id < OwnedFateStones.Num())
 	{
 		UFateStoneDataAsset* StoneData =  OwnedFateStones[Id];
-		OwnedFateStones.RemoveAtSwap(Id);
+		OwnedFateStones.RemoveAt(Id);
 		OnUpdateFateStoneStore.Broadcast();
 		return StoneData;
 	}

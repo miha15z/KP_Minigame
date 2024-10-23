@@ -13,6 +13,7 @@ class AKP_GameModeBase;
 class ACell;
 class UFateStoneDataAsset;
 class UFateStonePlayerStoreComponent;
+class UFateStoneColdStoreComponent;
 class UGameplayAbility;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdateCanRollState);
@@ -133,6 +134,9 @@ public:
 	UFateStonePlayerStoreComponent* GetFateStoneStore() const ;
 
 	UFUNCTION(BlueprintCallable, Category = Store)
+	UFateStoneColdStoreComponent* GetFateStonesColdStore() const;
+
+	UFUNCTION(BlueprintCallable, Category = Store)
 	void InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& InitData);
 
 	UFUNCTION(BlueprintCallable, Category = Store)
@@ -165,6 +169,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UFateStonePlayerStoreComponent> FateStoneStore;
+
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UFateStoneColdStoreComponent> FateStoneColdStore;
 
 	UPROPERTY(Transient)
 	mutable TWeakObjectPtr<AKP_GameModeBase> GM;

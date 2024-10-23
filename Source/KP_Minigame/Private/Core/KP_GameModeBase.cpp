@@ -70,7 +70,7 @@ void AKP_GameModeBase::StartPlay()
         PlayerPawn->InitBoardPieces(PlayerData.Pawns);
     }
     
-    // Setup Startup fate stones
+    // Setup Startup fate stones( only for test)
     PlayerPawn->InitFateStore(GenDataAsset.LoadSynchronous()->GetPlayerData(0).StartupFateStones);
 
     //Make GameQueue
@@ -84,6 +84,7 @@ void AKP_GameModeBase::StartPlay()
         auto PawnAI = World->SpawnActor<AKPPawn>(BotPawnClass.Get(), SpawnTransform, SpawnParams);
         PawnAI->PlayerId = i;
         PawnAI->SetGameModePtr(this);
+        // only for test or using advance bot
         PawnAI->InitFateStore(GenDataAsset->GetPlayerData(i).StartupFateStones);
         for (auto& PlayerData : BoardData.PlayersData)
         {
@@ -94,7 +95,7 @@ void AKP_GameModeBase::StartPlay()
     }
     UpdateGameBoard();
     SelectNextPawn();
-
+    //only test or add defaults stones 
     InitFateStore(GenDataAsset->GetGMFateStonesData());
 
 	//ui
@@ -103,6 +104,13 @@ void AKP_GameModeBase::StartPlay()
         PlayerUI = CreateWidget(GetWorld(), UIClassPtr);
         PlayerUI->AddToViewport();
     }
+
+	//show selectStoneUI
+	if (UISelectStonesToGameClass.LoadSynchronous())
+	{
+		auto* SelectStoneUI = CreateWidget(GetWorld(), UISelectStonesToGameClass.Get());
+		SelectStoneUI->AddToViewport();
+	}
 
     // firstInitUI and other
     OnFinishStep.Broadcast();
@@ -164,6 +172,7 @@ void AKP_GameModeBase::BeginPlay()
             AbilitySystemComponent->GiveAbility(Spec);
         }
     }
+
 }
 
 void AKP_GameModeBase::SelectCellForCurrentPlayer(ACell* Cell)
@@ -259,6 +268,34 @@ void AKP_GameModeBase::TryGiveBonus()
 void AKP_GameModeBase::ShowGiveBonusUI()
 {
     OnGiveBonus.Broadcast(CurrentPawn->PlayerId);
+}
+
+const TArray<TSoftObjectPtr<UFateStoneDataAsset>>& AKP_GameModeBase::GetStonesInGameForPlayer(const int32 PlayerId) const
+{
+    check(PlayerId >= 0 && PlayerId < BoardData.PlayersData.Num());
+    return BoardData.PlayersData[PlayerId].FateStonesInGame;
+}
+
+TSoftObjectPtr<UFateStoneDataAsset> AKP_GameModeBase::RemoveFateStoneInGameForPlayer(int32 IndexStone, int32 PlayerId)
+{
+    check(PlayerId >= 0 && PlayerId < BoardData.PlayersData.Num());
+    TSoftObjectPtr<UFateStoneDataAsset> Item = BoardData.PlayersData[PlayerId].FateStonesInGame[IndexStone];
+    BoardData.PlayersData[PlayerId].FateStonesInGame.RemoveAt(IndexStone);
+    return Item;
+}
+
+void AKP_GameModeBase::AddFateStoneInGameForPlayer(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData, int32 PlayerId)
+{
+    check(PlayerId >= 0 && PlayerId < BoardData.PlayersData.Num());
+    BoardData.PlayersData[PlayerId].FateStonesInGame.Add(FateStoneData);
+}
+
+void AKP_GameModeBase::TakePlayersFateStones()
+{
+    for (const auto& PlayerData : BoardData.PlayersData)
+    {
+        InitFateStore(PlayerData.FateStonesInGame);
+    }
 }
 
 int32 AKP_GameModeBase::RollDice() const
