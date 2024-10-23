@@ -13,4 +13,7 @@ UCLASS()
 class KP_MINIGAME_API UGameplayEffectFateStone : public UGameplayEffect
 {
 	GENERATED_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Fate Stone Effect")
+	int32 Turns = 6;
 };

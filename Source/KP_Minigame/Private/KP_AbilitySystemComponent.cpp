@@ -2,6 +2,7 @@
 
 
 #include "KP_AbilitySystemComponent.h"
+#include "GameplayEffectFateStone.h"
 
 TArray<FActiveTurnBasedEffectHandle> UKP_AbilitySystemComponent::ActiveTurnBasedEffects;
 
@@ -9,7 +10,8 @@ FActiveGameplayEffectHandle UKP_AbilitySystemComponent::ApplyGameplayEffectSpecT
 {
 	FActiveGameplayEffectHandle ActiveEffectHandle = UAbilitySystemComponent::ApplyGameplayEffectSpecToTarget(GameplayEffect, Target, PredictionKey);
 	// Register ActiveEffectHandle
-	AddActiveEffectToTurnBasedEffects(ActiveEffectHandle, 6 /*for now, TODO: get turn data from FGameplayEffectSpec::Def*/);
+	const UGameplayEffectFateStone* FateStoneEffect = Cast<UGameplayEffectFateStone>(GameplayEffect.Def);
+	AddActiveEffectToTurnBasedEffects(ActiveEffectHandle, FateStoneEffect ? FateStoneEffect->Turns : 6);
 	return FActiveGameplayEffectHandle();
 }
 
@@ -36,8 +38,11 @@ void UKP_AbilitySystemComponent::DecreaseActiveTurnBasedEffectsCounters()
 				FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ActiveTurnBasedEffect.ActiveEffectHandle;
 				if (ActiveGameplayEffectHandle.IsValid())
 				{
-
-					ActiveGameplayEffectHandle.GetOwningAbilitySystemComponent()->RemoveActiveGameplayEffect(ActiveGameplayEffectHandle);
+					UAbilitySystemComponent* ASC = ActiveGameplayEffectHandle.GetOwningAbilitySystemComponent();
+					if (ASC) 
+					{
+						ASC->RemoveActiveGameplayEffect(ActiveGameplayEffectHandle);
+					}
 				}
 			}
 		}
