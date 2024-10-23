@@ -12,6 +12,7 @@ ABoardPiece::ABoardPiece()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	SetActorEnableCollision(false);
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +32,8 @@ void ABoardPiece::BeginPlay()
 	}
 
 	AttributeSet = AbilitySystemComponent->GetSet<UBoardPieceAttributeSet>();
+
+
 }
 
 // Called every frame
