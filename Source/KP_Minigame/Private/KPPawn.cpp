@@ -480,7 +480,14 @@ void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 
 	for (auto& MovementData : PossibleMovements)
 	{
-		MovementData.CellTo->SetState(ECellState::SelectToNav);
+		if (SelectedBoardPiece->GetBoardPieceType() == EBoardPiece::King)
+		{
+			MovementData.CellTo->SetState((MovementData.bSafeForKing) ? ECellState::SelectToNav : ECellState::None);
+		}
+		else
+		{
+			MovementData.CellTo->SetState(ECellState::SelectToNav);
+		}
 	}
 }
 
