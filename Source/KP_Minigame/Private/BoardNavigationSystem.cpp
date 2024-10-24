@@ -246,7 +246,20 @@ void UBoardNavigationSystem::CalculateAtomicMovement(const ACell * Origin, const
 	for (ACell* NeighbouringCell : DestinationNeighbours)
 	{
 		const ABoardPiece* Pawn = NeighbouringCell->GetStoodPawn();
-		if (Pawn and Pawn->GetOwnPlayerId() != BoardPiece->GetOwnPlayerId())
+		if (not Pawn)
+		{
+			continue;
+		}
+		FBoardCoord PendingMovement = Destination->Coord - NeighbouringCell->Coord;
+		bool bMovementPossible = false;
+		for (const auto& PossibleMovement : Pawn->GetMovementDirections())
+		{
+			if (PossibleMovement == PendingMovement)
+			{
+				bMovementPossible = true;
+			}
+		}
+		if (Pawn->GetOwnPlayerId() != BoardPiece->GetOwnPlayerId() && bMovementPossible)
 		{
 			OutAtomicMovement.bSafeForKing = false;
 		}
