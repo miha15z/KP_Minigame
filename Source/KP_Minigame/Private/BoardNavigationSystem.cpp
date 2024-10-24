@@ -241,6 +241,17 @@ void UBoardNavigationSystem::CalculateAtomicMovement(const ACell * Origin, const
 		return;
 	}
 
+	// Check direction safety for the king
+	const TArray<ACell*>& DestinationNeighbours = Destination->Neighbours;
+	for (ACell* NeighbouringCell : DestinationNeighbours)
+	{
+		const ABoardPiece* Pawn = NeighbouringCell->GetStoodPawn();
+		if (Pawn and Pawn->GetOwnPlayerId() != BoardPiece->GetOwnPlayerId())
+		{
+			OutAtomicMovement.bSafeForKing = false;
+		}
+	}
+
 	// Trim available movement points
 	const float MaxMovementPointsOverride = Origin->GetAbilitySystemComponent()->GetNumericAttribute(UCellAttributeSet::GetMaxMovementPointsOverrideAttribute());
 	const float AvailableMovementPoints =  (MaxMovementPointsOverride < -DBL_EPSILON) ? MovementPoints : FMath::Min(MaxMovementPointsOverride, MovementPoints);

@@ -171,6 +171,8 @@ public:
 	float MovementPointsLeft;
 	UPROPERTY()
 	float MovementPointsConsumed;
+	UPROPERTY(BlueprintReadOnly)
+	bool bSafeForKing = true;
 };
 
 // Structure to support turn-based active effect handling
