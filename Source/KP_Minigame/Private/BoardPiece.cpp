@@ -19,6 +19,7 @@ ABoardPiece::ABoardPiece()
 void ABoardPiece::BeginPlay()
 {
 	Super::BeginPlay();
+
 	check(AbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	// add def  abilities
@@ -32,8 +33,6 @@ void ABoardPiece::BeginPlay()
 	}
 
 	AttributeSet = AbilitySystemComponent->GetSet<UBoardPieceAttributeSet>();
-
-
 }
 
 // Called every frame
@@ -143,7 +142,6 @@ bool ABoardPiece::ForceKill()
 {
 	if (IsAlive())
 	{
-		// to do
 		bAlive = false;
 		SetActorHiddenInGame(true);
 		SetActorLocation(FVector(0.f, 0.f, -1000.f));

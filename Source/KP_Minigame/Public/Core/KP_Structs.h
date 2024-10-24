@@ -64,9 +64,6 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
 	TSoftObjectPtr<UCellAbilityDataAsset> Data;
 
-	//UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
-	//TSubclassOf<UGameplayAbilityCellToPawnBase> AbilityClass;
-
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
 	int32 OwningPlayerID = -1;;
 };

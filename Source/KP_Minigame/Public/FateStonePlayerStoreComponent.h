@@ -34,7 +34,7 @@ public:
 	FOnUpdateFateStoneStore OnUpdateFateStoneStore;
 
 	UFUNCTION(BlueprintCallable, Category = Store)
-	bool TryAddFateStone(UFateStoneDataAsset* StoneData);
+	bool TryAddFateStone(UFateStoneDataAsset * StoneData);
 
 	UFUNCTION(BlueprintCallable, Category = Store)
 	UFateStoneDataAsset* GiveFateStone(const int32 Id);
@@ -58,13 +58,13 @@ public:
 	void ResetNumberOfUse();
 
 	UFUNCTION(BlueprintCallable, Category = Store)
-	const UFateStoneDataAsset* GetFateStone(const int32 Id);
+	const UFateStoneDataAsset* GetFateStone(const int32 Id) const;
 
 	UFUNCTION(BlueprintPure, Category = Store)
-	int32 GetCurrentNumberOfUsePerTurn();
+	int32 GetCurrentNumberOfUsePerTurn() const;
 
 	UFUNCTION(BlueprintCallable, Category = Store)
-	int32 GetCurrentNumberOfUseLeft();
+	int32 GetCurrentNumberOfUseLeft() const;
 
 	UFUNCTION(BlueprintPure, Category = Store)
 	int32 Num() const;

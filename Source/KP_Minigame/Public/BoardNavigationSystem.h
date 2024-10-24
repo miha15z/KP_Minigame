@@ -22,7 +22,7 @@ UCLASS(Blueprintable, BlueprintType)
 class KP_MINIGAME_API UBoardNavigationSystem : public UObject
 {
 	GENERATED_BODY()
-	// use shared or weak
+	//TO DO: use shared or weak
 	FBoardData* BoardDataRef = nullptr;
 
 public:
@@ -46,8 +46,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GetPossibleMovementsLocalData(const ABoardPiece * OriginPiece, const int32 MovementPoints, TArray<FBoardAtomicMovement>& PossibleMovements);
 
-
-	//!!! Check in Blueprints - might not work
 	UFUNCTION(BlueprintCallable)
 	static void GetMovementPathToCell(const TArray<FBoardAtomicMovement>& PossibleMovements, const ACell * OriginCell, const ACell * DestinationCell, bool& isPossible, TArray<FBoardAtomicMovement>& MovementPath);
 

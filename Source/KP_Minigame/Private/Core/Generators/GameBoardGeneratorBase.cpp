@@ -6,7 +6,7 @@
 #include "Cell.h"
 #include "BoardPiece.h"
 
-FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAsset* GenData, UObject* WorldContext) const
+FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(const UGenDataAsset* GenData, const UObject* WorldContext) const
 {
 	check(WorldContext);
 	auto World = WorldContext->GetWorld();
@@ -49,11 +49,8 @@ FBoardData UGameBoardGeneratorBase::GenerateGameBoard_Implementation(UGenDataAss
 		for (const auto& PawnData : PlayerData.Pawns)
 		{
 			check(PawnData.PawnClass.LoadSynchronous());
-			// to do
 			auto Pawn = World->SpawnActor<ABoardPiece>(PawnData.PawnClass.Get());
 			Pawn->SetNewCellId(PawnData.CellId);
-			// Use Array.FindByPredicate or BinareSerch
-
 			ACell* Cell = BoardData.GetGellByIdChecked(PawnData.CellId);
 			Pawn->SetActorLocation(Cell->GetActorLocation());
 			PlayerPawnsData.Pawns.Add({Pawn ,PawnData.CellId });

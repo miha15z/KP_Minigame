@@ -73,14 +73,18 @@ public:
 	{
 		return AbilitySystemComponent;
 	}
+
 	//Stones of Fate
 protected:
+	//This store is used for gameplay
 	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UFateStonePlayerStoreComponent> FateStoneStore;
 
+	// You can enable or disable Drawing random stone of fate for tests or chege gameplay 
 	UPROPERTY(EditDefaultsOnly, Category = Gameplay, BlueprintReadWrite)
 	bool bDrawingRandomFateStone = false;
 public:
+
 	UFUNCTION(BlueprintCallable, Category = Store)
 	void InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& InitData);
 
@@ -126,25 +130,26 @@ public:
 	const FBoardData& GetGameBoradData() const {return BoardData;}
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
-	FRollDicesData GetLastRollData()const;
+	const FRollDicesData& GetLastRollData()const;
 
 	UFUNCTION(BlueprintPure, Category = Gameplay)
 	bool IsBonusRollData() const;
 
 	void TryGiveBonus();
-	void ShowGiveBonusUI();
+	void ShowGiveBonusUI() const;
 	//may be used coldStore
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& GetStonesInGameForPlayer(const int32 PlayerId) const;
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
-	TSoftObjectPtr<UFateStoneDataAsset> RemoveFateStoneInGameForPlayer(int32 IndexStone, int32 PlayerId);
+	TSoftObjectPtr<UFateStoneDataAsset> RemoveFateStoneInGameForPlayer(const int32 IndexStone, const int32 PlayerId);
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
-	void AddFateStoneInGameForPlayer(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData, int32 PlayerId);
+	void AddFateStoneInGameForPlayer(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData, const int32 PlayerId);
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 	void TakePlayersFateStones();
+
 	//UI
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Widgets)
@@ -184,21 +189,21 @@ private:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = RollDices)
-	bool CanPlaerRollDices(const AKPPawn* PlayerPawn);
+	bool CanPlaerRollDices(const AKPPawn* PlayerPawn) const;
 
 	void OnRollDices() const;
 
 	void RollDices();
 
-	ACell* GetCellByID(int32 ID) const;
+	ACell* GetCellByID(const int32 Id) const;
 
 	//Gameplay
 protected:
-	//Maybe use TQueue
-	//UPROPERTY(VisibleInstanceOnly, Category = Gameplay)
+
 	TQueue<TWeakObjectPtr<AKPPawn>> QueuePawns;
 	TArray<TWeakObjectPtr<AKPPawn>> Pawns;
 	TWeakObjectPtr<AKPPawn> CurrentPawn = nullptr;
+
 	UFUNCTION(BlueprintNativeEvent, Category = Gameplay)
 	bool IsWin() const;
 	virtual bool IsWin_Implementation()const;
@@ -224,17 +229,17 @@ public:
 	void SelectNextPawn();
 
 	UFUNCTION(BlueprintCallable, Category = RollDices)
-	AKPPawn* GetCurrentPawn()const;
+	AKPPawn* GetCurrentPawn() const;
 
 	UFUNCTION(BlueprintCallable, Category = Player)
-	AKPPawn* GetPlayerPawnById(int32 Id);
+	AKPPawn* GetPlayerPawnById(const int32 Id) const;
 
 	void EnableSelectabilityForBoardPieces(const int32 OwnerPlayerId, const bool NewState, const EBoardPiece BoardPieceType = EBoardPiece::None);
 	void EnableSelectabilityForBoardPiecesForAllPlayer(const bool NewState, const EBoardPiece BoardPieceType = EBoardPiece::None);
 	void EnableSelectabilityForBoardPiecesForOtherPlayers(const int32 PlayerId, const bool NewState, const EBoardPiece BoardPieceType = EBoardPiece::None);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-	void  LeaveCell(int32 CellId, ABoardPiece* BoardPiece);
+	void  LeaveCell(const int32 CellId, const ABoardPiece * BoardPiece);
 
 	const TArray<FKPPawnInfo>& GetBoardPiecesForPlayer(const int32 PlayerId) const;
 

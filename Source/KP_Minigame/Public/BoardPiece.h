@@ -80,7 +80,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Player)
 	bool IsAlive() const;
 
-	bool Kill(const ABoardPiece * OherPawn);
+	bool Kill(const ABoardPiece * OtherPawn);
 
 	UFUNCTION(BlueprintCallable)
 	bool ForceKill();
@@ -98,7 +98,7 @@ public:
 	// Reset the number of movement points at the end of the turn
 	UFUNCTION(BlueprintCallable)
 	void ResetAvailableMovementPoints();
-
+	// to do: move to attribute
 	// Detract points from the available points when the board piece moves
 	UFUNCTION(BlueprintCallable)
 	void ConsumeMovementPoints(const int32 Points);

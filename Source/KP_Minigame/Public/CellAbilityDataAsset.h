@@ -26,7 +26,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Cell)
 	FText Name;
 
-	//description 
 	UPROPERTY(EditDefaultsOnly, Category = Cell)
 	FText Description;
 

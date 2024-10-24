@@ -8,11 +8,12 @@ TArray<FActiveTurnBasedEffectHandle> UKP_AbilitySystemComponent::ActiveTurnBased
 
 FActiveGameplayEffectHandle UKP_AbilitySystemComponent::ApplyGameplayEffectSpecToTarget(const FGameplayEffectSpec& GameplayEffect, UAbilitySystemComponent* Target, FPredictionKey PredictionKey)
 {
-	FActiveGameplayEffectHandle ActiveEffectHandle = UAbilitySystemComponent::ApplyGameplayEffectSpecToTarget(GameplayEffect, Target, PredictionKey);
+	FActiveGameplayEffectHandle ActiveEffectHandle = Super::ApplyGameplayEffectSpecToTarget(GameplayEffect, Target, PredictionKey);
 	// Register ActiveEffectHandle
 	const UGameplayEffectFateStone* FateStoneEffect = Cast<UGameplayEffectFateStone>(GameplayEffect.Def);
+	// to do StepsCounter
 	AddActiveEffectToTurnBasedEffects(ActiveEffectHandle, FateStoneEffect ? FateStoneEffect->Turns : 6);
-	return FActiveGameplayEffectHandle();
+	return ActiveEffectHandle;
 }
 
 void UKP_AbilitySystemComponent::AddActiveEffectToTurnBasedEffects(const FActiveGameplayEffectHandle& ActiveEffectHandle, const int32 Turns)

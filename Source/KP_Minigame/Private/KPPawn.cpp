@@ -21,8 +21,8 @@ AKPPawn::AKPPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
+	AbilitySystemComponent = CreateDefaultSubobject<UKP_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	FateStoneStore = CreateDefaultSubobject<UFateStonePlayerStoreComponent>(TEXT("FateStoneStore"));
 	FateStoneColdStore = CreateDefaultSubobject<UFateStoneColdStoreComponent>(TEXT("FateStoneColdStore"));
 }
@@ -31,6 +31,7 @@ AKPPawn::AKPPawn()
 void AKPPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
 	check(AbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
@@ -192,8 +193,8 @@ void AKPPawn::SelectCell(ACell* Cell)
 		return;
 	}
 
-	// set old cell's state
-	if (SelectedCell.IsValid())
+	// set old cell's state if select other cell
+	if (Cell && SelectedCell.IsValid())
 	{
 		SelectedCell->SetPastState();
 	}
@@ -217,6 +218,7 @@ bool AKPPawn::CanMoveBoardPiece() const
 	{
 		return false;
 	}
+
 	bool  bCanMoveBoardPiece = false;
 	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();
 	TArray<FBoardAtomicMovement> TempMovement;
@@ -242,6 +244,7 @@ bool AKPPawn::CanMoveBoardPiece() const
 
 	if (LastUsedBoardPieceTipe == EBoardPiece::None)
 	{
+		//first step
 		CheckCanMoveLambda([](const ABoardPiece* BoardPiece) 
 			{
 				return not BoardPiece->IsAlive(); 
@@ -249,6 +252,7 @@ bool AKPPawn::CanMoveBoardPiece() const
 	}
 	else
 	{
+		//second step, ...
 		CheckCanMoveLambda([&](const ABoardPiece* BoardPiece) 
 			{
 				return not BoardPiece->IsAlive() || BoardPiece->GetBoardPieceType() != LastUsedBoardPieceTipe;
@@ -259,12 +263,12 @@ bool AKPPawn::CanMoveBoardPiece() const
 
 bool AKPPawn::CanMoveToSelectedCell() const
 {
-	return StepsCounter > 0 &&  SelectedCell.IsValid() && PossibleMovements.Num() > 0;
+	return StepsCounter > 0 && SelectedCell.IsValid() && PossibleMovements.Num() > 0;
 }
 
 UFateStonePlayerStoreComponent* AKPPawn::GetFateStoneStore() const
 {
-	return  FateStoneStore;
+	return FateStoneStore;
 }
 
 UFateStoneColdStoreComponent* AKPPawn::GetFateStonesColdStore() const
@@ -277,7 +281,7 @@ void AKPPawn::InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset>>& I
 	FateStoneStore->Init(InitData);
 }
 
-void AKPPawn::SelectFateStone(int32 Index)
+void AKPPawn::SelectFateStone(const int32 Index)
 {
 	SelectedFateStoneData.SelectedFateStone = FateStoneStore->GetFateStone(Index);
 	if (SelectedFateStoneData.SelectedFateStone.IsValid())
@@ -289,6 +293,7 @@ void AKPPawn::SelectFateStone(int32 Index)
 		if (FateStoneAbilityCDO)
 		{
 			// TODO: Add target class check
+
 			// traverse cells
 			int32 CurrentNumberOfUsePerTurn = FateStoneStore->GetCurrentNumberOfUseLeft();
 			for (auto& Cell : GetKPGameMode() -> GetGameBoradData().Cells) 
@@ -325,7 +330,6 @@ void AKPPawn::CancelUsingFateStone()
 	OnUseOrCancelUseFateStone.Broadcast();
 	SetEnableFateStone(false);
 	SelectedCell = nullptr;
-	//SelectedBoardPiece->ResetSelection();
 	SelectedBoardPiece = nullptr;
 	OnUsingFateStoneDataRedy.Broadcast(false);
 	PrepareBoardToPlayer();
@@ -395,7 +399,6 @@ void AKPPawn::PrepareBoardToPlayer()
 
 bool AKPPawn::CanGiveFateStone() const
 {
-	// to do : once select in turn
 	return not FateStoneStore->IsFull();;
 }
 
@@ -474,10 +477,7 @@ void AKPPawn::MoveCurrentBoardPieceToSlectedCell()
 void AKPPawn::ShowNavigationCellForCurentBoardPiece()
 {
 	UBoardNavigationSystem* NavSys = GetKPGameMode()->GetBoardNavSystem();
-
-	// TODO:
 	// MovementPoints Calculation
-	// Check all the cells the board piecce can reach given the steps count and available movement points
 	NavSys->GetPossibleMovementsLocalData(SelectedBoardPiece.Get(), FMath::Min(StepsCounter, SelectedBoardPiece.Get()->GetAvailableMovementPoints()), PossibleMovements);
 
 	for (auto& MovementData : PossibleMovements)
@@ -501,11 +501,10 @@ void AKPPawn::ClearNavigationCell()
 	}
 
 	PossibleMovements.Empty();
-	// to do;
 	SelectCell(nullptr);
 }
 
-void AKPPawn::SetEnableFateStone(bool NewState)
+void AKPPawn::SetEnableFateStone(const bool NewState)
 {
 	bForFateStone = NewState;
 	FString PrintStr (bForFateStone ? TEXT("True") : TEXT("False"));

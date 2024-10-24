@@ -238,7 +238,7 @@ const UFateStoneDataAsset* AKP_GameModeBase::GetFateStoneData(const int32 Index)
     return FateStoneStore->GetFateStone(Index);
 }
 
-FRollDicesData AKP_GameModeBase::GetLastRollData() const
+const FRollDicesData& AKP_GameModeBase::GetLastRollData() const
 {
     return LastRollData;
 }
@@ -265,7 +265,7 @@ void AKP_GameModeBase::TryGiveBonus()
     //to do :ActivateGameCue  or ability GameplayAbilityGMRollSameNumer
 }
 
-void AKP_GameModeBase::ShowGiveBonusUI()
+void AKP_GameModeBase::ShowGiveBonusUI() const 
 {
     OnGiveBonus.Broadcast(CurrentPawn->PlayerId);
 }
@@ -276,7 +276,7 @@ const TArray<TSoftObjectPtr<UFateStoneDataAsset>>& AKP_GameModeBase::GetStonesIn
     return BoardData.PlayersData[PlayerId].FateStonesInGame;
 }
 
-TSoftObjectPtr<UFateStoneDataAsset> AKP_GameModeBase::RemoveFateStoneInGameForPlayer(int32 IndexStone, int32 PlayerId)
+TSoftObjectPtr<UFateStoneDataAsset> AKP_GameModeBase::RemoveFateStoneInGameForPlayer(const int32 IndexStone, const int32 PlayerId)
 {
     check(PlayerId >= 0 && PlayerId < BoardData.PlayersData.Num());
     TSoftObjectPtr<UFateStoneDataAsset> Item = BoardData.PlayersData[PlayerId].FateStonesInGame[IndexStone];
@@ -284,7 +284,7 @@ TSoftObjectPtr<UFateStoneDataAsset> AKP_GameModeBase::RemoveFateStoneInGameForPl
     return Item;
 }
 
-void AKP_GameModeBase::AddFateStoneInGameForPlayer(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData, int32 PlayerId)
+void AKP_GameModeBase::AddFateStoneInGameForPlayer(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData, const int32 PlayerId)
 {
     check(PlayerId >= 0 && PlayerId < BoardData.PlayersData.Num());
     BoardData.PlayersData[PlayerId].FateStonesInGame.Add(FateStoneData);
@@ -309,7 +309,7 @@ void AKP_GameModeBase::RollDices()
 	LastRollData.Value2 = RollDice();
 }
 
-bool AKP_GameModeBase::CanPlaerRollDices(const AKPPawn* PlayerPawn)
+bool AKP_GameModeBase::CanPlaerRollDices(const AKPPawn* PlayerPawn) const 
 {
     return PlayerPawn == CurrentPawn ; //  to do
 }
@@ -319,7 +319,7 @@ void AKP_GameModeBase::OnRollDices() const
     OnRerollDices.Broadcast(LastRollData, CurrentPawn.Get());
 }
 
-ACell* AKP_GameModeBase::GetCellByID(int32 Id) const
+ACell* AKP_GameModeBase::GetCellByID(const int32 Id) const
 {
     return BoardData.GetGellByIdChecked(Id);
 }
@@ -393,7 +393,7 @@ AKPPawn* AKP_GameModeBase::GetCurrentPawn() const
     return CurrentPawn.Get();
 }
 
-AKPPawn* AKP_GameModeBase::GetPlayerPawnById(int32 Id)
+AKPPawn* AKP_GameModeBase::GetPlayerPawnById(const int32 Id) const 
 {
     AKPPawn* Result = nullptr;
 
@@ -458,7 +458,7 @@ void AKP_GameModeBase::EnableSelectabilityForBoardPiecesForOtherPlayers(const in
     }
 }
 
-void AKP_GameModeBase::LeaveCell(int32 CellId, ABoardPiece* BoardPiece)
+void AKP_GameModeBase::LeaveCell(const int32 CellId, const ABoardPiece * BoardPiece)
 {
     BoardData.GetGellByIdChecked(CellId)->LeavePawn(BoardPiece);
 }

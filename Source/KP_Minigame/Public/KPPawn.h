@@ -130,17 +130,21 @@ public:
 	UFUNCTION(BlueprintPure, Category = Gameplay)
 	bool CanMoveToSelectedCell() const;
 
+	//Get the gameplay Store of stones
 	UFUNCTION(BlueprintCallable, Category = Store)
 	UFateStonePlayerStoreComponent* GetFateStoneStore() const ;
 
+	// Get player's store of Stones(#SaveGame, #PlayerProfile)
 	UFUNCTION(BlueprintCallable, Category = Store)
 	UFateStoneColdStoreComponent* GetFateStonesColdStore() const;
 
+	// for debug or may be gameplay, you can make start set of stones for player or bot, work witch gameplay Store
 	UFUNCTION(BlueprintCallable, Category = Store)
 	void InitFateStore(const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& InitData);
 
+	//work witch gameplay Store
 	UFUNCTION(BlueprintCallable, Category = Store)
-	void SelectFateStone(int32 Index);
+	void SelectFateStone(const int32 Index);
 
 	// cancel use 
 	UFUNCTION(BlueprintCallable, Category = Store)
@@ -149,13 +153,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Store)
 	void UseFateStone();
 
+	//work witch gameplay Store
+	// give used fate stone to GM
 	void EndUseFateStone();
 
 	void PrepareBoardToPlayer();
 
+	//work witch gameplay Store
 	UFUNCTION(BlueprintPure, Category = Store)
 	bool CanGiveFateStone() const;
 
+	//work witch gameplay Store
 	UFUNCTION(BlueprintCallable, Category = Store)
 	bool TryAddFateStone(UFateStoneDataAsset* FateStoneData);
 
@@ -167,9 +175,11 @@ protected:
 	UPROPERTY(Transient, Category = Gameplay, VisibleInstanceOnly, BlueprintReadOnly)
 	int32 StepsCounter = 0;
 
+	// gameplay  store of stones
 	UPROPERTY(VisibleAnywhere, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UFateStonePlayerStoreComponent> FateStoneStore;
 
+	// player's store of stones
 	UPROPERTY(EditDefaultsOnly, Category = Gameplay, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UFateStoneColdStoreComponent> FateStoneColdStore;
 
@@ -197,7 +207,7 @@ protected:
 
 protected:
 	EBoardPiece LastUsedBoardPieceTipe;
-	void SetEnableFateStone(bool NewState);
+	void SetEnableFateStone(const bool NewState);
 private:
 	bool bForFateStone = false;
 };

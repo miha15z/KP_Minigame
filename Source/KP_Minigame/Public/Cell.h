@@ -46,22 +46,14 @@ class KP_MINIGAME_API ACell : public AActor, public IAbilitySystemInterface
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base")
-	FGameplayAbilitySpec TestSpec;
-
-	UPROPERTY(BlueprintReadOnly, Category = CellInfo, BlueprintGetter = GetCellId, VisibleAnywhere)
-	int32 CellId = 0;
-
 	// descrete coordinates on a board
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
 	FBoardCoord Coord;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base")
-	TArray<TObjectPtr<UGameplayAbilityCellToPawnInfoHolder> > AbilityInfoHolders;
-
+	// may be use private property and friendly NavigationSystem
 	// Populated automatically
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base")
-	TArray<TObjectPtr<ACell>> Neighbours;
+	UPROPERTY(VisibleAnywhere, Category = "Base")
+	TArray<TWeakObjectPtr<ACell>> Neighbours;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCellChosenDelegate OnCellChosen;
@@ -72,6 +64,9 @@ public:
 	FOnSelectCell OnSelectCell;
 
 protected:
+	UPROPERTY(BlueprintReadOnly, Category = CellInfo, BlueprintGetter = GetCellId, VisibleAnywhere)
+	int32 CellId = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
@@ -164,6 +159,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Cells)
 	void AddAbilities(const TArray<FGameplayAbilityCellToPawnInfo>& InAbilitiesInfo);
 
+	// may be move this function to the NavigationSystem
 	UFUNCTION(BlueprintCallable, Category = Cells)
-	void GetNeighbourByDepth(int32 Depth, TArray<ACell*>& OutNeighbours);
+	void GetNeighbourByDepth(int32 Depth, TArray<ACell*>& OutNeighbours) const;
+
+	friend class UGameBoardGeneratorBase;
 };

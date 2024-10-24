@@ -25,11 +25,7 @@ class KP_MINIGAME_API UGameBoardGeneratorBase : public UObject
 public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Generation)
-	FBoardData GenerateGameBoard(UGenDataAsset* GenData, UObject* WorldContext) const;
+	FBoardData GenerateGameBoard(const UGenDataAsset* GenData, const UObject* WorldContext) const;
 protected:
-	virtual FBoardData GenerateGameBoard_Implementation(UGenDataAsset* GenData, UObject* WorldContext) const;
-
-protected:
-/*	void SpawnPawns(FBoardData& BoardData, )*/
-
+	virtual FBoardData GenerateGameBoard_Implementation(const UGenDataAsset* GenData, const UObject* WorldContext) const;
 };

@@ -33,7 +33,7 @@ void UFateStonePlayerStoreComponent::TickComponent(float DeltaTime, ELevelTick T
 	// ...
 }
 
-bool UFateStonePlayerStoreComponent::TryAddFateStone(UFateStoneDataAsset* StoneData)
+bool UFateStonePlayerStoreComponent::TryAddFateStone(UFateStoneDataAsset * StoneData)
 {
 	if (OwnedFateStones.Num() < MaxStoreSize && StoneData)
 	{
@@ -97,7 +97,7 @@ void UFateStonePlayerStoreComponent::ResetNumberOfUse()
 	CurrentNumberOfUsePerTurn = 0;
 }
 
-const UFateStoneDataAsset* UFateStonePlayerStoreComponent::GetFateStone(const int32 Id)
+const UFateStoneDataAsset* UFateStonePlayerStoreComponent::GetFateStone(const int32 Id) const 
 {
 	if (Id >= 0, Id < OwnedFateStones.Num())
 	{
@@ -106,12 +106,12 @@ const UFateStoneDataAsset* UFateStonePlayerStoreComponent::GetFateStone(const in
 	return nullptr;
 }
 
-int32 UFateStonePlayerStoreComponent::GetCurrentNumberOfUsePerTurn()
+int32 UFateStonePlayerStoreComponent::GetCurrentNumberOfUsePerTurn() const 
 {
 	return CurrentNumberOfUsePerTurn;
 }
 
-int32 UFateStonePlayerStoreComponent::GetCurrentNumberOfUseLeft()
+int32 UFateStonePlayerStoreComponent::GetCurrentNumberOfUseLeft() const 
 {
 	return MaxNumberOfUsesPerTurn - CurrentNumberOfUsePerTurn;
 }

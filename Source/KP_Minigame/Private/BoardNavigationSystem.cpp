@@ -94,14 +94,12 @@ void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnB
 	PossibleMovements.Empty();
 
 	TQueue<FBoardAtomicMovement> OpenQueue;
-	// WARNING: Might be succeptible for wrongful garbage collection
-	//TArray<UBoardAtomicMovement*> ClosedArray;
 
 	// create movement info to the origin's neighbouring cells
 	for (const auto& Neighbour : OriginCell->Neighbours) 
 	{
 		FBoardAtomicMovement ConstructedMovement;
-		UBoardNavigationSystem::CalculateAtomicMovement(OriginCell, Neighbour, OriginPiece, (float)MovementPoints, ConstructedMovement);
+		UBoardNavigationSystem::CalculateAtomicMovement(OriginCell, Neighbour.Get(), OriginPiece, (float)MovementPoints, ConstructedMovement);
 		OpenQueue.Enqueue(ConstructedMovement);
 	}
 	while (not OpenQueue.IsEmpty()) 
@@ -141,7 +139,7 @@ void UBoardNavigationSystem::GetPossibleMovements(const TArray<ACell*>& CellsOnB
 		for (const auto& Neighbour : CurrentMovement.CellTo->Neighbours) 
 		{
 			FBoardAtomicMovement ConstructedMovement;
-			CalculateAtomicMovement(CurrentMovement.CellTo.Get(), Neighbour, OriginPiece, (float)CurrentMovement.MovementPointsLeft, ConstructedMovement);
+			CalculateAtomicMovement(CurrentMovement.CellTo.Get(), Neighbour.Get(), OriginPiece, (float)CurrentMovement.MovementPointsLeft, ConstructedMovement);
 			OpenQueue.Enqueue(ConstructedMovement);
 		}
 	}
@@ -242,15 +240,15 @@ void UBoardNavigationSystem::CalculateAtomicMovement(const ACell * Origin, const
 	}
 
 	// Check direction safety for the king
-	const TArray<ACell*>& DestinationNeighbours = Destination->Neighbours;
-	for (ACell* NeighbouringCell : DestinationNeighbours)
+	const TArray<TWeakObjectPtr<ACell> >& DestinationNeighbours = Destination->Neighbours;
+	for (const auto& NeighbouringCell : DestinationNeighbours)
 	{
 		const ABoardPiece* Pawn = NeighbouringCell->GetStoodPawn();
 		if (not Pawn)
 		{
 			continue;
 		}
-		FBoardCoord PendingMovement = Destination->Coord - NeighbouringCell->Coord;
+		const FBoardCoord PendingMovement = Destination->Coord - NeighbouringCell->Coord;
 		bool bMovementPossible = false;
 		for (const auto& PossibleMovement : Pawn->GetMovementDirections())
 		{

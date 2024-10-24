@@ -8,13 +8,9 @@
 
 class UFateStoneDataAsset;
 
-USTRUCT(BlueprintType)
-struct KP_MINIGAME_API FFateStoneToGameData
-{
-	GENERATED_BODY();
-};
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpdatePlayerStore);
+
+
 //stored all user's Stones Of Fate
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KP_MINIGAME_API UFateStoneColdStoreComponent : public UActorComponent
@@ -32,34 +28,38 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	
+	// for visualization 
 	UFUNCTION(BlueprintCallable)
-	TSoftObjectPtr<UFateStoneDataAsset> SendToGame(int32 index);
-
+	TSoftObjectPtr<UFateStoneDataAsset> SendToGame(const int32 index);
+	// for visualization 
 	UFUNCTION(BlueprintCallable)
 	void ReturnInStore(const TSoftObjectPtr<UFateStoneDataAsset>& FateStone);
 
+	//work witch player's stones( save game)
 	UFUNCTION(BlueprintCallable)
 	void AddFateStone(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData);
 
+	//work witch player's stones( save game)
 	UFUNCTION(BlueprintCallable)
 	bool RemoveFateStone(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData);
 
+	//Synchronize player's stones and visualization data 
 	UFUNCTION(BlueprintCallable)
-	void SincPlayerStonesData();
+	void SyncPlayerStonesData();
 
 	UFUNCTION(BlueprintCallable)
 	const TArray<TSoftObjectPtr<UFateStoneDataAsset> >& GetPlayerFateStonesForGame() const;
-
-	//Need save in player's profile
-	UPROPERTY(EditDefaultsOnly, Category = ColdStore)
-	TArray<TSoftObjectPtr<UFateStoneDataAsset> > PlayerFateStones;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdatePlayerStore OnUpdatePlayerStore;
 
 protected:
-	// data only game;
+	// visualization data ;
 	UPROPERTY(Transient)
 	TArray<TSoftObjectPtr<UFateStoneDataAsset> > PlayerFateStonesForGame;
+
+	//Need save in player's profile
+	UPROPERTY(EditDefaultsOnly, Category = ColdStore)
+	TArray<TSoftObjectPtr<UFateStoneDataAsset> > PlayerFateStones;
 };

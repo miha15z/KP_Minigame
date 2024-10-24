@@ -32,8 +32,8 @@ void UGameplayAbilityGMUpgradePawn::ActivateAbility(const FGameplayAbilitySpecHa
 	{
 		CancelAbility(Handle, ActorInfo, ActivationInfo, false);
 	}
-	FVector InitialActorLocation = InitialPawn->GetActorLocation();
-	FRotator InitialActorRotation = InitialPawn->GetActorRotation();
+	const FVector InitialActorLocation = InitialPawn->GetActorLocation();
+	const FRotator InitialActorRotation = InitialPawn->GetActorRotation();
 
 	ABoardPiece* NewPawn = GetWorld()->SpawnActor<ABoardPiece>(UpgradeClass, InitialActorLocation, InitialActorRotation);
 	NewPawn->CopyState(InitialPawn);

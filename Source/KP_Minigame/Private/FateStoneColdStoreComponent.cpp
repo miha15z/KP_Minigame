@@ -20,7 +20,7 @@ void UFateStoneColdStoreComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	SincPlayerStonesData();
+	SyncPlayerStonesData();
 }
 
 
@@ -32,7 +32,7 @@ void UFateStoneColdStoreComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	// ...
 }
 
-TSoftObjectPtr<UFateStoneDataAsset> UFateStoneColdStoreComponent::SendToGame(int32 index)
+TSoftObjectPtr<UFateStoneDataAsset> UFateStoneColdStoreComponent::SendToGame(const int32 index)
 {
 	check(index >= 0 && index < PlayerFateStonesForGame.Num());
 	auto Item = PlayerFateStonesForGame[index];
@@ -50,17 +50,17 @@ void UFateStoneColdStoreComponent::ReturnInStore(const TSoftObjectPtr<UFateStone
 void UFateStoneColdStoreComponent::AddFateStone(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData)
 {
 	PlayerFateStones.Add(FateStoneData);
-	SincPlayerStonesData();
+	SyncPlayerStonesData();
 }
 
 bool UFateStoneColdStoreComponent::RemoveFateStone(const TSoftObjectPtr<UFateStoneDataAsset>& FateStoneData)
 {
 	int32  RemoveNuber = PlayerFateStones.RemoveSingle(FateStoneData);
-	SincPlayerStonesData();
+	SyncPlayerStonesData();
 	return RemoveNuber == 1;
 }
 
-void UFateStoneColdStoreComponent::SincPlayerStonesData()
+void UFateStoneColdStoreComponent::SyncPlayerStonesData()
 {
 	PlayerFateStonesForGame = PlayerFateStones;
 	OnUpdatePlayerStore.Broadcast();

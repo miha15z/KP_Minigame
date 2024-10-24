@@ -110,7 +110,7 @@ ABoardPiece* ACell::GetStoodPawn() const
 
 void ACell::ActivateOwnedAbilitiesOnStoodPawn() const
 {
-	ABoardPiece* StandingBoardPiece = PawnPtr.Get();
+	const ABoardPiece* StandingBoardPiece = PawnPtr.Get();
 	if (StandingBoardPiece != NULL) {
 		ActivateOwnedAbilities(StandingBoardPiece);
 	}
@@ -146,19 +146,18 @@ void ACell::AddAbility(const FGameplayAbilityCellToPawnInfo& Info)
 
 void ACell::AddAbilities(const TArray<FGameplayAbilityCellToPawnInfo>& InAbilitiesInfo)
 {
-	AbilityInfoHolders.Empty(); //  may be not need!!
 	for (const auto& Info : InAbilitiesInfo)
 	{
 		AddAbility(Info);
 	}
 }
 
-void ACell::GetNeighbourByDepth(int32 Depth, TArray<ACell*>& OutNeighbours)
+void ACell::GetNeighbourByDepth(int32 Depth, TArray<ACell*>& OutNeighbours) const 
 {
 	OutNeighbours.Empty();
-	OutNeighbours.Add(this);
-	TArray<ACell*> Frontier = { this };
-	TArray<ACell*> PendingNeighbours;
+	OutNeighbours.Add(const_cast<ACell*>(this));
+	TArray<TWeakObjectPtr<ACell> > Frontier = { const_cast<ACell*>(this) };
+	TArray<TWeakObjectPtr<ACell> > PendingNeighbours;
 	
 	for (int32 CurrentDepth = 0; CurrentDepth < Depth; CurrentDepth++)
 	{
@@ -168,7 +167,7 @@ void ACell::GetNeighbourByDepth(int32 Depth, TArray<ACell*>& OutNeighbours)
 			for (auto& Neighbour : CellNeighbours)
 			{
 				PendingNeighbours.AddUnique(Neighbour);
-				OutNeighbours.AddUnique(Neighbour);
+				OutNeighbours.AddUnique(Neighbour.Get());
 			}
 		}
 		Frontier = PendingNeighbours;
