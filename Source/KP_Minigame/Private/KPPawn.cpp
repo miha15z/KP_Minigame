@@ -14,6 +14,7 @@
 #include "GameplayAbilityFateStone.h"
 #include "GameplayAbilitySpec.h"
 #include "FateStoneColdStoreComponent.h"
+#include "BoardPieceAttributeSet.h"
 
 // Sets default values
 AKPPawn::AKPPawn()
@@ -229,7 +230,8 @@ bool AKPPawn::CanMoveBoardPiece() const
 					continue;
 				}
 				NavSys->GetPossibleMovementsLocalData(PawnInfo.Pawn, FMath::Min(StepsCounter, PawnInfo.Pawn->GetAvailableMovementPoints()), TempMovement);
-				if (TempMovement.Num() > 0)
+				// TODO: Resolve through GetPossibleMovementsLocalData only
+				if (TempMovement.Num() > 0 && PawnInfo.Pawn->GetAbilitySystemComponent()->GetNumericAttribute(UBoardPieceAttributeSet::GetMovementPointsMaxAttribute()) > DBL_EPSILON)
 				{
 					UE_LOG(LogTemp, Display, TEXT("BoardPiece %s have %d PossibleMovements"), *PawnInfo.Pawn->GetHumanReadableName(), TempMovement.Num())
 						bCanMoveBoardPiece = true;
